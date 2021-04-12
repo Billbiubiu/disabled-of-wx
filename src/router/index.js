@@ -24,7 +24,7 @@ function PrivateRoute(){
         sensitive={true}
         exact={true}
         from={commonConfig.routeBasePath + "/"}
-        to={commonConfig.routeBasePath + "/home"}
+        to={commonConfig.routeBasePath + "/login"}
       />
       {routes.map((item, index) => {
         return <RouteWithSubRoutes key={index} {...item} />;
@@ -43,7 +43,7 @@ function RouterMap(){
           sensitive={true}
           exact={true}
           from="/"
-          to={commonConfig.routeBasePath + "/home"}
+          to={commonConfig.routeBasePath + "/login"}
         />
         <Route path={commonConfig.routeBasePath + "/*"}>
           <PrivateRoute />
