@@ -4,9 +4,9 @@ import axios from "axios";
 import { commonConfig } from "../shared/config/index";
 
 
-export const getUserInfo = (requestCode) => {
-  return axios({
-    url: `/wx/lx/getUserInfo?requestCode=${requestCode}`,
+export const loginOut = (requestCode) => {
+  return ajax({
+    url: ``,
     method: "get",
     baseURL: commonConfig.baseURL,
   })
