@@ -1,5 +1,5 @@
 import { commonConfig } from "../shared/config/";
-import {Home} from '../pages/index'
+import { Home, Login } from '../pages/index';
 
 let routes = [
   {
@@ -7,6 +7,10 @@ let routes = [
     text: "首页",
     path: commonConfig.routeBasePath + "/home",
     component: Home,
+  },
+  {
+    path: commonConfig.routeBasePath + "/login",
+    component: Login,
   },
 ];
 
