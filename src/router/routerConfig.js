@@ -1,13 +1,12 @@
 import { commonConfig } from "../shared/config/";
-import { Home, Login ,MainPage,ServiceAgencies} from '../pages/index';
+import {
+  Login,
+  MainPage,
+  DisabledPerson,
+  ServiceAgencies,
+} from '../pages/index';
 
 let routes = [
-  {
-    name: "首页",
-    text: "首页",
-    path: commonConfig.routeBasePath + "/home",
-    component: Home,
-  },
   {
     name: "导航页面",
     text: "导航页面",
@@ -19,6 +18,12 @@ let routes = [
     text: "登录页面",
     path: commonConfig.routeBasePath + "/login",
     component: Login,
+  },
+  {
+    name: "残疾人",
+    text: "残疾人",
+    path: commonConfig.routeBasePath + "/disabled-person",
+    component: DisabledPerson,
   },
   {
     name: "服务机构",

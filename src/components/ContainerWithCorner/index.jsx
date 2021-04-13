@@ -17,7 +17,7 @@ const defaultContainer = (props) => {
 const Corner = (props) => {
   const { className } = props;
   return (
-    <svg width="150px" height="150px" className={classNames('container-corner', className)}>
+    <svg width="150" height="150" className={classNames('container-corner', className)}>
       <polygon points="6,66 6,18 12,12 18,12 24,6 27,6 30,9 36,9 39,6 84,6 81,9 75,9 73.2,7 40.8,7 37.8,10.2 24,10.2 12,21 12,24 9,27 9,51 7.8,54 7.8,63" fill="#4fd2dd">
         <animate attributeName="fill" values="#4fd2dd;#235fa7;#4fd2dd" dur="0.5s" begin="0s" repeatCount="indefinite">
         </animate>
@@ -32,20 +32,27 @@ const Corner = (props) => {
   )
 }
 
-const ContainerWithCorner = (props) => {
-  const {
-    component,
-    children,
-    className,
-    ...restProps
-  } = props;
-  const Container = component || defaultContainer;
+const Corners = () => {
   return (
-    <Container {...restProps} className={classNames('container-with-corner', className)}>
+    <>
       <Corner className="top-left-corner" />
       <Corner className="top-right-corner" />
       <Corner className="bottom-right-corner" />
       <Corner className="bottom-left-corner" />
+    </>
+  )
+}
+
+const ContainerWithCorner = (props) => {
+  const {
+    component: Container = defaultContainer,
+    children,
+    className,
+    ...restProps
+  } = props;
+  return (
+    <Container {...restProps} className={classNames('container-with-corner', className)}>
+      <Corners />
       {children}
     </Container>
   )

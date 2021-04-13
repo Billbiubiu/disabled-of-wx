@@ -18,7 +18,7 @@ const MainPage = () => {
     <div className="main-page">
       <CommonNavBar title="无锡市残疾人联合会数据可视化平台"></CommonNavBar>
       <ContainerWithCorner className="main-page-content">
-        <div className="handicapped" onClick={() => { history.push("/") }}>
+        <div className="handicapped" onClick={() => { history.push("/disabled-person") }}>
           <div className="div-container">
             <img src={cjr} alt="" />
             <span>残疾人</span>
