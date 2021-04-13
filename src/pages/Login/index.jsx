@@ -1,6 +1,6 @@
 import React from 'react';
 import { Layout, Form, Select, Input, Button } from 'antd';
-import { ContainerCorner } from '../../components';
+import { ContainerWithCorner } from '../../components';
 import './index.scss';
 
 const { Header, Content } = Layout;
@@ -30,11 +30,7 @@ const Login = (props) => {
       <Header className="login-header">
         <h1 style={{ color: '#fff' }}>无锡市残疾人联合会数据可视化平台</h1>
       </Header>
-      <Content className="login-content">
-        <ContainerCorner type="top-left" />
-        <ContainerCorner type="top-right" />
-        <ContainerCorner type="bottom-right" />
-        <ContainerCorner type="bottom-left" />
+      <ContainerWithCorner component={Content} className="login-content">
         <Form
           form={form}
           initialValues={{
@@ -67,7 +63,7 @@ const Login = (props) => {
             <Button type="link" style={{ float: 'right' }}>忘记密码</Button>
           </FormItem>
         </Form>
-      </Content>
+      </ContainerWithCorner>
     </Layout>
   )
 }
