@@ -1,35 +1,23 @@
 import React from 'react';
+import classNames from 'classnames';
+import './index.scss';
 
-const ContainerCorner = (props) => {
-  const { type = 'top-left' } = props;
-  const styleMap = {
-    'top-left': {
-      top: 0,
-      left: 0,
-    },
-    'top-right': {
-      top: 0,
-      right: 0,
-      transform: 'rotate(90deg)',
-    },
-    'bottom-right': {
-      bottom: 0,
-      right: 0,
-      transform: 'rotate(180deg)',
-    },
-    'bottom-left': {
-      bottom: 0,
-      left: 0,
-      transform: 'rotate(270deg)',
-    },
-  };
-  const style = {
-    position: 'absolute',
-    pointerEvents: 'none',
-    ...styleMap[type],
-  };
+const defaultContainer = (props) => {
+  const {
+    children,
+    ...restProps
+  } = props;
   return (
-    <svg width="150px" height="150px" style={style}>
+    <div {...restProps}>
+      {children}
+    </div>
+  )
+}
+
+const Corner = (props) => {
+  const { className } = props;
+  return (
+    <svg width="150px" height="150px" className={classNames('container-corner', className)}>
       <polygon points="6,66 6,18 12,12 18,12 24,6 27,6 30,9 36,9 39,6 84,6 81,9 75,9 73.2,7 40.8,7 37.8,10.2 24,10.2 12,21 12,24 9,27 9,51 7.8,54 7.8,63" fill="#4fd2dd">
         <animate attributeName="fill" values="#4fd2dd;#235fa7;#4fd2dd" dur="0.5s" begin="0s" repeatCount="indefinite">
         </animate>
@@ -44,4 +32,23 @@ const ContainerCorner = (props) => {
   )
 }
 
-export default ContainerCorner;
+const ContainerWithCorner = (props) => {
+  const {
+    component,
+    children,
+    className,
+    ...restProps
+  } = props;
+  const Container = component || defaultContainer;
+  return (
+    <Container {...restProps} className={classNames('container-with-corner', className)}>
+      <Corner className="top-left-corner" />
+      <Corner className="top-right-corner" />
+      <Corner className="bottom-right-corner" />
+      <Corner className="bottom-left-corner" />
+      {children}
+    </Container>
+  )
+}
+
+export default ContainerWithCorner;
