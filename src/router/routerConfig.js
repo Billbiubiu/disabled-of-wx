@@ -1,5 +1,9 @@
 import { commonConfig } from "../shared/config/";
-import { Home, Login } from '../pages/index';
+import {
+  Home,
+  Login,
+  DisabledPerson,
+} from '../pages/index';
 
 let routes = [
   {
@@ -11,6 +15,10 @@ let routes = [
   {
     path: commonConfig.routeBasePath + "/login",
     component: Login,
+  },
+  {
+    path: commonConfig.routeBasePath + "/disabled",
+    component: DisabledPerson,
   },
 ];
 

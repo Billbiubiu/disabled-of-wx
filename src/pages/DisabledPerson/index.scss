@@ -1,0 +1,25 @@
+.disabled-person {
+  height: 100vh;
+  min-height: 800px;
+  background-image: url("/assets/images/background.png");
+  background-size: cover;
+  ::before {
+    content: "";
+    display: block;
+    height: 0;
+    visibility: hidden;
+  }
+  .disabled-person-header {
+    text-align: center;
+    background-color: transparent;
+  }
+  .disabled-person-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background-color: transparent;
+    padding: 10px;
+  }
+}
