@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { Layout } from 'antd';
 import { CommonNavBar, ContainerWithCorner, GridLayout, ContainerWithBorder } from '../../components';
 import './index.scss';
@@ -16,43 +16,20 @@ const layout = [
 ];
 
 const DisabledPerson = (props) => {
-  const layoutContainerRef = useRef();
   return (
     <Layout className="disabled-person">
       <CommonNavBar showTime={true} title="残疾人" btnType="back" />
       <ContainerWithCorner
         component={Content}
         className="disabled-person-content">
-        <div
-          ref={layoutContainerRef}
-          className="grid-layout-container"
-        >
-          <GridLayout
-            {...{
-              layout,
-              layoutContainerRef,
-            }}
-          >
-            <div key="0">
-              <ContainerWithBorder className="grid-item-content"></ContainerWithBorder>
-            </div>
-            <div key="1">
-              <ContainerWithBorder className="grid-item-content"></ContainerWithBorder>
-            </div>
-            <div key="2">
-              <ContainerWithBorder className="grid-item-content"></ContainerWithBorder>
-            </div>
-            <div key="3">
-              <ContainerWithBorder className="grid-item-content"></ContainerWithBorder>
-            </div>
-            <div key="4">
-              <ContainerWithBorder className="grid-item-content"></ContainerWithBorder>
-            </div>
-            <div key="5">
-              <ContainerWithBorder className="grid-item-content"></ContainerWithBorder>
-            </div>
-          </GridLayout>
-        </div>
+        <GridLayout layout={layout}>
+          <ContainerWithBorder key="0" className="grid-item-content"></ContainerWithBorder>
+          <ContainerWithBorder key="1" className="grid-item-content"></ContainerWithBorder>
+          <ContainerWithBorder key="2" className="grid-item-content"></ContainerWithBorder>
+          <ContainerWithBorder key="3" className="grid-item-content"></ContainerWithBorder>
+          <ContainerWithBorder key="4" className="grid-item-content"></ContainerWithBorder>
+          <ContainerWithBorder key="5" className="grid-item-content"></ContainerWithBorder>
+        </GridLayout>
       </ContainerWithCorner>
     </Layout>
   )

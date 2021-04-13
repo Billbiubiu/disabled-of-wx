@@ -8,23 +8,24 @@ function GridLayout(props) {
     colNum = 24, // 列数
     margin = [10, 10], // 间距
     layout = [], // 布局
-    layoutContainerRef, // 布局容器
+    children = [], // 子组件
+    containerStyle = {},
+    containerClassName = '',
     ...restProps
-  } = props
+  } = props;
+  const layoutContainerRef = useRef();
   const [layoutVisible, setLayoutVisible] = useState(false); // 用于延迟渲染
   const [layoutSize, setLayoutSize] = useState({ width: 0, height: 0 }); // 布局组件宽高
   const { height, width } = layoutSize;
   // 确定布局组件宽高
   const resizeTimer = useRef();
   useEffect(() => {
-    if (!layoutContainerRef) return;
     const onResize = () => {
       if (resizeTimer.current) {
         clearTimeout(resizeTimer.current)
       }
       resizeTimer.current = setTimeout(() => {
         const layoutContainer = layoutContainerRef.current;
-        if (!layoutContainer) return;
         const { clientWidth: width, clientHeight: height } = layoutContainer;
         setLayoutSize({ width, height });
         setLayoutVisible(true);
@@ -38,26 +39,43 @@ function GridLayout(props) {
     return () => {
       window.removeEventListener('resize', onResize)
     }
-  }, [layoutContainerRef])
+  }, [])
   // 根据布局容器高度、行数、间距计算行高
   const rowHeight = useMemo(() => {
     return (height - ((rowNum + 1) * margin[1])) / rowNum;
   }, [height, rowNum, margin])
-  if (!layoutVisible) return null;
   return (
-    <ReactGridLayout
-      width={width}
-      cols={colNum}
-      layout={layout}
-      margin={margin}
-      rowHeight={rowHeight}
-      isDraggable={false}
-      isResizable={false}
-      useCSSTransforms={false}
-      {...restProps}
+    <div
+      ref={layoutContainerRef}
+      className={containerClassName}
+      style={{
+        width: '100%',
+        height: '100%',
+        ...containerStyle,
+      }}
     >
-      {props.children}
-    </ReactGridLayout>
+      {
+        layoutVisible && (
+          <ReactGridLayout
+            width={width}
+            cols={colNum}
+            layout={layout}
+            margin={margin}
+            rowHeight={rowHeight}
+            isDraggable={false}
+            isResizable={false}
+            useCSSTransforms={false}
+            {...restProps}
+          >
+            {children.map(child => (
+              <div key={child.key}>
+                {child}
+              </div>
+            ))}
+          </ReactGridLayout>
+        )
+      }
+    </div>
   )
 }
 
