@@ -32,20 +32,27 @@ const Corner = (props) => {
   )
 }
 
-const ContainerWithCorner = (props) => {
-  const {
-    component,
-    children,
-    className,
-    ...restProps
-  } = props;
-  const Container = component || defaultContainer;
+const Corners = () => {
   return (
-    <Container {...restProps} className={classNames('container-with-corner', className)}>
+    <>
       <Corner className="top-left-corner" />
       <Corner className="top-right-corner" />
       <Corner className="bottom-right-corner" />
       <Corner className="bottom-left-corner" />
+    </>
+  )
+}
+
+const ContainerWithCorner = (props) => {
+  const {
+    component: Container = defaultContainer,
+    children,
+    className,
+    ...restProps
+  } = props;
+  return (
+    <Container {...restProps} className={classNames('container-with-corner', className)}>
+      <Corners />
       {children}
     </Container>
   )
