@@ -1,0 +1,62 @@
+.main-page {
+  height: 100vh;
+  min-height: 800rem;
+  background-image: url("/assets/images/background.png");
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+
+  .main-page-content {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    padding: 20rem;
+
+
+    div {
+      width: 25%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+
+      .div-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: white;
+
+        img {
+          width: 70rem;
+          height: 70rem;
+        }
+
+        span {
+          margin-top: 5rem;
+        }
+      }
+    }
+
+    .handicapped {
+      background-image: linear-gradient(rgb(0, 9, 40), rgb(1, 129, 74), rgb(0, 9, 40));
+    }
+
+    .serviceAgencies {
+      background-image: linear-gradient(rgb(0, 9, 40), rgb(0, 3, 8), rgb(0, 9, 40));
+    }
+
+    .serviceApply {
+      background-image: linear-gradient(rgb(0, 9, 40), rgb(0, 61, 121), rgb(0, 9, 40));
+    }
+
+    .interServe {
+      background-image: linear-gradient(rgb(0, 9, 40), rgb(187, 61, 0), rgb(0, 9, 40));
+    }
+
+    .satisfact {
+      background-image: linear-gradient(rgb(0, 9, 40), rgb(151, 124, 0), rgb(0, 9, 40));
+    }
+  }
+}

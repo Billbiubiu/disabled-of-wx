@@ -14,7 +14,7 @@ import { loginOut } from '../../service/index'
 let interval = null
 
 const CommonNavBar = (props) => {
-  const { showTime = true, title = "服务申请", btnType = "logout" } = props
+  const { showTime = false, title = "服务申请", btnType = "logout" } = props
   const [time, setTime] = useState()
   const history = useHistory();
 
@@ -47,18 +47,16 @@ const CommonNavBar = (props) => {
 
   return (
     <div className="common-bar">
-      {
-        showTime && <div className="bar-time">
-          {time}
-        </div>
-      }
+      <div className="bar-time">
+        {showTime && time}
+      </div>
       <div className="bar-title">{title}</div>
       <div className="bar-btn">
         {
           btnType === "back" && <div className="btn-back">
             <svg width="120" height="50" className="dv-border-svg-container">
-              <polygon fill="transparent" points="7, 7 113, 7 113, 43 7, 43"></polygon><polyline points="2, 2 118 ,2 118, 48 2, 48 2, 2" stroke="#fff"></polyline>
-              <polyline points="6, 6 114, 6 114, 44 6, 44 6, 6" stroke="rgba(255, 255, 255, 0.6)"></polyline>
+              <polygon fill="transparent" points="7, 7 113, 7 113, 43 7, 43"></polygon><polyline points="2, 2 118 ,2 118, 48 2, 48 2, 2" fill="transparent" stroke="#fff"></polyline>
+              <polyline points="6, 6 114, 6 114, 44 6, 44 6, 6" fill="transparent" stroke="rgba(255, 255, 255, 0.6)"></polyline>
               <circle cx="11" cy="11" r="1" fill="#fff"></circle>
               <circle cx="109" cy="11" r="1" fill="#fff"></circle>
               <circle cx="109" cy="39" r="1" fill="#fff"></circle>
@@ -70,8 +68,8 @@ const CommonNavBar = (props) => {
         {
           btnType === "logout" && <div className="btn-back">
             <svg width="120" height="50" className="dv-border-svg-container">
-              <polygon fill="transparent" points="7, 7 113, 7 113, 43 7, 43"></polygon><polyline points="2, 2 118 ,2 118, 48 2, 48 2, 2" stroke="#fff"></polyline>
-              <polyline points="6, 6 114, 6 114, 44 6, 44 6, 6" stroke="rgba(255, 255, 255, 0.6)"></polyline>
+              <polygon fill="transparent" points="7, 7 113, 7 113, 43 7, 43"></polygon><polyline points="2, 2 118 ,2 118, 48 2, 48 2, 2" fill="transparent" stroke="#fff"></polyline>
+              <polyline points="6, 6 114, 6 114, 44 6, 44 6, 6" fill="transparent" stroke="rgba(255, 255, 255, 0.6)"></polyline>
               <circle cx="11" cy="11" r="1" fill="#fff"></circle>
               <circle cx="109" cy="11" r="1" fill="#fff"></circle>
               <circle cx="109" cy="39" r="1" fill="#fff"></circle>
