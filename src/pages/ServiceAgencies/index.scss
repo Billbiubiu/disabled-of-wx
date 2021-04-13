@@ -1,0 +1,12 @@
+.service-agencies {
+  height: 100vh;
+  min-height: 800rem;
+  background-image: url("/assets/images/background.png");
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+
+  .service-agencies-content {
+    flex: 1
+  }
+}

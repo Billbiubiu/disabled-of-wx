@@ -23,7 +23,7 @@ const Login = (props) => {
   const [form] = useForm();
   const onSubmit = (values) => {
     console.log(values);
-    history.push('/home');
+    history.push('/mainPage');
   };
   return (
     <Layout className="login">
