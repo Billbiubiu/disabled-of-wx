@@ -5,22 +5,18 @@
   background-size: cover;
   display: flex;
   flex-direction: column;
-
   .main-page-content {
     flex: 1;
     display: flex;
     justify-content: space-between;
     padding: 20rem;
-
-
-    div {
+    > div {
       width: 25%;
       height: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
       cursor: pointer;
-
       .div-container {
         display: flex;
         flex-direction: column;
@@ -38,24 +34,19 @@
         }
       }
     }
-
-    .handicapped {
+    .disabled-person {
       background-image: linear-gradient(rgb(0, 9, 40), rgb(1, 129, 74), rgb(0, 9, 40));
     }
-
-    .serviceAgencies {
+    .service-agencies {
       background-image: linear-gradient(rgb(0, 9, 40), rgb(0, 3, 8), rgb(0, 9, 40));
     }
-
-    .serviceApply {
+    .service-applications {
       background-image: linear-gradient(rgb(0, 9, 40), rgb(0, 61, 121), rgb(0, 9, 40));
     }
-
-    .interServe {
+    .service-online {
       background-image: linear-gradient(rgb(0, 9, 40), rgb(187, 61, 0), rgb(0, 9, 40));
     }
-
-    .satisfact {
+    .satisfaction {
       background-image: linear-gradient(rgb(0, 9, 40), rgb(151, 124, 0), rgb(0, 9, 40));
     }
   }

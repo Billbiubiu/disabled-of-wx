@@ -3,10 +3,21 @@
   min-height: 800rem;
   background-image: url("/assets/images/background.png");
   background-size: cover;
-  display: flex;
-  flex-direction: column;
-
   .service-agencies-content {
-    flex: 1
+    flex: 1;
+    padding: 10rem;
+  }
+  .grid-item {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 10rem 20rem;
+    .grid-item-title {
+      font-size: 16rem;
+    }
+    .grid-item-content {
+      flex: 1;
+    }
   }
 }

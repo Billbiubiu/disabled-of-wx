@@ -16,14 +16,25 @@ const layout = [
   { i: '1-1', x: 0, y: 0, w: 6, h: 24 },
   { i: '2-1', x: 6, y: 0, w: 12, h: 16 },
   { i: '2-2', x: 6, y: 16, w: 12, h: 8 },
-  { i: '3-1', x: 18, y: 0, w: 6, h: 4 },
-  { i: '3-2', x: 18, y: 4, w: 6, h: 20 },
+  { i: '3-1', x: 18, y: 0, w: 6, h: 8 },
+  { i: '3-2', x: 18, y: 8, w: 6, h: 8 },
+  { i: '3-3', x: 18, y: 16, w: 6, h: 8 },
 ];
 
-const ServiceAgencies = () => {
+const ServiceOnline = (props) => {
   const [echartsOptions, setEchartsOptions] = useState({
-    // 机构每月残疾人变化趋势
+    // 互动交流
+    '1-1-2': {},
+    // 业务模块
+    '1-1-3': {},
+    // 康复签到
     '2-2': {},
+    // 点击量
+    '3-1': {},
+    // 无障碍地图
+    '3-2': {},
+    // 无障碍建筑与设施评分
+    '3-3': {},
   });
   const mergeEchartsOptions = useCallback((mergeData) => {
     setEchartsOptions(oldData => ({
@@ -35,28 +46,42 @@ const ServiceAgencies = () => {
     mergeEchartsOptions({})
   }, [mergeEchartsOptions]);
   return (
-    <Layout className="service-agencies">
-      <CommonNavBar showTime={true} title="服务机构" btnType="back" />
+    <Layout className="service-online">
+      <CommonNavBar showTime={true} title="服务申请" btnType="back" />
       <ContainerWithCorner
         component={Content}
         className="disabled-person-content">
         <GridLayout layout={layout}>
           <ContainerWithBorder key="1-1" className="grid-item">
             <div className="grid-item-title">
-              <span>残疾人康复机构数据统计</span>
+              <span>注册人数据统计</span>
             </div>
             <div className="grid-item-content"></div>
             <div className="grid-item-title">
-              <span>服务机构数据</span>
+              <span>互动交流</span>
             </div>
-            <div className="grid-item-content" style={{ flex: 2 }}></div>
+            <ReactEcharts
+              option={echartsOptions['1-1-2']}
+              className="grid-item-content"
+            />
+            <div className="grid-item-title">
+              <span>业务模块</span>
+            </div>
+            <ReactEcharts
+              option={echartsOptions['1-1-3']}
+              className="grid-item-content"
+            />
+            <div className="grid-item-title">
+              <span>热点服务</span>
+            </div>
+            <div className="grid-item-content"></div>
           </ContainerWithBorder>
           <ContainerWithBorder key="2-1" className="grid-item">
 
           </ContainerWithBorder>
           <ContainerWithBorder key="2-2" className="grid-item">
             <div className="grid-item-title">
-              <span>机构每月残疾人变化趋势</span>
+              <span>康复签到</span>
             </div>
             <ReactEcharts
               option={echartsOptions['2-2']}
@@ -65,22 +90,35 @@ const ServiceAgencies = () => {
           </ContainerWithBorder>
           <ContainerWithBorder key="3-1" className="grid-item">
             <div className="grid-item-title">
-              <span>残疾人服务机构办理事务情况统计</span>
+              <span>点击量</span>
             </div>
-            <div className="grid-item-content"></div>
+            <ReactEcharts
+              option={echartsOptions['3-1']}
+              className="grid-item-content"
+            />
           </ContainerWithBorder>
           <ContainerWithBorder key="3-2" className="grid-item">
             <div className="grid-item-title">
-              <span>残联机构</span>
+              <span>无障碍地图</span>
             </div>
-            <div className="grid-item-content"></div>
+            <ReactEcharts
+              option={echartsOptions['3-2']}
+              className="grid-item-content"
+            />
+          </ContainerWithBorder>
+          <ContainerWithBorder key="3-3" className="grid-item">
+            <div className="grid-item-title">
+              <span>无障碍建筑与设施评分</span>
+            </div>
+            <ReactEcharts
+              option={echartsOptions['3-3']}
+              className="grid-item-content"
+            />
           </ContainerWithBorder>
         </GridLayout>
       </ContainerWithCorner>
     </Layout>
   )
-
 }
 
-
-export default ServiceAgencies
+export default ServiceOnline;
