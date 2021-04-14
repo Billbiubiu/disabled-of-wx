@@ -1,14 +1,14 @@
 import React from 'react';
-import { CommonNavBar, ContainerWithCorner } from '../../components/index';
-import { cjr, fwjg, fwsq, wsfw, myd } from '../../assets/images/mainPage/index';
+import { CommonNavBar, ContainerWithCorner } from '../../components';
+import { cjr, fwjg, fwsq, wsfw, myd } from '../../assets/images/home';
 import './index.scss';
 
-const MainPage = (props) => {
+const Home = (props) => {
   const { history } = props;
   return (
-    <div className="main-page">
+    <div className="home">
       <CommonNavBar title="无锡市残疾人联合会数据可视化平台" />
-      <ContainerWithCorner className="main-page-content">
+      <ContainerWithCorner className="home-content">
         <div className="disabled-person" onClick={() => { history.push("/disabled-person") }}>
           <div className="div-container">
             <img src={cjr} alt="" />
@@ -46,4 +46,4 @@ const MainPage = (props) => {
 }
 
 
-export default MainPage
+export default Home

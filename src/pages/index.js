@@ -1,5 +1,5 @@
 import Login from './Login';
-import MainPage from './MainPage';
+import Home from './Home';
 import DisabledPerson from './DisabledPerson';
 import ServiceAgencies from './ServiceAgencies/index.jsx';
 import ServiceApplications from './ServiceApplications';
@@ -8,7 +8,7 @@ import Satisfaction from './Satisfaction';
 
 export {
   Login,
-  MainPage,
+  Home,
   DisabledPerson,
   ServiceAgencies,
   ServiceApplications,

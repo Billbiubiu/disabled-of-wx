@@ -1,9 +1,9 @@
 import React from 'react';
 import { Layout, Form, Select, Input, Button } from 'antd';
-import { ContainerWithCorner } from '../../components';
+import { CommonNavBar, ContainerWithCorner } from '../../components';
 import './index.scss';
 
-const { Header, Content } = Layout;
+const { Content } = Layout;
 const { useForm, Item: FormItem } = Form;
 const { Option } = Select;
 
@@ -23,13 +23,11 @@ const Login = (props) => {
   const [form] = useForm();
   const onSubmit = (values) => {
     console.log(values);
-    history.push('/mainPage');
+    history.push('/home');
   };
   return (
     <Layout className="login">
-      <Header className="login-header">
-        <h1 style={{ color: '#fff' }}>无锡市残疾人联合会数据可视化平台</h1>
-      </Header>
+      <CommonNavBar title="无锡市残疾人联合会数据可视化平台" />
       <ContainerWithCorner component={Content} className="login-content">
         <Form
           form={form}

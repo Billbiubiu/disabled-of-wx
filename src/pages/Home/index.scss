@@ -1,11 +1,11 @@
-.main-page {
+.home {
   height: 100vh;
   min-height: 800rem;
   background-image: url("/assets/images/background.png");
   background-size: cover;
   display: flex;
   flex-direction: column;
-  .main-page-content {
+  .home-content {
     flex: 1;
     display: flex;
     justify-content: space-between;
