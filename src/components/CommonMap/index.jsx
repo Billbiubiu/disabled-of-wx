@@ -1,55 +1,34 @@
 import React, { useState, useEffect } from 'react'
 import './index.scss'
 
+const areaMap = {
+  '1': { code: 1, name: "江阴市" },
+  '2': { code: 2, name: "惠山区" },
+  '3': { code: 3, name: "梁溪区" },
+  '4': { code: 4, name: "新吴区" },
+  '5': { code: 5, name: "锡山区" },
+  '6': { code: 6, name: "宜兴市" },
+  '7': { code: 7, name: "滨湖区" },
+};
 /**
  * 
  * @param {(code:number,name:string)=>void} callBack  点击地图的回调函数
  */
-
 const CommomMap = (props) => {
-  const { callBack } = props
-  const [title, setTitle] = useState("")
-  const [clickMap, setClickMap] = useState(0)
-
+  const {
+    callBack = () => { },
+  } = props
+  const [title, setTitle] = useState('');
+  const [clickMap, setClickMap] = useState(0);
   useEffect(() => {
-    switch (clickMap) {
-      case 0:
-        setTitle("")
-        break;
-      case 1:
-        setTitle("江阴市")
-        callBack({ code: 1, name: "江阴市" })
-        break;
-      case 2:
-        setTitle("惠山区")
-        callBack({ code: 2, name: "惠山区" })
-        break;
-      case 3:
-        setTitle("梁溪区")
-        callBack({ code: 3, name: "梁溪区" })
-
-        break;
-      case 4:
-        setTitle("新吴区")
-        callBack({ code: 4, name: "新吴区" })
-
-        break;
-      case 5:
-        setTitle("锡山区")
-        callBack({ code: 5, name: "锡山区" })
-        break;
-      case 6:
-        setTitle("宜兴市")
-        callBack({ code: 6, name: "宜兴市" })
-        break;
-      case 7:
-        setTitle("滨湖区")
-        callBack({ code: 7, name: "滨湖区" })
-        break;
-      default:
-        break;
+    const area = areaMap[clickMap];
+    if (area) {
+      setTitle(area.name);
+      callBack(area);
+    } else {
+      setTitle('');
     }
-  }, [clickMap])
+  }, [clickMap, callBack])
 
   return <div className="common-map">
     <div className="map-header">
@@ -137,5 +116,4 @@ const CommomMap = (props) => {
   </div>
 }
 
-
-export default CommomMap
+export default CommomMap;

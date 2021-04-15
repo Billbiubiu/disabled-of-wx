@@ -12,12 +12,40 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    padding: 10rem 20rem;
+    padding: 20rem;
     .grid-item-title {
       font-size: 16rem;
     }
     .grid-item-content {
       flex: 1;
+    }
+  }
+  .applicant-count {
+    .grid-item-content {
+      color: #08e5ff;
+      font-weight: bold;
+      line-height: 55rem;
+      display: flex;
+      align-items: center;
+    }
+    .applicant-count-label {
+      font-size: 19rem;
+    }
+    .applicant-count-value {
+      flex: 1;
+      display: flex;
+      align-items: flex-end;
+    }
+    .applicant-count-number {
+      flex: 1;
+      margin: 3rem;
+      height: 56rem;
+      font-size: 33rem;
+      text-align: center;
+      background-color: rgba(4, 49, 128, 0.6);
+    }
+    .applicant-count-separate {
+      font-size: 19rem;
     }
   }
 }

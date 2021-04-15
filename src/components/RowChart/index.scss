@@ -1,0 +1,27 @@
+.row-chart {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  .row-chart-row {
+    .row-chart-row-header {
+      .row-chart-row-index {
+        color: #1370fb;
+        margin-right: 1em;
+      }
+      .row-chart-row-value {
+        float: right;
+      }
+    }
+    .row-chart-row-body {
+      background-color: #1370fb;
+      height: 6rem;
+      min-width: 1rem;
+    }
+    .row-chart-row-footer {
+      margin-top: 2rem;
+      border-bottom: 2rem solid rgba(19,112,251,.5);
+    }
+  }
+}
