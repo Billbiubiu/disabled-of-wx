@@ -1,15 +1,33 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import ReactEcharts from 'echarts-for-react';
 import { Layout } from 'antd';
+import { RightOutlined } from '@ant-design/icons';
 import {
   CommonNavBar,
   ContainerWithCorner,
   GridLayout,
   ContainerWithBorder,
+  RowChart,
 } from '../../components';
 import './index.scss';
 
 const { Content } = Layout;
+
+const mockData = {
+  '1-2': {
+    data: [
+      { name: '残联机构', value: 51 },
+      { name: '残疾人之家', value: 33 },
+      { name: '辅具适配中心', value: 32 },
+      { name: '教育机构', value: 22 },
+      { name: '爱心企业', value: 15 },
+      { name: '盲人按摩机构', value: 12 },
+      { name: '托养机构', value: 11 },
+      { name: '康复机构', value: 2 },
+      { name: '其他', value: 1 },
+    ]
+  }
+}
 
 // 布局数据
 const layout = [
@@ -22,6 +40,8 @@ const layout = [
 
 const ServiceAgencies = () => {
   const [echartsOptions, setEchartsOptions] = useState({
+    // 服务机构数据
+    '1-2': {},
     // 机构每月残疾人变化趋势
     '2-2': {},
   });
@@ -31,9 +51,13 @@ const ServiceAgencies = () => {
       ...mergeData,
     }))
   }, []);
+  // 当前选中的服务机构数据
+  const [activeAgency, setActiveAgency] = useState();
   useEffect(() => {
-    mergeEchartsOptions({})
+    mergeEchartsOptions(mockData);
+    setActiveAgency(mockData['1-2'].data[0]);
   }, [mergeEchartsOptions]);
+
   return (
     <Layout className="service-agencies">
       <CommonNavBar showTime={true} title="服务机构" btnType="back" />
@@ -49,7 +73,48 @@ const ServiceAgencies = () => {
             <div className="grid-item-title">
               <span>服务机构数据</span>
             </div>
-            <div className="grid-item-content" style={{ flex: 2 }}></div>
+            <div
+              className="grid-item-content"
+              style={{
+                flex: 2,
+                display: 'flex',
+                alignItems: 'stretch',
+              }}
+            >
+              <RowChart
+                option={echartsOptions['1-2']}
+                style={{ flex: 1 }}
+                rowBodyStyle={{
+                  backgroundColor: '#bb3d00',
+                }}
+                rowFooterStyle={{
+                  backgroundColor: '#bb3d00',
+                }}
+              />
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-around',
+                marginLeft: '10rem',
+              }}>
+                {(echartsOptions['1-2'].data && echartsOptions['1-2'].data.length) && (
+                  echartsOptions['1-2'].data.map((item, index) => {
+                    const key = index;
+                    const isActive = activeAgency && activeAgency.name === item.name;
+                    return (
+                      <div key={key} onClick={() => setActiveAgency(item)}>
+                        <RightOutlined
+                          style={{
+                            fontSize: '30rem',
+                            color: isActive ? '#bb3d00' : 'white',
+                          }}
+                        />
+                      </div>
+                    )
+                  })
+                )}
+              </div>
+            </div>
           </ContainerWithBorder>
           <ContainerWithBorder key="2-1" className="grid-item">
 

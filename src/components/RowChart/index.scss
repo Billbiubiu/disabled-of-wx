@@ -4,7 +4,16 @@
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
   .row-chart-row {
+    min-height: 50rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     .row-chart-row-header {
       .row-chart-row-index {
         color: #1370fb;
@@ -20,8 +29,9 @@
       min-width: 1rem;
     }
     .row-chart-row-footer {
+      height: 2rem;
       margin-top: 2rem;
-      border-bottom: 2rem solid rgba(19,112,251,.5);
+      background-color: rgba(19,112,251,.5);
     }
   }
 }
