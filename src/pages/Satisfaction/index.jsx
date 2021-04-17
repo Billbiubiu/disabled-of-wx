@@ -35,6 +35,10 @@ const mockData = {
       { name: '惠山区', value: 84.22 },
       { name: '惠山区', value: 84.22 },
       { name: '惠山区', value: 70.22 },
+      { name: '惠山区', value: 70.22 },
+      { name: '惠山区', value: 70.22 },
+      { name: '惠山区', value: 70.22 },
+      { name: '惠山区', value: 70.22 },
     ]
   },
   "2-2": {
