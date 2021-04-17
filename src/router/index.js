@@ -2,7 +2,7 @@ import React from "react";
 import {
   Route,
   Switch,
-  HashRouter as Router,
+  BrowserRouter as Router,
   Redirect,
 } from "react-router-dom";
 import routes from "./routerConfig";
