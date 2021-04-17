@@ -3,6 +3,7 @@ import moment from 'moment';
 import { message } from 'antd';
 import { loginOut } from '../../service';
 import './index.scss';
+import { useHistory } from 'react-router';
 
 /**
  * @param {Boolean} showTime  是否展示当前时间
@@ -10,8 +11,8 @@ import './index.scss';
  * @param {String} btnType  右侧button的类型  back(返回按钮)/logout(注销)/none(无按钮)
  */
 const CommonNavBar = (props) => {
+  const history = useHistory()
   const {
-    history,
     showTime = false,
     title = '',
     btnType = ''
