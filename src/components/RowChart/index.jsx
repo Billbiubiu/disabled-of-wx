@@ -8,6 +8,7 @@ const RowChart = (props) => {
       data = [], // 数据
       unit = '', // 单位
     } = {},
+    ifShowArrow = false,// 是否展示箭头
     className,
     style = {},
     rowStyle = {},

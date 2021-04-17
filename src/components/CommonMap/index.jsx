@@ -13,13 +13,15 @@ const areaMap = {
 /**
  * 
  * @param {(code:number,name:string)=>void} callBack  点击地图的回调函数
+ * @param {number} initData 默认选择哪一个
  */
 const CommomMap = (props) => {
   const {
+    initData = 1,
     callBack = () => { },
   } = props
   const [title, setTitle] = useState('');
-  const [clickMap, setClickMap] = useState(0);
+  const [clickMap, setClickMap] = useState(initData);
   useEffect(() => {
     const area = areaMap[clickMap];
     if (area) {
