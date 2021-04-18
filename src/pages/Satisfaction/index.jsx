@@ -153,6 +153,8 @@ const Satisfaction = (props) => {
               <span>各区平均满意度</span>
             </div>
             <RowChart
+              rowIndxStyle={{ color: 'white' }}
+              ifShowArrow={true}
               option={echartsOptions['1-2']}
               className="grid-item-content"
             />
