@@ -12,12 +12,58 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    padding: 10rem 20rem;
+    padding: 20rem;
     .grid-item-title {
       font-size: 16rem;
     }
     .grid-item-content {
       flex: 1;
+    }
+  }
+  .agency-statistics {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    .agency-statistics-item {
+      text-align: center;
+    }
+    .agency-statistics-value {
+      font-size: 20rem;
+      color: #08e5ff;
+    }
+    .agency-statistics-icon {
+      width: 30rem;
+      height: 30rem;
+      margin-right: 8rem;
+    }
+    .agency-statistics-name {
+      font-size: 16rem;
+    }
+  }
+  .business-statistics {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    .business-statistics-item {
+      flex: 1;
+      margin: 2rem;
+      text-align: center;
+      background-color: rgba(4,49,128,.6);
+      border: 2rem solid rgba(1,153,209,.5);
+    }
+    .business-statistics-value {
+      font-size: 30rem;
+      font-weight: bold;
+      color: #08e5ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .business-statistics-name {
+      font-size: 16rem;
+    }
+    .business-statistics-rate {
+      font-size: 18rem;
     }
   }
 }
