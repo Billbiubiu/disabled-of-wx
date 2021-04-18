@@ -12,33 +12,57 @@
   }
 
   .row-chart-row {
-    min-height: 50rem;
     width: 100%;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    flex-wrap: nowrap;
+    cursor: pointer;
 
-    .row-chart-row-header {
-      .row-chart-row-index {
-        color: #1370fb;
-        margin-right: 1em;
-      }
+    .row-click {
+      background-color: #bb3d00 !important;
+    }
 
-      .row-chart-row-value {
+    .row-arrow {
+      img {
+        height: 20rem;
         float: right;
+        margin-top: 25rem;
+        margin-right: 8rem;
+        margin-left: 8rem;
+        cursor: pointer;
       }
     }
 
-    .row-chart-row-body {
-      background-color: #1370fb;
-      height: 6rem;
-      min-width: 1rem;
+    .row-container {
+      min-height: 50rem;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      .row-chart-row-header {
+        .row-chart-row-index {
+          color: #1370fb;
+          margin-right: 1em;
+        }
+
+        .row-chart-row-value {
+          float: right;
+        }
+      }
+
+      .row-chart-row-body {
+        background-color: #1370fb;
+        height: 6rem;
+        min-width: 1rem;
+      }
+
+      .row-chart-row-footer {
+        height: 2rem;
+        margin-top: 2rem;
+        background-color: rgba(19, 112, 251, .5);
+      }
     }
 
-    .row-chart-row-footer {
-      height: 2rem;
-      margin-top: 2rem;
-      background-color: rgba(19, 112, 251, .5);
-    }
+
   }
 }
