@@ -110,6 +110,23 @@ const layout = [
 ];
 
 const ServiceApplications = (props) => {
+  // 申请人数量
+  const [applicantCount, setApplicantCount] = useState(0);
+  const applicantCountList = useMemo(() => {
+    const list = applicantCount.toString().split('').reverse();
+    while (list.length < 7) list.push('0');
+    return list.reduce((result, item, index) => {
+      if (index && index % 3 === 0) {
+        result.push(',');
+      }
+      result.push(item);
+      return result;
+    }, []).reverse();
+  }, [applicantCount]);
+  useEffect(() => {
+    setApplicantCount(1368422);
+  }, []);
+  // echarts图表
   const [echartsOptions, setEchartsOptions] = useState({
     // 维文
     '1-2': {},
@@ -129,21 +146,6 @@ const ServiceApplications = (props) => {
   useEffect(() => {
     mergeEchartsOptions(mockData);
   }, [mergeEchartsOptions]);
-  const [applicantCount, setApplicantCount] = useState(0);
-  const applicantCountList = useMemo(() => {
-    const list = applicantCount.toString().split('').reverse();
-    while (list.length < 7) list.push('0');
-    return list.reduce((result, item, index) => {
-      if (index && index % 3 === 0) {
-        result.push(',');
-      }
-      result.push(item);
-      return result;
-    }, []).reverse();
-  }, [applicantCount]);
-  useEffect(() => {
-    setApplicantCount(1368422);
-  }, []);
   return (
     <Layout className="service-applications">
       <CommonNavBar showTime={true} title="服务申请" btnType="back" />
@@ -151,11 +153,11 @@ const ServiceApplications = (props) => {
         component={Content}
         className="service-applications-content">
         <GridLayout layout={layout} margin={[5, 5]}>
-          <ContainerWithBorder key="1-1" className="grid-item applicant-count">
-            <div className="grid-item-title applicant-count-title">
+          <ContainerWithBorder key="1-1" className="grid-item">
+            <div className="grid-item-title">
               <span>服务申请人数统计</span>
             </div>
-            <div className="grid-item-content">
+            <div className="grid-item-content applicant-count">
               <span className="applicant-count-label">申请人数量</span>
               <span className="applicant-count-value">
                 {

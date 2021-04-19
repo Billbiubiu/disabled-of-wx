@@ -120,24 +120,19 @@ const businessStatisticsList = [
 ];
 
 const ServiceAgencies = () => {
+  // 残疾人康复机构数据统计
   const [agencyStatisticsData, setAgencyStatisticsData] = useState({
     agency: 0,
     staff: 0,
     customer: 0,
   });
-  const [businessStatisticsData, setBusinessStatisticsData] = useState({
-    organization: {
-      value: 0,
-    },
-    business: {
-      value: 0,
-      rate: 0,
-    },
-    completion: {
-      value: 0,
-      rate: 0,
-    },
-  });
+  useEffect(() => {
+    setAgencyStatisticsData({
+      agency: parseNumber(168),
+      staff: parseNumber(2365),
+      customer: parseNumber(1183),
+    });
+  }, []);
   const [echartsOptions, setEchartsOptions] = useState({
     // 服务机构数据
     '1-2': {},
@@ -153,15 +148,24 @@ const ServiceAgencies = () => {
   // 当前选中的服务机构数据
   const [activeAgency, setActiveAgency] = useState();
   useEffect(() => {
-    // 1-1
-    setAgencyStatisticsData({
-      agency: parseNumber(168),
-      staff: parseNumber(2365),
-      customer: parseNumber(1183),
-    });
     mergeEchartsOptions(mockData);
     setActiveAgency(mockData['1-2'].data[0]);
-    // 3-1
+  }, [mergeEchartsOptions]);
+  // 残疾人服务机构办理事务情况统计
+  const [businessStatisticsData, setBusinessStatisticsData] = useState({
+    organization: {
+      value: 0,
+    },
+    business: {
+      value: 0,
+      rate: 0,
+    },
+    completion: {
+      value: 0,
+      rate: 0,
+    },
+  });
+  useEffect(() => {
     setBusinessStatisticsData({
       organization: {
         value: parseNumber(108),
@@ -175,7 +179,7 @@ const ServiceAgencies = () => {
         rate: -8.3,
       }
     })
-  }, [mergeEchartsOptions]);
+  }, []);
   return (
     <Layout className="service-agencies">
       <CommonNavBar showTime={true} title="服务机构" btnType="back" />
