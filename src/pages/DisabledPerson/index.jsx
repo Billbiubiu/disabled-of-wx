@@ -6,11 +6,138 @@ import {
   ContainerWithCorner,
   GridLayout,
   ContainerWithBorder,
+  RowChart,
 } from '../../components';
 import * as Icons from '../../assets/images/disabled-person';
 import './index.scss';
 
 const { Content } = Layout;
+
+const mockData = {
+  '1-1-3': {
+    data: [
+      { name: '肢体', value: 543769 },
+      { name: '智力', value: 410527 },
+      { name: '精神', value: 273684 },
+      { name: '听力', value: 136842 },
+    ],
+    unit: '人',
+  },
+  '2-2': {
+    grid: [
+      {
+        top: 10,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        containLabel: true,
+      }
+    ],
+    xAxis: [
+      {
+        type: 'category',
+        boundaryGap: true,
+        data: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+      },
+    ],
+    yAxis: [
+      {
+        type: 'value',
+        splitLine: {
+          show: false,
+        },
+        axisLine: {
+          show: true,
+        },
+      },
+    ],
+    series: [
+      {
+        type: 'bar',
+        data: [2, 4, 6, 6, 8, 6, 2, 2, 3, 1, 5, 6],
+      },
+      {
+        type: 'line',
+        data: [2, 4, 6, 6, 8, 6, 2, 2, 3, 1, 5, 6],
+      }
+    ]
+  },
+  '3-1': {
+    series: [
+      {
+        type: 'pie',
+        radius: ['40%', '70%'],
+        avoidLabelOverlap: false,
+        data: [
+          { value: 20, name: '14周岁以下' },
+          { value: 30, name: '14~22周岁' },
+          { value: 40, name: '22~60周岁' },
+          { value: 10, name: '60周岁以上' },
+        ]
+      },
+    ]
+  },
+  '3-2': {
+    legend: {
+      bottom: '5%',
+      left: 'center',
+      textStyle: {
+        color: '#fff',
+      },
+    },
+    series: [
+      {
+        type: 'pie',
+        radius: ['40%', '50%'],
+        avoidLabelOverlap: false,
+        data: [
+          { value: 37, name: '务工收入' },
+          { value: 22, name: '养殖收入' },
+          { value: 26, name: '经销收入' },
+          { value: 15, name: '种地收入' },
+        ]
+      },
+    ]
+  },
+  '3-3': {
+    grid: [
+      {
+        top: 10,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        containLabel: true,
+      }
+    ],
+    xAxis: [
+      {
+        type: 'category',
+        boundaryGap: true,
+        axisLabel: {
+          interval: 0,
+        },
+        data: ['无', '小学', '初中', '中专', '高中', '高职', '大专', '本科', '研究生', '博士', '博士后'],
+      },
+    ],
+    yAxis: [
+      {
+        type: 'value',
+        splitLine: {
+          show: false,
+        },
+        axisLine: {
+          show: true,
+        },
+      },
+    ],
+    series: [
+      {
+        type: 'bar',
+        data: [2, 4, 6, 6, 8, 6, 2, 2, 3, 1, 5],
+      },
+    ]
+  },
+}
 
 // 布局数据
 const layout = [
@@ -84,6 +211,8 @@ const DisabledPerson = (props) => {
   }, []);
   // echarts图表
   const [echartsOptions, setEchartsOptions] = useState({
+    // 残疾人类型统计
+    '1-1-3': {},
     // 残疾人增长趋势图
     '2-2': {},
     // 残疾人年龄分布统计
@@ -100,7 +229,7 @@ const DisabledPerson = (props) => {
     }))
   }, []);
   useEffect(() => {
-    mergeEchartsOptions({})
+    mergeEchartsOptions(mockData)
   }, [mergeEchartsOptions]);
   return (
     <Layout className="disabled-person">
@@ -151,11 +280,49 @@ const DisabledPerson = (props) => {
             <div className="grid-item-title">
               <span>残疾人性别统计</span>
             </div>
-            <div className="grid-item-content"></div>
+            <div className="grid-item-content" style={{ flex: 'none' }}>
+              <div className="proportion-of-gender" style={{ margin: '5rem 0' }}>
+                <div style={{
+                  border: '3rem solid #C236FF',
+                  borderRadius: '4rem',
+                  height: '30rem',
+                  display: 'flex',
+                  alignItems: 'stretch',
+                  padding: '3rem',
+                }}>
+                  <div style={{
+                    flex: 55,
+                    marginRight: '3rem',
+                    backgroundColor: '#C236FF',
+                  }}></div>
+                  <div style={{
+                    flex: 44,
+                    backgroundColor: '#C236FF',
+                  }}></div>
+                </div>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                }}>
+                  <div>
+                    <span>男性：55%</span><br />
+                    <span style={{ fontWeight: 'bold' }}>958人</span>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <span>女性：45%</span><br />
+                    <span style={{ fontWeight: 'bold' }}>757人</span>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div className="grid-item-title">
               <span>残疾人类型统计</span>
             </div>
-            <div className="grid-item-content"></div>
+            <RowChart
+              option={echartsOptions['1-1-3']}
+              className="grid-item-content"
+              style={{ height: '200rem' }}
+            />
             <div className="grid-item-title">
               <span>残疾人等级统计</span>
             </div>
