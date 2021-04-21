@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import ReactEcharts from 'echarts-for-react';
 import { Layout } from 'antd';
-import { RightOutlined } from '@ant-design/icons';
 import {
   CommonNavBar,
   ContainerWithCorner,
@@ -11,6 +10,7 @@ import {
   CommomMap,
 } from '../../components';
 import agencyStatisticsIcon from '../../assets/images/service-agency/agency-statistics-icon.png';
+import StachChart from './StackChart';
 import './index.scss';
 
 const { Content } = Layout;
@@ -18,15 +18,10 @@ const { Content } = Layout;
 const mockData = {
   '1-2': {
     data: [
-      { name: '残联机构', value: 51 },
-      { name: '残疾人之家', value: 33 },
-      { name: '辅具适配中心', value: 32 },
-      { name: '教育机构', value: 22 },
-      { name: '爱心企业', value: 15 },
-      { name: '盲人按摩机构', value: 12 },
-      { name: '托养机构', value: 11 },
-      { name: '康复机构', value: 2 },
-      { name: '其他', value: 1 },
+      { name: '残联机构', values: [51, 35, 45] },
+      { name: '康复机构', values: [47, 50, 40] },
+      { name: '托养机构', values: [49, 40, 18] },
+      { name: '残疾人之家', values: [48, 50, 45] },
     ]
   },
   '2-2': {
@@ -108,15 +103,16 @@ const parseNumber = (number) => {
     .reverse()
     .join('');
 }
+
 const agencyStatisticsList = [
   { name: '服务机构数量', key: 'agency' },
   { name: '工作人员数量', key: 'staff' },
   { name: '服务对象数量', key: 'customer' },
 ];
+
 const businessStatisticsList = [
-  { name: '办理单位数量', key: 'organization' },
-  { name: '本月办理事务数量', key: 'business' },
-  { name: '事务完成率', key: 'completion', unit: '%' },
+  { name: '单位数量', key: 'dwsl', unit: '个' },
+  { name: '安置残疾人数', key: 'azcjrs', unit: '人' },
 ];
 
 const ServiceAgencies = () => {
@@ -133,11 +129,14 @@ const ServiceAgencies = () => {
       customer: parseNumber(1183),
     });
   }, []);
+  // echarts图表配置
   const [echartsOptions, setEchartsOptions] = useState({
     // 服务机构数据
     '1-2': {},
     // 机构每月残疾人变化趋势
     '2-2': {},
+    // 残联机构
+    '3-2': {},
   });
   const mergeEchartsOptions = useCallback((mergeData) => {
     setEchartsOptions(oldData => ({
@@ -146,38 +145,18 @@ const ServiceAgencies = () => {
     }))
   }, []);
   // 当前选中的服务机构数据
-  const [activeAgency, setActiveAgency] = useState();
   useEffect(() => {
     mergeEchartsOptions(mockData);
-    setActiveAgency(mockData['1-2'].data[0]);
   }, [mergeEchartsOptions]);
   // 残疾人服务机构办理事务情况统计
   const [businessStatisticsData, setBusinessStatisticsData] = useState({
-    organization: {
-      value: 0,
-    },
-    business: {
-      value: 0,
-      rate: 0,
-    },
-    completion: {
-      value: 0,
-      rate: 0,
-    },
+    'dwsl': 0,
+    'azcjrs': 0,
   });
   useEffect(() => {
     setBusinessStatisticsData({
-      organization: {
-        value: parseNumber(108),
-      },
-      business: {
-        value: parseNumber(12466),
-        rate: 14.2,
-      },
-      completion: {
-        value: 88.3,
-        rate: -8.3,
-      }
+      'dwsl': parseNumber(1269),
+      'azcjrs': parseNumber(35118),
     })
   }, []);
   return (
@@ -215,45 +194,12 @@ const ServiceAgencies = () => {
             </div>
             <div
               className="grid-item-content"
-              style={{
-                flex: 4,
-                display: 'flex',
-                alignItems: 'stretch',
-              }}
+              style={{ flex: 4 }}
             >
-              <RowChart
+              <StachChart
                 option={echartsOptions['1-2']}
                 style={{ flex: 1 }}
-                rowBodyStyle={{
-                  backgroundColor: '#bb3d00',
-                }}
-                rowFooterStyle={{
-                  backgroundColor: '#bb3d00',
-                }}
               />
-              <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-around',
-                marginLeft: '10rem',
-              }}>
-                {(echartsOptions['1-2'].data && echartsOptions['1-2'].data.length) && (
-                  echartsOptions['1-2'].data.map((item, index) => {
-                    const key = index;
-                    const isActive = activeAgency && activeAgency.name === item.name;
-                    return (
-                      <div key={key} onClick={() => setActiveAgency(item)}>
-                        <RightOutlined
-                          style={{
-                            fontSize: '30rem',
-                            color: isActive ? '#bb3d00' : 'white',
-                          }}
-                        />
-                      </div>
-                    )
-                  })
-                )}
-              </div>
             </div>
           </ContainerWithBorder>
           <ContainerWithBorder key="2-1" className="grid-item">
@@ -275,29 +221,19 @@ const ServiceAgencies = () => {
             <div className="grid-item-content business-statistics">
               {businessStatisticsList.map(item => {
                 const { key, name, unit } = item;
-                const { value, rate } = businessStatisticsData[key];
-                const arrow = (rate && (rate > 0 ? '⬆' : '⬇')) || null;
-                const rateStyle = (rate && (rate > 0 ? {
-                  color: '#00EC00',
-                } : {
-                  color: '#FF0000',
-                })) || {};
+                const value = businessStatisticsData[key];
                 return (
                   <div
                     key={key}
                     className="business-statistics-item"
                   >
-                    <div className="business-statistics-value">{value}{unit}</div>
-                    <div className="business-statistics-name">{name}</div>
-                    <div
-                      className="business-statistics-rate"
-                      style={rateStyle}
-                    >
-                      {rate ? (
-                        <span>{arrow}{Math.abs(rate)}{rate && '%'}</span>
-                      ) : (
+                    <div>
+                      <div>
+                        <span className="business-statistics-value">{value}</span>
                         <span>&nbsp;</span>
-                      )}
+                        <span className="business-statistics-unit">{unit}</span>
+                      </div>
+                      <div className="business-statistics-name">{name}</div>
                     </div>
                   </div>
                 )

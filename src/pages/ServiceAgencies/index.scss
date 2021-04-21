@@ -43,10 +43,15 @@
   .business-statistics {
     display: flex;
     justify-content: space-around;
-    align-items: center;
+    align-items: stretch;
+    padding: 5rem;
     .business-statistics-item {
       flex: 1;
-      margin: 2rem;
+      margin: 5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       text-align: center;
       background-color: rgba(4,49,128,.6);
       border: 2rem solid rgba(1,153,209,.5);
@@ -55,15 +60,13 @@
       font-size: 30rem;
       font-weight: bold;
       color: #08e5ff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    }
+    .business-statistics-unit {
+      font-size: 16rem;
+      color: #08e5ff;
     }
     .business-statistics-name {
       font-size: 16rem;
-    }
-    .business-statistics-rate {
-      font-size: 18rem;
     }
   }
 }
