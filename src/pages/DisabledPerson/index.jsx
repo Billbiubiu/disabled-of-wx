@@ -6,12 +6,8 @@ import {
   ContainerWithCorner,
   GridLayout,
   ContainerWithBorder,
-<<<<<<< HEAD
-  RowChart,
-=======
   CommomMap,
   RowChart
->>>>>>> 7d3c702... feat():残疾人页面开发1.0
 } from '../../components';
 import * as Icons from '../../assets/images/disabled-person';
 import './index.scss';
@@ -209,9 +205,6 @@ const DisabledPerson = (props) => {
   // echarts图表
   const [echartsOptions, setEchartsOptions] = useState({
     // 残疾人类型统计
-<<<<<<< HEAD
-    '1-1-3': {},
-=======
     '1-2': {
       data: [
         { name: '肢体', value: 87.68 },
@@ -250,7 +243,6 @@ const DisabledPerson = (props) => {
         }
       ]
     },
->>>>>>> 7d3c702... feat():残疾人页面开发1.0
     // 残疾人增长趋势图
     '2-2': {
       legend: {
@@ -360,45 +352,7 @@ const DisabledPerson = (props) => {
             <div className="grid-item-title">
               <span>残疾人类型统计</span>
             </div>
-<<<<<<< HEAD
-            <div className="grid-item-content" style={{ flex: 'none' }}>
-              <div className="proportion-of-gender" style={{ margin: '5rem 0' }}>
-                <div style={{
-                  border: '3rem solid #C236FF',
-                  borderRadius: '4rem',
-                  height: '30rem',
-                  display: 'flex',
-                  alignItems: 'stretch',
-                  padding: '3rem',
-                }}>
-                  <div style={{
-                    flex: 55,
-                    marginRight: '3rem',
-                    backgroundColor: '#C236FF',
-                  }}></div>
-                  <div style={{
-                    flex: 44,
-                    backgroundColor: '#C236FF',
-                  }}></div>
-                </div>
-                <div style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                }}>
-                  <div>
-                    <span>男性：55%</span><br />
-                    <span style={{ fontWeight: 'bold' }}>958人</span>
-                  </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <span>女性：45%</span><br />
-                    <span style={{ fontWeight: 'bold' }}>757人</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-=======
             <RowChart option={echartsOptions['1-2']} className="grid-item-content" style={{ height: '50rem', }}></RowChart>
->>>>>>> 7d3c702... feat():残疾人页面开发1.0
             <div className="grid-item-title">
               <span>残疾人性别统计</span>
             </div>
@@ -425,14 +379,6 @@ const DisabledPerson = (props) => {
                 </div>
               </div>
             </div>
-<<<<<<< HEAD
-            <RowChart
-              option={echartsOptions['1-1-3']}
-              className="grid-item-content"
-              style={{ height: '200rem' }}
-            />
-=======
->>>>>>> 7d3c702... feat():残疾人页面开发1.0
             <div className="grid-item-title">
               <span>残疾人数据统计</span>
             </div>
