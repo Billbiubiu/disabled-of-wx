@@ -6,7 +6,12 @@ import {
   ContainerWithCorner,
   GridLayout,
   ContainerWithBorder,
+<<<<<<< HEAD
   RowChart,
+=======
+  CommomMap,
+  RowChart
+>>>>>>> 7d3c702... feat():残疾人页面开发1.0
 } from '../../components';
 import * as Icons from '../../assets/images/disabled-person';
 import './index.scss';
@@ -164,18 +169,15 @@ const parseNumber = (number) => {
     .reverse()
     .join('');
 }
-const disabledStatisticsList = [
-  { name: '重度残疾人', key: 'zdcjr', icon: Icons.zdcjr },
-  { name: '低保', key: 'db', icon: Icons.db },
-  { name: '低收入数', key: 'dsrs', icon: Icons.dsrs },
-  { name: '就业', key: 'jy', icon: Icons.jy },
-  { name: '生活补贴', key: 'shbt', icon: Icons.shbt },
-  { name: '护理人数', key: 'hlrs', icon: Icons.hlrs },
-]
+
 
 const DisabledPerson = (props) => {
   // 残疾人数
   const [disabledCount, setDisabledCount] = useState(0);
+
+  //残疾人类型总数
+  const [disabledStatisticsList, setDisabledStatisticsList] = useState([])
+
   const disabledCountList = useMemo(() => {
     const list = disabledCount.toString().split('').reverse();
     while (list.length < 7) list.push('0');
@@ -187,40 +189,126 @@ const DisabledPerson = (props) => {
       return result;
     }, []).reverse();
   }, [disabledCount]);
+
   useEffect(() => {
+    const num = {
+      zdcjr: '185369',
+      dccjr: "23369",
+      gdzcjr: "11247"
+    }
+    const list = [
+      { title: "重度残疾人", num: parseNumber(num.zdcjr) },
+      { title: "多重残疾人", num: parseNumber(num.dccjr) },
+      { title: "孤独症残疾人", num: parseNumber(num.gdzcjr) },
+    ]
+    setDisabledStatisticsList(list)
     setDisabledCount(1368422);
   }, []);
-  // 残疾人统计数据
-  const [disabledStatisticsData, setDisabledStatisticsData] = useState({
-    zdcjr: 0,
-    db: 0,
-    dsrs: 0,
-    jy: 0,
-    shbt: 0,
-    hlrs: 0,
-  });
-  useEffect(() => {
-    setDisabledStatisticsData({
-      db: parseNumber(1222),
-      dsrs: parseNumber(1222),
-      hlrs: parseNumber(1222),
-      jy: parseNumber(1222),
-      shbt: parseNumber(1222),
-      zdcjr: parseNumber(1222),
-    })
-  }, []);
+
+
   // echarts图表
   const [echartsOptions, setEchartsOptions] = useState({
     // 残疾人类型统计
+<<<<<<< HEAD
     '1-1-3': {},
+=======
+    '1-2': {
+      data: [
+        { name: '肢体', value: 87.68 },
+        { name: '智力', value: 86.42 },
+        { name: '精神', value: 85.37 },
+        { name: '听力', value: 84.22 },
+        { name: '听力', value: 84.22 },
+        { name: '听力', value: 84.22 },
+      ]
+    },
+    // 残疾人数据统计
+    '1-3': {
+      tooltip: {
+        trigger: 'item',
+        formatter: '{b}:{c} ({d}%)',
+        textStyle: {
+          fontWeight: 50,
+          fontSize: '10'
+        }
+      },
+      series: [
+        {
+          type: 'pie',
+          label: {
+            fontWeight: 50,
+            color: 'white',
+            fontSize: '10'
+          },
+          radius: '100%',
+          selectedMode: 'single',
+          data: [
+            { value: 735, name: '残疾军人' },
+            { value: 510, name: '执证残疾人' },
+            { value: 434, name: '疑是残疾人' },
+          ]
+        }
+      ]
+    },
+>>>>>>> 7d3c702... feat():残疾人页面开发1.0
     // 残疾人增长趋势图
-    '2-2': {},
-    // 残疾人年龄分布统计
-    '3-1': {},
-    // 残疾人收入来源分布
+    '2-2': {
+      legend: {
+        right: 0,
+        top: -5,
+        data: ['残疾人人均年收入', '市人均年收入'],
+        textStyle: {
+          color: 'white'
+        }
+      },
+      tooltip: {
+        trigger: 'axis',
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        top: '16%',
+        bottom: '3%',
+        containLabel: true
+      },
+      xAxis: {
+        axisLine: {
+          lineStyle: {
+            color: 'white'
+          }
+        },
+        type: 'category',
+        boundaryGap: false,
+        data: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+      },
+      yAxis: {
+        axisLine: {
+          lineStyle: {
+            color: 'white'
+          }
+        },
+        type: 'value'
+      },
+      series: [
+        {
+          name: '残疾人人均年收入',
+          type: 'line',
+          stack: '总量',
+          data: [120, 132, 101, 134, 90, 230, 210, 110, 513, 444, 111, 333]
+        },
+        {
+          name: '市人均年收入',
+          type: 'line',
+          stack: '总量',
+          data: [220, 182, 191, 234, 290, 330, 310, 120, 132, 101, 134, 441]
+        },
+
+      ]
+    },
+    // 残疾人数据统计
     '3-2': {},
-    // 残疾人受教育程度统计
-    '3-3': {},
+    // 残疾人收入统计
+    '3-3': {}
   });
   const mergeEchartsOptions = useCallback((mergeData) => {
     setEchartsOptions(oldData => ({
@@ -244,7 +332,7 @@ const DisabledPerson = (props) => {
             </div>
             <div className="grid-item-content" style={{ flex: 'none' }}>
               <div className="disabled-count">
-                <span className="disabled-count-label">申请人数量</span>
+                <span className="disabled-count-label">残疾人数</span>
                 <span className="disabled-count-value">
                   {
                     disabledCountList.map((item, index) => {
@@ -258,28 +346,21 @@ const DisabledPerson = (props) => {
                 </span>
               </div>
               <div className="disabled-statistics">
-                {disabledStatisticsList.map(item => {
-                  const { key, name, icon } = item;
-                  const value = disabledStatisticsData[key] || 0;
-                  return (
-                    <div key={key} className="disabled-statistics-item">
-                      <img
-                        alt=""
-                        src={icon}
-                        className="disabled-statistics-icon"
-                      />
-                      <div>
-                        <div className="disabled-statistics-value">{value}</div>
-                        <div className="disabled-statistics-name">{name}</div>
-                      </div>
+                {
+                  disabledStatisticsList.map((item) => {
+                    return <div className="disabled-item">
+                      <img src={Icons.cjr} alt="" />
+                      <span className="item-num">{item.num}</span>
+                      <span className="item-title">{item.title}</span>
                     </div>
-                  )
-                })}
+                  })
+                }
               </div>
             </div>
             <div className="grid-item-title">
-              <span>残疾人性别统计</span>
+              <span>残疾人类型统计</span>
             </div>
+<<<<<<< HEAD
             <div className="grid-item-content" style={{ flex: 'none' }}>
               <div className="proportion-of-gender" style={{ margin: '5rem 0' }}>
                 <div style={{
@@ -315,25 +396,57 @@ const DisabledPerson = (props) => {
                 </div>
               </div>
             </div>
+=======
+            <RowChart option={echartsOptions['1-2']} className="grid-item-content" style={{ height: '50rem', }}></RowChart>
+>>>>>>> 7d3c702... feat():残疾人页面开发1.0
             <div className="grid-item-title">
-              <span>残疾人类型统计</span>
+              <span>残疾人性别统计</span>
             </div>
+            <div className="grid-item-content sex-analysis">
+              <div className="sex-rate">
+                <img src={Icons.man} alt="" />
+                <div className="rate-container">
+                  <div className="rate-man" style={{ width: "70%" }}></div>
+                  <div className="rate-icon">
+                    <div className="rate-bc"></div>
+                  </div>
+                  <div className="rate-woman" style={{ width: "30%" }}></div>
+                </div>
+                <img src={Icons.woman} alt="" />
+              </div>
+              <div className="memo">
+                <div className="man-memo">
+                  <div style={{ fontSize: '6rem' }}>男性：72%</div>
+                  <span><span style={{ fontSize: '18rem' }}>12311</span>人</span>
+                </div>
+                <div className="woman-memo">
+                  <div style={{ fontSize: '6rem' }}>女性：72%</div>
+                  <span><span style={{ fontSize: '18rem' }}>12311</span>人</span>
+                </div>
+              </div>
+            </div>
+<<<<<<< HEAD
             <RowChart
               option={echartsOptions['1-1-3']}
               className="grid-item-content"
               style={{ height: '200rem' }}
             />
+=======
+>>>>>>> 7d3c702... feat():残疾人页面开发1.0
             <div className="grid-item-title">
-              <span>残疾人等级统计</span>
+              <span>残疾人数据统计</span>
             </div>
-            <div className="grid-item-content"></div>
+            <ReactEcharts
+              option={echartsOptions['1-3']}
+              className="grid-item-content"
+            />
           </ContainerWithBorder>
           <ContainerWithBorder key="2-1" className="grid-item">
-
+            <CommomMap></CommomMap>
           </ContainerWithBorder>
           <ContainerWithBorder key="2-2" className="grid-item">
             <div className="grid-item-title">
-              <span>残疾人增长趋势图</span>
+              <span>残疾人和全市人均收入增长趋势图</span>
             </div>
             <ReactEcharts
               option={echartsOptions['2-2']}
@@ -344,32 +457,32 @@ const DisabledPerson = (props) => {
             <div className="grid-item-title">
               <span>残疾人年龄分布统计</span>
             </div>
-            <ReactEcharts
+            {/* <ReactEcharts
               option={echartsOptions['3-1']}
               className="grid-item-content"
-            />
+            /> */}
           </ContainerWithBorder>
           <ContainerWithBorder key="3-2" className="grid-item">
             <div className="grid-item-title">
               <span>残疾人收入来源分布</span>
             </div>
-            <ReactEcharts
+            {/* <ReactEcharts
               option={echartsOptions['3-2']}
               className="grid-item-content"
-            />
+            /> */}
           </ContainerWithBorder>
           <ContainerWithBorder key="3-3" className="grid-item">
             <div className="grid-item-title">
               <span>残疾人受教育程度统计</span>
             </div>
-            <ReactEcharts
+            {/* <ReactEcharts
               option={echartsOptions['3-3']}
               className="grid-item-content"
-            />
+            /> */}
           </ContainerWithBorder>
         </GridLayout>
       </ContainerWithCorner>
-    </Layout>
+    </Layout >
   )
 }
 
