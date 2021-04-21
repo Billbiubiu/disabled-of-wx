@@ -54,10 +54,18 @@ const mockData = {
     xAxis: [
       {
         type: 'category',
+        axisLine: {
+          lineStyle: {
+            color: 'white'
+          }
+        },
         boundaryGap: true,
         data: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
       },
     ],
+    tooltip: {
+      trigger: 'axis',
+    },
     yAxis: [
       {
         type: 'value',
@@ -66,16 +74,21 @@ const mockData = {
         },
         axisLine: {
           show: true,
+          lineStyle: {
+            color: 'white'
+          }
         },
       },
     ],
     series: [
       {
         type: 'bar',
+        name: 'bar',
         data: [2, 4, 6, 6, 8, 6, 2, 2, 3, 1, 5, 6],
       },
       {
         type: 'line',
+        name: 'line',
         data: [2, 4, 6, 6, 8, 6, 2, 2, 3, 1, 5, 6],
       }
     ]

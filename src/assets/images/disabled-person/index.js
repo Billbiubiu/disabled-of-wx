@@ -1,15 +1,13 @@
-import db from './db.png';
-import dsrs from './dsrs.png';
-import hlrs from './hlrs.png';
-import jy from './jy.png';
-import shbt from './shbt.png';
-import zdcjr from './zdcjr.png';
+import cjr from './cjr.png'
+import cjr_big from './cjr_big.png'
+import man from './man.png'
+import woman from './woman.png'
+import people from './people.png'
 
 export {
-  db,
-  dsrs,
-  hlrs,
-  jy,
-  shbt,
-  zdcjr,
+  cjr,
+  cjr_big,
+  man,
+  woman,
+  people
 }
