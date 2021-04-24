@@ -203,7 +203,7 @@ const FirstLayout = (props) => {
       title: {
         text: '家庭医生签约统计',
         left: 'center',
-        top: 12,
+        top: 0,
         textStyle: {
           color: 'white',
           fontSize: '10'
@@ -215,8 +215,9 @@ const FirstLayout = (props) => {
           color: 'white'
         },
         width: 1000,
-        bottom: '4%',
-        left: 'center'
+        bottom: '1',
+        left: 'center',
+        itemWidth:14,
       },
       series: [
         {
@@ -252,7 +253,7 @@ const FirstLayout = (props) => {
       title: {
         text: '残疾人婚姻状况统计',
         left: 'center',
-        top: 12,
+        top: 0,
         textStyle: {
           color: 'white',
           fontSize: '10'
@@ -264,8 +265,9 @@ const FirstLayout = (props) => {
           color: 'white'
         },
         width: 1000,
-        bottom: '4%',
-        left: 'center'
+        bottom: '1',
+        left: 'center',
+        itemWidth:14,
       },
       series: [
         {
