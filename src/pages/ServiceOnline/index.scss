@@ -20,4 +20,51 @@
       flex: 1;
     }
   }
+  .registered-count {
+    margin: 5rem 0;
+    color: #08e5ff;
+    font-weight: bold;
+    line-height: 40rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .registered-count-label {
+      font-size: 16rem;
+      margin-right: 5rem;
+    }
+    .registered-count-value {
+      display: flex;
+      align-items: flex-end;
+    }
+    .registered-count-number {
+      margin: 3rem;
+      width: 30rem;
+      height: 40rem;
+      font-size: 28rem;
+      text-align: center;
+      background-color: rgba(4, 49, 128, 0.6);
+    }
+    .registered-count-separate {
+      font-size: 19rem;
+    }
+  }
+  .user-statistics {
+    display: flex;
+    .user-statistics-item {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      color: #08E5FF;
+    }
+    .item-icon {
+      width: 56rem;
+      height: 56rem;
+    }
+    .item-value {
+      font-size: 14rem;
+    }
+    .item-name {
+      font-size: 16rem;
+    }
+  }
 }

@@ -3,7 +3,7 @@ import ReactEcharts from 'echarts-for-react';
 import {
   GridLayout,
   ContainerWithBorder,
-  CommomMap,
+  CommonMap,
   RowChart
 } from '../../components';
 import * as Icons from '../../assets/images/disabled-person';
@@ -380,7 +380,7 @@ const FirstLayout = (props) => {
         />
       </ContainerWithBorder>
       <ContainerWithBorder key="2-1" className="grid-item">
-        <CommomMap></CommomMap>
+        <CommonMap></CommonMap>
       </ContainerWithBorder>
       <ContainerWithBorder key="2-2" className="grid-item">
         <div className="grid-item-title">

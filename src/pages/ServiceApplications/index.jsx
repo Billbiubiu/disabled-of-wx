@@ -12,7 +12,7 @@ import {
   GridLayout,
   ContainerWithBorder,
   RowChart,
-  CommomMap,
+  CommonMap,
 } from '../../components';
 import './index.scss';
 
@@ -191,7 +191,7 @@ const ServiceApplications = (props) => {
             />
           </ContainerWithBorder>
           <ContainerWithBorder key="2-1" className="grid-item">
-              <CommomMap />
+              <CommonMap />
           </ContainerWithBorder>
           <ContainerWithBorder key="2-2" className="grid-item">
             <div className="grid-item-title">

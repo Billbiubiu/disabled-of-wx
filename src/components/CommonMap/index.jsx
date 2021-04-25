@@ -15,7 +15,7 @@ const areaMap = {
  * @param {(code:number,name:string)=>void} callBack  点击地图的回调函数
  * @param {number} initData 默认选择哪一个
  */
-const CommomMap = (props) => {
+const CommonMap = (props) => {
   const {
     initData = 1,
     callBack = () => { },
@@ -118,4 +118,4 @@ const CommomMap = (props) => {
   </div>
 }
 
-export default CommomMap;
+export default CommonMap;

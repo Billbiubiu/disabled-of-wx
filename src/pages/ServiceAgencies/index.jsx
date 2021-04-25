@@ -7,7 +7,7 @@ import {
   GridLayout,
   ContainerWithBorder,
   RowChart,
-  CommomMap,
+  CommonMap,
 } from '../../components';
 import agencyStatisticsIcon from '../../assets/images/service-agency/agency-statistics-icon.png';
 import StachChart from './StackChart';
@@ -203,7 +203,7 @@ const ServiceAgencies = () => {
             </div>
           </ContainerWithBorder>
           <ContainerWithBorder key="2-1" className="grid-item">
-            <CommomMap />
+            <CommonMap />
           </ContainerWithBorder>
           <ContainerWithBorder key="2-2" className="grid-item">
             <div className="grid-item-title">

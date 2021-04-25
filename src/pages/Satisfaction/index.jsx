@@ -6,7 +6,7 @@ import {
   ContainerWithCorner,
   GridLayout,
   ContainerWithBorder,
-  CommomMap,
+  CommonMap,
   RowChart
 } from '../../components';
 import './index.scss';
@@ -173,7 +173,7 @@ const Satisfaction = (props) => {
             />
           </ContainerWithBorder>
           <ContainerWithBorder key="2-1" className="grid-item">
-            <CommomMap callBack={() => { }}></CommomMap>
+            <CommonMap callBack={() => { }}></CommonMap>
           </ContainerWithBorder>
           <ContainerWithBorder key="2-2" className="grid-item">
             <div className="grid-item-title">

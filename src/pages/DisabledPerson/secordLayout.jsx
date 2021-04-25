@@ -3,7 +3,7 @@ import ReactEcharts from 'echarts-for-react';
 import {
   GridLayout,
   ContainerWithBorder,
-  CommomMap,
+  CommonMap,
   RowChart
 } from '../../components';
 import * as Icons from '../../assets/images/disabled-person';
