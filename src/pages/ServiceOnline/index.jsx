@@ -50,7 +50,7 @@ const ServiceOnline = (props) => {
       <CommonNavBar showTime={true} title="服务申请" btnType="back" />
       <ContainerWithCorner
         component={Content}
-        className="disabled-person-content">
+        className="service-online-content">
         <GridLayout layout={layout}>
           <ContainerWithBorder key="1-1" className="grid-item">
             <div className="grid-item-title">
