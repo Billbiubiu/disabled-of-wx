@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import ReactEcharts from 'echarts-for-react';
 import { Layout } from 'antd';
+import { MenuOutlined } from '@ant-design/icons';
 import {
   CommonNavBar,
   ContainerWithCorner,
@@ -8,6 +9,7 @@ import {
   ContainerWithBorder,
   RowChart,
   CommonMap,
+  CommonModal,
 } from '../../components';
 import agencyStatisticsIcon from '../../assets/images/service-agency/agency-statistics-icon.png';
 import StachChart from './StackChart';
@@ -159,6 +161,8 @@ const ServiceAgencies = () => {
       'azcjrs': parseNumber(35118),
     })
   }, []);
+  // 弹窗状态
+  const [commonModalVisible, setCommonModalVisible] = useState(false);
   return (
     <Layout className="service-agencies">
       <CommonNavBar showTime={true} title="服务机构" btnType="back" />
@@ -213,6 +217,12 @@ const ServiceAgencies = () => {
               option={echartsOptions['2-2']}
               className="grid-item-content"
             />
+            <div style={{ position: 'absolute', top: '20rem', right: '20rem' }}>
+              <MenuOutlined
+                onClick={() => setCommonModalVisible(true)}
+                style={{ fontSize: '1.5em' }}
+              />
+            </div>
           </ContainerWithBorder>
           <ContainerWithBorder key="3-1" className="grid-item">
             <div className="grid-item-title">
@@ -251,6 +261,10 @@ const ServiceAgencies = () => {
           </ContainerWithBorder>
         </GridLayout>
       </ContainerWithCorner>
+      <CommonModal
+        visible={commonModalVisible}
+        setVisible={() => setCommonModalVisible(false)}
+      />
     </Layout>
   )
 

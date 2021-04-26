@@ -3,6 +3,7 @@ import ContainerWithCorner from './ContainerWithCorner';  // 外部容器
 import ContainerWithBorder from './ContainerWithBorder';  // 内部容器
 import GridLayout from './GridLayout'; // grid 布局容器
 import CommonMap from './CommonMap'; // 公共地图样式
+import CommonModal from './CommonModal';
 import RowChart from './RowChart';
 
 export {
@@ -11,5 +12,6 @@ export {
   ContainerWithBorder,
   GridLayout,
   CommonMap,
+  CommonModal,
   RowChart,
 }

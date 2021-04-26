@@ -6,6 +6,7 @@ import React, {
 } from 'react';
 import ReactEcharts from 'echarts-for-react';
 import { Layout } from 'antd';
+import { MenuOutlined } from '@ant-design/icons';
 import {
   CommonNavBar,
   ContainerWithCorner,
@@ -13,6 +14,7 @@ import {
   ContainerWithBorder,
   RowChart,
   CommonMap,
+  CommonModal,
 } from '../../components';
 import './index.scss';
 
@@ -146,6 +148,8 @@ const ServiceApplications = (props) => {
   useEffect(() => {
     mergeEchartsOptions(mockData);
   }, [mergeEchartsOptions]);
+  // 弹窗状态
+  const [commonModalVisible, setCommonModalVisible] = useState(false);
   return (
     <Layout className="service-applications">
       <CommonNavBar showTime={true} title="服务申请" btnType="back" />
@@ -191,7 +195,7 @@ const ServiceApplications = (props) => {
             />
           </ContainerWithBorder>
           <ContainerWithBorder key="2-1" className="grid-item">
-              <CommonMap />
+            <CommonMap />
           </ContainerWithBorder>
           <ContainerWithBorder key="2-2" className="grid-item">
             <div className="grid-item-title">
@@ -201,6 +205,12 @@ const ServiceApplications = (props) => {
               option={echartsOptions['2-2']}
               className="grid-item-content"
             />
+            <div style={{ position: 'absolute', top: '20rem', right: '20rem' }}>
+              <MenuOutlined
+                onClick={() => setCommonModalVisible(true)}
+                style={{ fontSize: '1.5em' }}
+              />
+            </div>
           </ContainerWithBorder>
           <ContainerWithBorder key="3-1" className="grid-item">
             <div className="grid-item-title">
@@ -213,6 +223,10 @@ const ServiceApplications = (props) => {
           </ContainerWithBorder>
         </GridLayout>
       </ContainerWithCorner>
+      <CommonModal
+        visible={commonModalVisible}
+        setVisible={() => setCommonModalVisible(false)}
+      />
     </Layout>
   )
 }
