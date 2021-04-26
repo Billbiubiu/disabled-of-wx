@@ -171,7 +171,7 @@ const FirstLayout = (props) => {
         },
         type: 'category',
         boundaryGap: false,
-        data: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+        data: ['20010年', '2011年', '2012年', '2013年', '2014年', '2015年', '2016年', '2017年', '2018年', '2019年', '2020年', '2021年']
       },
       yAxis: {
         axisLine: {
@@ -217,7 +217,7 @@ const FirstLayout = (props) => {
         width: 1000,
         bottom: '1',
         left: 'center',
-        itemWidth:14,
+        itemWidth: 14,
       },
       series: [
         {
@@ -267,7 +267,7 @@ const FirstLayout = (props) => {
         width: 1000,
         bottom: '1',
         left: 'center',
-        itemWidth:14,
+        itemWidth: 14,
       },
       series: [
         {

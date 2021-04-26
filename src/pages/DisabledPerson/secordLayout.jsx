@@ -13,9 +13,9 @@ import './secord.scss';
 const layout = [
   { i: '1-1', x: 0, y: 0, w: 6, h: 24 },
   { i: '2-1', x: 6, y: 0, w: 12, h: 24 },
-  { i: '3-1', x: 18, y: 0, w: 6, h: 12 },
-  { i: '3-2', x: 18, y: 8, w: 6, h: 6 },
-  { i: '3-3', x: 18, y: 16, w: 6, h: 6 },
+  { i: '3-1', x: 18, y: 0, w: 6, h: 10 },
+  { i: '3-2', x: 18, y: 8, w: 6, h: 7 },
+  { i: '3-3', x: 18, y: 16, w: 6, h: 7 },
 ];
 
 const parseNumber = (number) => {
@@ -36,42 +36,42 @@ const parseNumber = (number) => {
 
 
 const SecordLayout = (props) => {
-    // echarts图表
+  // echarts图表
   const [echartsOptions, setEchartsOptions] = useState({
     '1-1': {
-       grid:{
-      	 top:"5%",
-         left:"10%",
-         bottom:"13%"
-	    },
-      color:['#00a8e8'],
-        xAxis: {
-            type: 'category',
-            axisLine: {
-              lineStyle: {
-                color: 'white'
-              }
+      grid: {
+        top: "5%",
+        left: "10%",
+        bottom: "13%"
+      },
+      color: ['#00a8e8'],
+      xAxis: {
+        type: 'category',
+        axisLine: {
+          lineStyle: {
+            color: 'white'
+          }
         },
-            data: ['无', '小学', '初中', '高中', '大专', '本科', '硕士','博士']
+        data: ['无', '小学', '初中', '高中', '大专', '本科', '硕士', '博士']
+      },
+      tooltip: {
+        show: true,
+      },
+      yAxis: {
+        type: 'value',
+        axisLine: {
+          lineStyle: {
+            color: 'white'
+          }
         },
-            tooltip: {
-            show: true,
-        },
-        yAxis: {
-            type: 'value',
-            axisLine: {
-              lineStyle: {
-                color: 'white'
-              }
-        },
-        },
-        series: [{
-            data: [120, 200, 150, 80, 70, 110, 130,23],
-             radius: [80, 100],
-            type: 'bar'
-        }]
+      },
+      series: [{
+        data: [120, 200, 150, 80, 70, 110, 130, 23],
+        radius: [80, 100],
+        type: 'bar'
+      }]
     },
-    '1-2':{
+    '1-2': {
       color: ['#0263ff', '#ff1493', '#00f5ff'],
       tooltip: {
         trigger: 'item',
@@ -81,30 +81,30 @@ const SecordLayout = (props) => {
           fontSize: '10'
         }
       },
-        series: [
-            {
-                name: '面积模式',
-                type: 'pie',
-                radius: [80, 90],
-                roseType: 'area',
-                label:{
-                  fontSize: '10',
-                  color: "#fff",
-                  backgroundColor: "transparent",
-                },
+      series: [
+        {
+          name: '面积模式',
+          type: 'pie',
+          radius: [80, 90],
+          roseType: 'area',
+          label: {
+            fontSize: '10',
+            color: "#fff",
+            backgroundColor: "transparent",
+          },
 
-                itemStyle: {
-                    borderRadius: 8
-                },
-                data: [
-                    {value: 40, name: '特长1'},
-                    {value: 38, name: '特长2'},
-                    {value: 32, name: '特长3'},
-                ]
-            }
-        ]
+          itemStyle: {
+            borderRadius: 8
+          },
+          data: [
+            { value: 40, name: '特长1' },
+            { value: 38, name: '特长2' },
+            { value: 32, name: '特长3' },
+          ]
+        }
+      ]
     },
-    '1-3':{
+    '1-3': {
       data: [
         { name: '小学', value: 8768 },
         { name: '初中', value: 8642 },
@@ -116,7 +116,7 @@ const SecordLayout = (props) => {
         { name: '博士', value: 5622 },
       ]
     },
-    '2-1-1':{
+    '2-1-1': {
       color: ['#ff1493', '#00f5ff'],
       title: {
         text: '医疗保险',
@@ -135,7 +135,7 @@ const SecordLayout = (props) => {
         width: 1000,
         bottom: '1',
         left: 'center',
-        itemWidth:14,
+        itemWidth: 14,
       },
       series: [
         {
@@ -165,7 +165,7 @@ const SecordLayout = (props) => {
         }
       ]
     },
-    '2-1-2':{
+    '2-1-2': {
       color: ['#ff1493', '#00f5ff'],
       title: {
         text: '养老保险',
@@ -184,7 +184,7 @@ const SecordLayout = (props) => {
         width: 1000,
         bottom: '1',
         left: 'center',
-        itemWidth:14,
+        itemWidth: 14,
       },
       series: [
         {
@@ -214,7 +214,7 @@ const SecordLayout = (props) => {
         }
       ]
     },
-    '2-1-3':{
+    '2-1-3': {
       color: ['#ff1493', '#00f5ff'],
       title: {
         text: '养老保险分布',
@@ -233,7 +233,7 @@ const SecordLayout = (props) => {
         width: 1000,
         bottom: '1',
         left: 'center',
-        itemWidth:14,
+        itemWidth: 14,
       },
       series: [
         {
@@ -263,7 +263,7 @@ const SecordLayout = (props) => {
         }
       ]
     },
-    '2-1-4':{
+    '2-1-4': {
       color: ['#ff1493', '#00f5ff'],
       title: {
         text: '医疗保险分布',
@@ -282,7 +282,7 @@ const SecordLayout = (props) => {
         width: 1000,
         bottom: '1',
         left: 'center',
-        itemWidth:14,
+        itemWidth: 14,
       },
       series: [
         {
@@ -312,8 +312,8 @@ const SecordLayout = (props) => {
         }
       ]
     },
-    '3-1-1':{
-      color: ['#ff1493', '#00f5ff','#3c98ff','#ffdb5c','#f0732e','#7fce67'],
+    '3-1-1': {
+      color: ['#ff1493', '#00f5ff', '#3c98ff', '#ffdb5c', '#f0732e', '#7fce67'],
       title: {
         text: '残疾人类别统计',
         left: 'center',
@@ -323,25 +323,15 @@ const SecordLayout = (props) => {
           fontSize: '10'
         }
       },
-      legend: {
-        textStyle: {
-          fontSize: 10,
-          color: 'white'
-        },
-        bottom: 0,
-        left: 'center',
-         itemWidth:14,
-         itemGap:5
-      },
-      tooltip:{
-        show:true
+      tooltip: {
+        show: true
       },
       series: [
         {
           name: '残疾人类别统计',
           type: 'pie',
           label: {
-            show:false
+            show: false
           },
           data: [
             { value: 335, name: '类型1' },
@@ -355,8 +345,8 @@ const SecordLayout = (props) => {
         }
       ]
     },
-    '3-1-2':{
-      color: ['#ff1493', '#00f5ff','#3c98ff','#ffdb5c','#f0732e','#7fce67'],
+    '3-1-2': {
+      color: ['#ff1493', '#00f5ff', '#3c98ff', '#ffdb5c', '#f0732e', '#7fce67'],
       title: {
         text: '残疾人年龄统计',
         left: 'center',
@@ -366,25 +356,15 @@ const SecordLayout = (props) => {
           fontSize: '10'
         }
       },
-      legend: {
-        textStyle: {
-          fontSize: 10,
-          color: 'white'
-        },
-        bottom: 0,
-        left: 'center',
-         itemWidth:14,
-         itemGap:5
-      },
-      tooltip:{
-        show:true
+      tooltip: {
+        show: true
       },
       series: [
         {
           name: '残疾人年龄统计',
           type: 'pie',
           label: {
-            show:false
+            show: false
           },
           data: [
             { value: 335, name: '18 以下' },
@@ -398,7 +378,7 @@ const SecordLayout = (props) => {
         }
       ]
     },
-    '3-2':{
+    '3-2': {
       data: [
         { name: '录用', value: 8768 },
         { name: '聘用', value: 8642 },
@@ -406,7 +386,7 @@ const SecordLayout = (props) => {
         { name: '定向创业', value: 8422 },
       ]
     },
-    '3-3':{
+    '3-3': {
       data: [
         { name: '国有企业', value: 8768 },
         { name: '民营企业', value: 8642 },
@@ -431,11 +411,11 @@ const SecordLayout = (props) => {
         <div className="grid-item-title">
           <span>残疾人特长统计</span>
         </div>
-                <ReactEcharts
+        <ReactEcharts
           option={echartsOptions['1-2']}
           className="grid-item-content"
         />
-                <div className="grid-item-title">
+        <div className="grid-item-title">
           <span>就读学校分类统计</span>
         </div>
         <RowChart rowIndxStyle={{ color: 'white' }} option={echartsOptions['1-3']} className="grid-item-content"></RowChart>
@@ -453,7 +433,7 @@ const SecordLayout = (props) => {
         <div className="grid-item-title">
           <span>就业情况</span>
         </div>
-                <div className="grid-item-content sex-analysis">
+        <div className="grid-item-content sex-analysis">
           <div className="sex-rate">
             <div className="rate-container">
               <div className="rate-man" style={{ width: "64%" }}></div>
@@ -474,18 +454,18 @@ const SecordLayout = (props) => {
             </div>
           </div>
         </div>
-              <div className="grid-item-content content-charts">
+        <div className="grid-item-content content-charts">
           <ReactEcharts option={echartsOptions['3-1-1']} className="grid-item-chart"></ReactEcharts>
           <ReactEcharts option={echartsOptions['3-1-2']} className="grid-item-chart"></ReactEcharts>
-              
-              </div>
+
+        </div>
 
       </ContainerWithBorder>
       <ContainerWithBorder key="3-2" className="grid-item">
         <div className="grid-item-title">
           <span>就业形势分类</span>
         </div>
-        <RowChart rowIndxStyle={{ color: 'white' }} rowBodyStyle={{backgroundColor:'#bb3d00'}} rowFooterStyle={{backgroundColor:'#bb3d00'}} option={echartsOptions['3-2']} className="grid-item-content"></RowChart>
+        <RowChart rowIndxStyle={{ color: 'white' }} rowBodyStyle={{ backgroundColor: '#bb3d00' }} rowFooterStyle={{ backgroundColor: '#bb3d00' }} option={echartsOptions['3-2']} className="grid-item-content"></RowChart>
       </ContainerWithBorder>
       <ContainerWithBorder key="3-3" className="grid-item">
         <div className="grid-item-title">
