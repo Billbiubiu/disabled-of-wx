@@ -8,6 +8,7 @@ import {
 } from '../../components';
 import * as Icons from '../../assets/images/disabled-person';
 import './firstLayout.scss';
+import {getDisabledNum,disabeldType,disabeldSex} from '../../service/index'
 
 // 布局数据
 const layout = [
@@ -45,9 +46,15 @@ const FirstLayout = (props) => {
   const [disabledAnalysis, setDisabledAnalysis] = useState([])
   // 残疾人收入统计
   const [disabledMoney, setDisabledMoney] = useState([])
+  //选择地图的区域
+  const [area,setArea] = useState()
+  // 残疾人性别数量
+   const [sexNum,setSexNum] = useState({})
 
   // 是否切换到第二屏幕
   const [switchFlag, setSwtichFlag] = useState(false)
+  // 
+  const [timeRange,setTimeRange]= useState({})
 
   const disabledCountList = useMemo(() => {
     const list = disabledCount.toString().split('').reverse();
@@ -62,6 +69,20 @@ const FirstLayout = (props) => {
   }, [disabledCount]);
 
   useEffect(() => {
+    //执证残疾人总数
+    getDisabledNum(area,timeRange.startDate,timeRange.endDate).then((res)=>{
+      setDisabledCount(res.data.sum)
+    })
+    // 残疾人类型统计
+    disabeldType(area,timeRange.startDate,timeRange.endDate).then((res)=>{
+      setDisabledAnalysis(res.data)
+    })
+    // 残疾人性别数量
+    disabeldSex(area,timeRange.startDate,timeRange.endDate).then((res)=>{
+      setSexNum(res.data)
+    })
+
+    // mock数据
     const num = {
       zdcjr: '185369',
       dccjr: "23369",
@@ -93,11 +114,12 @@ const FirstLayout = (props) => {
       { title: "残疾人人均年收入", num: parseNumber(moneyNum.cjrrjnsr), img: Icons.cjr_big },
       { title: "市人均年收入", num: parseNumber(moneyNum.srjnsr), img: Icons.people },
     ]
+    setSexNum({man:70,woman:30})
     setDisabledMoney(moneyList)
     setDisabledAnalysis(disabledList)
     setDisabledStatisticsList(list)
     setDisabledCount(1368422);
-  }, []);
+  }, [area,timeRange]);
 
 
   // echarts图表
@@ -352,22 +374,22 @@ const FirstLayout = (props) => {
           <div className="sex-rate">
             <img src={Icons.man} alt="" />
             <div className="rate-container">
-              <div className="rate-man" style={{ width: "70%" }}></div>
+              <div className="rate-man" style={{ width: sexNum.man*100/(sexNum.man+sexNum.woman)+"%" }}></div>
               <div className="rate-icon">
                 <div className="rate-bc"></div>
               </div>
-              <div className="rate-woman" style={{ width: "30%" }}></div>
+              <div className="rate-woman" style={{ width: sexNum.woman*100/(sexNum.man+sexNum.woman)+"%" }}></div>
             </div>
             <img src={Icons.woman} alt="" />
           </div>
           <div className="memo">
             <div className="man-memo">
-              <div style={{ fontSize: '6rem' }}>男性：72%</div>
-              <span><span style={{ fontSize: '18rem' }}>12311</span>人</span>
+              <div style={{ fontSize: '6rem' }}>男性：{sexNum.man*100/(sexNum.man+sexNum.woman)+"%" }</div>
+              <span><span style={{ fontSize: '18rem' }}>{sexNum.man}</span>人</span>
             </div>
             <div className="woman-memo">
-              <div style={{ fontSize: '6rem' }}>女性：72%</div>
-              <span><span style={{ fontSize: '18rem' }}>12311</span>人</span>
+              <div style={{ fontSize: '6rem' }}>女性：{sexNum.woman*100/(sexNum.man+sexNum.woman)+"%" }</div>
+              <span><span style={{ fontSize: '18rem' }}>{sexNum.woman}</span>人</span>
             </div>
           </div>
         </div>
@@ -380,7 +402,7 @@ const FirstLayout = (props) => {
         />
       </ContainerWithBorder>
       <ContainerWithBorder key="2-1" className="grid-item">
-        <CommonMap></CommonMap>
+        <CommonMap callBack={(e)=>{setArea(e.name)}}></CommonMap>
       </ContainerWithBorder>
       <ContainerWithBorder key="2-2" className="grid-item">
         <div className="grid-item-title">
