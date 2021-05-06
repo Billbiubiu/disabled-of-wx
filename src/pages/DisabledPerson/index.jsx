@@ -19,7 +19,7 @@ const DisabledPerson = (props) => {
 
   return (
     <Layout className="disabled-person">
-      <CommonNavBar showTime={true} title="执政残疾人" btnType="back" />
+      <CommonNavBar showTime={true} title="执证残疾人" btnType="back" />
       <ContainerWithCorner
         component={Content}
         className="disabled-person-content">
