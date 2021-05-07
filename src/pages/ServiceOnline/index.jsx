@@ -313,7 +313,7 @@ const ServiceOnline = (props) => {
   }, [mergeEchartsOptions]);
   return (
     <Layout className="service-online">
-      <CommonNavBar showTime={true} title="服务申请" btnType="back" />
+      <CommonNavBar showTime={true} title="网上服务" btnType="back" />
       <ContainerWithCorner
         component={Content}
         className="service-online-content">
