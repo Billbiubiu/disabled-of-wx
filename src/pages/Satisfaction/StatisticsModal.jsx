@@ -51,9 +51,7 @@ const EditableCell = ({
     }
     toggleEdit();
   };
-
   let childNode = children;
-
   if (editable) {
     childNode = editing ? (
       <Form.Item
@@ -64,7 +62,9 @@ const EditableCell = ({
       </Form.Item>
     ) : (
       <div className="editable-cell-value-wrap" onClick={toggleEdit}>
-        {children}
+        {record[dataIndex] ? children : (
+          <span style={{ color: '#505C79' }}>请输入</span>
+        )}
       </div>
     );
   }
@@ -159,7 +159,7 @@ const StatisticsModal = (props) => {
   const handleSave = useCallback((row) => {
     setDataSource(oldDataSource => {
       const newDataSource = [...oldDataSource];
-      const index = newDataSource.findIndex(item => item.key === row.key);
+      const index = newDataSource.findIndex(item => item.area === row.area);
       const item = newDataSource[index];
       newDataSource.splice(index, 1, {
         ...item,
@@ -191,6 +191,17 @@ const StatisticsModal = (props) => {
       };
     });
   }, [handleSave]);
+  const parsedDataSource = useMemo(() => {
+    return dataSource.map(item => {
+      let { area, average, ...data } = item;
+      const values = Object.values(data).filter(Boolean);
+      average = parseFloat((values.reduce((t, d) => t + d, 0) / values.length).toFixed(2)) || '';
+      return {
+        ...item,
+        average,
+      }
+    });
+  }, [dataSource])
   return (
     <Modal
       centered
@@ -217,7 +228,7 @@ const StatisticsModal = (props) => {
         rowKey="dataIndex"
         pagination={false}
         components={components}
-        dataSource={dataSource}
+        dataSource={parsedDataSource}
         rowClassName={() => 'editable-row'}
       />
       <Row style={{ padding: '10rem 1em 0' }}>
