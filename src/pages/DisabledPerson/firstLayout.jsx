@@ -6,9 +6,10 @@ import {
   CommonMap,
   RowChart
 } from '../../components';
+import { Spin } from 'antd'
 import * as Icons from '../../assets/images/disabled-person';
 import './firstLayout.scss';
-import {getDisabledNum,disabeldType,disabeldSex} from '../../service/index'
+import {getDisabledNum,disabeldType,disabeldSex,disabeldMarry,disabeldDbNum} from '../../service/index'
 
 // 布局数据
 const layout = [
@@ -50,11 +51,12 @@ const FirstLayout = (props) => {
   const [area,setArea] = useState()
   // 残疾人性别数量
    const [sexNum,setSexNum] = useState({})
-
   // 是否切换到第二屏幕
   const [switchFlag, setSwtichFlag] = useState(false)
-  // 
+  // 时间范围
   const [timeRange,setTimeRange]= useState({})
+  //是否加载完毕
+  const [loading,setLoading] = useState()
 
   const disabledCountList = useMemo(() => {
     const list = disabledCount.toString().split('').reverse();
@@ -67,60 +69,6 @@ const FirstLayout = (props) => {
       return result;
     }, []).reverse();
   }, [disabledCount]);
-
-  useEffect(() => {
-    //执证残疾人总数
-    getDisabledNum(area,timeRange.startDate,timeRange.endDate).then((res)=>{
-      setDisabledCount(res.data.sum)
-    })
-    // 残疾人类型统计
-    disabeldType(area,timeRange.startDate,timeRange.endDate).then((res)=>{
-      setDisabledAnalysis(res.data)
-    })
-    // 残疾人性别数量
-    disabeldSex(area,timeRange.startDate,timeRange.endDate).then((res)=>{
-      setSexNum(res.data)
-    })
-
-    // mock数据
-    const num = {
-      zdcjr: '185369',
-      dccjr: "23369",
-      gdzcjr: "11247"
-    }
-    const list = [
-      { title: "重度残疾人", num: parseNumber(num.zdcjr) },
-      { title: "多重残疾人", num: parseNumber(num.dccjr) },
-      { title: "孤独症残疾人", num: parseNumber(num.gdzcjr) },
-    ]
-    const disabledNum = {
-      db: 5369,
-      dsr: 85369,
-      yhdc: 3125,
-      rjzfmj: 33.25
-    }
-    const disabledList = [
-      { title: "低保人数", num: parseNumber(disabledNum.db), unit: "人" },
-      { title: "低收入人数", num: parseNumber(disabledNum.dsr), unit: "人" },
-      { title: "一户多残数量", num: parseNumber(disabledNum.yhdc), unit: "人" },
-      { title: "人均住房面积", num: disabledNum.rjzfmj, unit: "平米" },
-    ]
-
-    const moneyNum = {
-      cjrrjnsr: '185369',
-      srjnsr: "23369",
-    }
-    const moneyList = [
-      { title: "残疾人人均年收入", num: parseNumber(moneyNum.cjrrjnsr), img: Icons.cjr_big },
-      { title: "市人均年收入", num: parseNumber(moneyNum.srjnsr), img: Icons.people },
-    ]
-    setSexNum({man:70,woman:30})
-    setDisabledMoney(moneyList)
-    setDisabledAnalysis(disabledList)
-    setDisabledStatisticsList(list)
-    setDisabledCount(1368422);
-  }, [area,timeRange]);
-
 
   // echarts图表
   const [echartsOptions, setEchartsOptions] = useState({
@@ -270,7 +218,80 @@ const FirstLayout = (props) => {
       ]
     },
     // 残疾人数据统计2
-    '3-2-2': {
+    '3-2-2': {},
+    // 残疾人收入统计
+    '3-3': {}
+  });
+
+  useEffect(() => {
+    //执证残疾人总数
+    getDisabledNum(area,timeRange.startDate,timeRange.endDate).then((res)=>{
+      setDisabledCount(res.data.sum)
+    })
+    // 残疾人类型统计
+    disabeldType(area,timeRange.startDate,timeRange.endDate).then((res)=>{
+      setDisabledAnalysis(res.data)
+    })
+    // 残疾人性别数量
+    disabeldSex(area,timeRange.startDate,timeRange.endDate).then((res)=>{
+      setSexNum(res.data)
+    })
+    // 残疾人婚姻状况
+    disabeldMarry(area,timeRange.startDate,timeRange.endDate).then((res)=>{
+      setEchartsOptions({...echartsOptions,'3-2-2':{
+        color: ['#ff1493', '#00f5ff'],
+        title: {
+          text: '残疾人婚姻状况统计',
+          left: 'center',
+          top: 0,
+          textStyle: {
+            color: 'white',
+            fontSize: '10'
+          }
+        },
+        legend: {
+          textStyle: {
+            fontSize: 10,
+            color: 'white'
+          },
+          width: 1000,
+          bottom: '1',
+          left: 'center',
+          itemWidth: 14,
+        },
+        series: [
+          {
+            name: '访问来源',
+            type: 'pie',
+            radius: ['40%', '80%'],
+            label: {
+              show: false,
+              position: 'center'
+            },
+            emphasis: {
+              label: {
+                formatter: `{d}%
+  
+  {b}`,
+                show: true,
+                fontSize: '10',
+                color: "#fff",
+                backgroundColor: "transparent",
+              }
+            },
+            data:[
+                  { value: res.data.WH, name: '未婚' },
+                  { value: res.data.YPO, name: '有配偶' },
+                  { value: res.data.LH, name: '离婚' },
+                  { value: res.data.SO, name: '丧偶' },
+            ],
+          }
+        ]
+      }})
+    })
+
+    // mock数据
+    setEchartsOptions({...echartsOptions,'3-2-2':{
       color: ['#ff1493', '#00f5ff'],
       title: {
         text: '残疾人婚姻状况统计',
@@ -311,26 +332,58 @@ const FirstLayout = (props) => {
               backgroundColor: "transparent",
             }
           },
-          data: [
-            { value: 335, name: '直接访问' },
-            { value: 310, name: '邮件营销' },
-          ],
+          data:[
+            { value: 123, name: '未婚' },
+            { value: 33, name: '有配偶' },
+            { value: 44, name: '离婚' },
+            { value: 51, name: '丧偶' },
+      ],
         }
       ]
-    },
-    // 残疾人收入统计
-    '3-3': {}
-  });
-  const mergeEchartsOptions = useCallback((mergeData) => {
-    setEchartsOptions(oldData => ({
-      ...oldData,
-      ...mergeData,
-    }))
-  }, []);
-  useEffect(() => {
-    mergeEchartsOptions({})
-  }, [mergeEchartsOptions]);
-  return (
+    }})
+    const num = {
+      zdcjr: '185369',
+      dccjr: "23369",
+      gdzcjr: "11247"
+    }
+    const list = [
+      { title: "重度残疾人", num: parseNumber(num.zdcjr) },
+      { title: "多重残疾人", num: parseNumber(num.dccjr) },
+      { title: "孤独症残疾人", num: parseNumber(num.gdzcjr) },
+    ]
+    const disabledNum = {
+      db: 5369,
+      dsr: 85369,
+      yhdc: 3125,
+      rjzfmj: 33.25
+    }
+    const disabledList = [
+      { title: "低保人数", num: parseNumber(disabledNum.db), unit: "人" },
+      { title: "低收入人数", num: parseNumber(disabledNum.dsr), unit: "人" },
+      { title: "一户多残数量", num: parseNumber(disabledNum.yhdc), unit: "人" },
+      { title: "人均住房面积", num: disabledNum.rjzfmj, unit: "平米" },
+    ]
+
+    const moneyNum = {
+      cjrrjnsr: '185369',
+      srjnsr: "23369",
+    }
+    const moneyList = [
+      { title: "残疾人人均年收入", num: parseNumber(moneyNum.cjrrjnsr), img: Icons.cjr_big },
+      { title: "市人均年收入", num: parseNumber(moneyNum.srjnsr), img: Icons.people },
+    ]
+    setSexNum({man:70,woman:30})
+    setDisabledMoney(moneyList)
+    setDisabledAnalysis(disabledList)
+    setDisabledStatisticsList(list)
+    setDisabledCount(1368422);
+    setLoading(true)
+  }, [area,timeRange]);
+
+  useEffect(()=>{if(loading)console.log(echartsOptions)},[loading])
+
+
+  return loading?(
     <GridLayout layout={layout}>
       <ContainerWithBorder key="1-1" className="grid-item">
         <div className="grid-item-title">
@@ -354,7 +407,7 @@ const FirstLayout = (props) => {
           <div className="disabled-statistics">
             {
               disabledStatisticsList.map((item) => {
-                return <div className="disabled-item">
+                return <div className="disabled-item" key={item.num}>
                   <img src={Icons.cjr} alt="" />
                   <span className="item-num">{item.num}</span>
                   <span className="item-title">{item.title}</span>
@@ -420,7 +473,7 @@ const FirstLayout = (props) => {
         <div className="grid-item-content grid-num">
           {
             disabledAnalysis.map((item) => {
-              return <div className="content-item">
+              return <div className="content-item" key={item.num}>
                 <div className="item-num-content">
                   <span className="item-num">{item.num}</span>
                   <span className="item-unit">{item.unit}</span>
@@ -429,7 +482,6 @@ const FirstLayout = (props) => {
               </div>
             })
           }
-
         </div>
       </ContainerWithBorder>
       <ContainerWithBorder key="3-2" className="grid-item">
@@ -452,7 +504,7 @@ const FirstLayout = (props) => {
         <div className="disabled-money">
           {
             disabledMoney.map((item) => {
-              return <div className="disabled-item">
+              return <div className="disabled-item" key={item.num}>
                 <span className="item-num">{item.num}<span>元</span></span>
                 <img src={item.img} alt="" />
                 <span className="item-title">{item.title}</span>
@@ -462,7 +514,7 @@ const FirstLayout = (props) => {
         </div>
       </ContainerWithBorder>
     </GridLayout>
-  )
+  ):<div className="loading"><Spin  tip="Loading..."></Spin></div>
 }
 
 export default FirstLayout;

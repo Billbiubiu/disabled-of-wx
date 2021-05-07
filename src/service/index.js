@@ -122,5 +122,77 @@ export const disabeldDbNum = (area,startDate,endDate)=>{
     }
   })
 }
+//已就业的残疾人中，年龄段的数量
+export const disabeldAge = (area,startDate,endDate)=>{
+  return ajax({
+    url:'disabled/age',
+    method:'get',
+    params:{
+      area:area,
+      startDate:startDate,
+      endDate:endDate
+    }
+  })
+}
+//残疾人文化程度
+export const disabeldEducation = (area,startDate,endDate)=>{
+  return ajax({
+    url:'disabled/education/degree',
+    method:'get',
+    params:{
+      area:area,
+      startDate:startDate,
+      endDate:endDate
+    }
+  })
+}
+//残疾人特长
+export const disabeldSpecial = (area,startDate,endDate)=>{
+  return ajax({
+    url:'disabled/special',
+    method:'get',
+    params:{
+      area:area,
+      startDate:startDate,
+      endDate:endDate
+    }
+  })
+}
+//残疾人就业形式分类
+export const disabeldEmployment = (area,startDate,endDate)=>{
+  return ajax({
+    url:'disabled/from/of/employment',
+    method:'get',
+    params:{
+      area:area,
+      startDate:startDate,
+      endDate:endDate
+    }
+  })
+}
+//残疾人就业单位性质分类
+export const disabeldUnit = (area,startDate,endDate)=>{
+  return ajax({
+    url:'disabled/employment/unit',
+    method:'get',
+    params:{
+      area:area,
+      startDate:startDate,
+      endDate:endDate
+    }
+  })
+}
+//残疾人人均年收入
+export const disabeldAvg = (area,startDate,endDate)=>{
+  return ajax({
+    url:'disabled/oneincome/avg',
+    method:'get',
+    params:{
+      area:area,
+      startDate:startDate,
+      endDate:endDate
+    }
+  })
+}
 
 /**  执证残疾人页面 end */
