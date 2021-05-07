@@ -1,6 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ReactEcharts from 'echarts-for-react';
 import { Layout } from 'antd';
+import { MenuOutlined } from '@ant-design/icons';
 import {
   CommonNavBar,
   ContainerWithCorner,
@@ -9,6 +10,7 @@ import {
   CommonMap,
   RowChart
 } from '../../components';
+import StatisticsModal from './StatisticsModal';
 import './index.scss';
 
 const { Content } = Layout;
@@ -110,13 +112,13 @@ const mockData = {
 }
 
 const Satisfaction = (props) => {
-  const mergeEchartsOptions = useCallback((mergeData) => {
-    setEchartsOptions(oldData => ({
-      ...oldData,
-      ...mergeData,
-    }))
-  }, []);
-
+  // 统计数据
+  const [tjData, setTjData] = useState([
+    { title: "办理单位数量", num: 108 },
+    { title: "本月办理事务数量", num: 108, scale: '14.2', status: 'down' },
+    { title: "平均满意度", num: "82.3%", scale: '14.2', status: 'up' },
+  ]);
+  // echarts 图表
   const [echartsOptions, setEchartsOptions] = useState({
     // 各区平均满意度
     '1-2': {},
@@ -125,17 +127,17 @@ const Satisfaction = (props) => {
     // 各区域的数据
     '3-1': {},
   });
-
-  const [tjData, setTjData] = useState([
-    { title: "办理单位数量", num: 108 },
-    { title: "本月办理事务数量", num: 108, scale: '14.2', status: 'down' },
-    { title: "平均满意度", num: "82.3%", scale: '14.2', status: 'up' },
-  ])
-
+  const mergeEchartsOptions = useCallback((mergeData) => {
+    setEchartsOptions(oldData => ({
+      ...oldData,
+      ...mergeData,
+    }))
+  }, []);
   useEffect(() => {
     mergeEchartsOptions(mockData)
   }, [mergeEchartsOptions]);
-
+  // 弹窗相关
+  const [modalVisible, setModalVisible] = useState(false);
   return (
     <Layout className="satisfaction">
       <CommonNavBar showTime={true} title="满意度" btnType="back" />
@@ -148,17 +150,14 @@ const Satisfaction = (props) => {
               <span>残疾人满意度情况统计</span>
             </div>
             <div className="grid-item-content">
-              {
-                tjData.map((item) => {
-                  return <div className="content-item">
-                    <span className="item-num">{item.num}</span>
-                    <span className="item-title">{item.title}</span>
-                    {item.status === "up" ? <span className="item-scale text-green">↑{item.scale}</span> : item.status ? <span className="item-scale text-red">↓{item.scale}</span> : <span className="item-scale"></span>}
-                  </div>
-                }
-                )
-              }
-
+              {tjData.map((item, index) => {
+                const key = index;
+                return <div key={key} className="content-item">
+                  <span className="item-num">{item.num}</span>
+                  <span className="item-title">{item.title}</span>
+                  {item.status === "up" ? <span className="item-scale text-green">↑{item.scale}</span> : item.status ? <span className="item-scale text-red">↓{item.scale}</span> : <span className="item-scale"></span>}
+                </div>
+              })}
             </div>
           </ContainerWithBorder>
           <ContainerWithBorder key="1-2" className="grid-item">
@@ -183,6 +182,12 @@ const Satisfaction = (props) => {
               option={echartsOptions['2-2']}
               className="grid-item-content"
             />
+            <div style={{ position: 'absolute', top: '20rem', right: '20rem' }}>
+              <MenuOutlined
+                onClick={() => setModalVisible(true)}
+                style={{ fontSize: '1.5em' }}
+              />
+            </div>
           </ContainerWithBorder>
           <ContainerWithBorder key="3-1" className="grid-item">
             <div className="grid-item-title">
@@ -195,6 +200,10 @@ const Satisfaction = (props) => {
           </ContainerWithBorder>
         </GridLayout>
       </ContainerWithCorner>
+      <StatisticsModal
+        visible={modalVisible}
+        setVisible={setModalVisible}
+      />
     </Layout>
   )
 }
