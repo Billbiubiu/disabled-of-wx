@@ -3,7 +3,7 @@ let defaultConfig = {
   //登录请求的基础地址
   loginURL: "",
   // 其他请求的基础地址
-  baseURL: "",
+  baseURL: "http://2.20.103.134/api/",
   //所有路由前缀
   routeBasePath: "",
 };
