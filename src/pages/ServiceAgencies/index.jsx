@@ -11,7 +11,7 @@ import {
   CommonMap,
   CommonModal,
 } from '../../components';
-import agencyStatisticsIcon from '../../assets/images/service-agency/agency-statistics-icon.png';
+import { agencyStatisticsIcon } from '../../assets/images/service-agency';
 import StachChart from './StackChart';
 import './index.scss';
 
