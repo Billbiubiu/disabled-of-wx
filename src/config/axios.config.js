@@ -15,7 +15,7 @@ function ajax(config) {
       baseURL: commonConfig.baseURL,
     })
       .then((res) => {
-        if (res.data.status === 1) {
+        if (res.status === 200) {
           resolve(res.data);
         } else {
           // Toast.fail(res.data.msg, TOAST_DURATION);
