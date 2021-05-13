@@ -1,22 +1,33 @@
 import ajax from "../config/axios.config";
-import { commonConfig } from "../shared/config/index";
 
-export const loginOut = (requestCode) => {
+export const getOrganizationTotal = (params) => {
   return ajax({
-    url: ``,
-    method: "get",
-    baseURL: commonConfig.baseURL,
+    url:'organization/total',
+    method:'get',
+    params,
   })
 }
 
-export const getStatistics = ({ area, startDate, endDate}) => {
+export const getOrganizationCategoryTotal = (params) => {
   return ajax({
-    url:'orgnization/total',
+    url:'organization/category/total',
     method:'get',
-    params:{
-      area:area,
-      startDate:startDate,
-      endDate:endDate
-    }
+    params,
+  })
+}
+
+export const getOrganizationCategoryWorkPersonnelTotal = (params) => {
+  return ajax({
+    url:'organization/category/work/personnel/total',
+    method:'get',
+    params,
+  })
+}
+
+export const getOrganizationCompanyTotal = (params) => {
+  return ajax({
+    url:'organization/company/count',
+    method:'get',
+    params,
   })
 }

@@ -12,6 +12,12 @@ import {
   CommonModal,
 } from '../../components';
 import { agencyStatisticsIcon } from '../../assets/images/service-agency';
+import {
+  getOrganizationTotal,
+  getOrganizationCategoryTotal,
+  getOrganizationCategoryWorkPersonnelTotal,
+  getOrganizationCompanyTotal,
+} from '../../service/ServiceAgencies';
 import StachChart from './StackChart';
 import './index.scss';
 
@@ -106,30 +112,24 @@ const parseNumber = (number) => {
     .join('');
 }
 
-const agencyStatisticsList = [
-  { name: '服务机构数量', key: 'agency' },
-  { name: '工作人员数量', key: 'staff' },
-  { name: '服务对象数量', key: 'customer' },
-];
-
-const businessStatisticsList = [
-  { name: '单位数量', key: 'dwsl', unit: '个' },
-  { name: '安置残疾人数', key: 'azcjrs', unit: '人' },
-];
+const params = {};
 
 const ServiceAgencies = () => {
   // 残疾人康复机构数据统计
-  const [agencyStatisticsData, setAgencyStatisticsData] = useState({
-    agency: 0,
-    staff: 0,
-    customer: 0,
-  });
+  const [agencyStatisticsData, setAgencyStatisticsData] = useState([
+    { name: '服务机构数量', value: parseNumber(168) },
+    { name: '工作人员数量', value: parseNumber(2365) },
+    { name: '服务对象数量', value: parseNumber(1183) },
+  ]);
   useEffect(() => {
-    setAgencyStatisticsData({
-      agency: parseNumber(168),
-      staff: parseNumber(2365),
-      customer: parseNumber(1183),
-    });
+    getOrganizationTotal(params).then(res => {
+      const { organizationTotal, workPersonnelSum } = res;
+      setAgencyStatisticsData([
+        { name: '服务机构数量', value: parseNumber(organizationTotal) },
+        { name: '工作人员数量', value: parseNumber(workPersonnelSum) },
+        { name: '服务对象数量', value: parseNumber(1183) },
+      ])
+    })
   }, []);
   // echarts图表配置
   const [echartsOptions, setEchartsOptions] = useState({
@@ -151,15 +151,18 @@ const ServiceAgencies = () => {
     mergeEchartsOptions(mockData);
   }, [mergeEchartsOptions]);
   // 残疾人服务机构办理事务情况统计
-  const [businessStatisticsData, setBusinessStatisticsData] = useState({
-    'dwsl': 0,
-    'azcjrs': 0,
-  });
+  const [businessStatisticsData, setBusinessStatisticsData] = useState([
+    { name: '单位数量', value: 0, unit: '个' },
+    { name: '安置残疾人数', value: 0, unit: '人' },
+  ]);
   useEffect(() => {
-    setBusinessStatisticsData({
-      'dwsl': parseNumber(1269),
-      'azcjrs': parseNumber(35118),
-    })
+    getOrganizationCompanyTotal(params).then(res => {
+      const { companyTotal, disabledPeopleSum, companyGroupDisabledPeople } = res;
+      setBusinessStatisticsData([
+        { name: '单位数量', value: parseNumber(companyTotal), unit: '个' },
+        { name: '安置残疾人数', value: parseNumber(disabledPeopleSum), unit: '人' },
+      ])
+    });
   }, []);
   // 弹窗状态
   const [commonModalVisible, setCommonModalVisible] = useState(false);
@@ -175,9 +178,9 @@ const ServiceAgencies = () => {
               <span>残疾人康复机构数据统计</span>
             </div>
             <div className="grid-item-content agency-statistics">
-              {agencyStatisticsList.map(item => {
-                const { key, name } = item;
-                const value = agencyStatisticsData[key] || 0;
+              {agencyStatisticsData.map((item, index) => {
+                const { name, value } = item;
+                const key = index;
                 return (
                   <div key={key} className="agency-statistics-item">
                     <div className="agency-statistics-value">
@@ -229,9 +232,9 @@ const ServiceAgencies = () => {
               <span>残疾人服务机构办理事务情况统计</span>
             </div>
             <div className="grid-item-content business-statistics">
-              {businessStatisticsList.map(item => {
-                const { key, name, unit } = item;
-                const value = businessStatisticsData[key];
+              {businessStatisticsData.map((item, index) => {
+                const { name, value, unit } = item;
+                const key = index;
                 return (
                   <div
                     key={key}

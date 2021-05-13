@@ -1,9 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import ReactEcharts from 'echarts-for-react';
 import { Layout } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
@@ -16,32 +11,65 @@ import {
   CommonMap,
   CommonModal,
 } from '../../components';
+import { useMergeState } from '../../shared/hooks';
+import {
+  getServiceTotal,
+  getServiceWeiwen,
+  getServiceKangfu,
+  getServiceJiaojiu,
+} from '../../service/ServiceApplications';
 import './index.scss';
 
 const { Content } = Layout;
+const KANGFU_MAP = {
+  1: '精神病人门诊救助数量',
+  2: '肢体矫治救助数量',
+  3: '儿童康复评定数量',
+  4: '精神病人机构康复救助数量',
+  5: '辅助器具数量',
+  6: '苯丙酮尿症救助数量',
+  7: '精神病人住院救助数量',
+  8: '医疗救助数量',
+  9: '人工耳蜗救助数量',
+};
+const JIAOJIU_MAP = {
+  1: '子女助学金数量',
+  2: '残疾学生奖学金数量',
+  3: '残疾学生助学金数量',
+  4: '盲生交通伙食补贴数量',
+  5: '助残大学生一次性入学补助数量',
+  6: '个体创业扶持数量',
+  7: '临时救助数量',
+  8: '日间照料服务补贴数量',
+  9: '集中托养服务补贴数量',
+  10: '居家安养服务补贴数量',
+  11: '老年重残救助数量',
+  12: '社保补贴数量',
+  13: '辅助性就业资格认定数量',
+};
 
 const mockData = {
-  '1-2': {
-    data: [
-      { name: '无障碍改造', value: 543769 },
-      { name: '代步车购买', value: 410527 },
-    ],
-    unit: '人',
-  },
-  '1-3': {
-    data: [
-      { name: '精神病人门诊救助', value: 543767 },
-      { name: '肢体矫治救助', value: 543764 },
-      { name: '儿童康复评定', value: 543767 },
-      { name: '精神病人机构康复救助', value: 410528 },
-      { name: '辅助器具', value: 410525 },
-      { name: '苯丙酮尿症救助', value: 410522 },
-      { name: '精神病人住院救助', value: 273689 },
-      { name: '医疗救助', value: 273686 },
-      { name: '人工耳蜗救助', value: 273683 },
-      { name: '偏瘫残疾人机构康复救助', value: 136840 },
-    ]
-  },
+  // '1-2': {
+  //   data: [
+  //     { name: '无障碍改造', value: 543769 },
+  //     { name: '代步车购买', value: 410527 },
+  //   ],
+  //   unit: '人',
+  // },
+  // '1-3': {
+  //   data: [
+  //     { name: '精神病人门诊救助', value: 543767 },
+  //     { name: '肢体矫治救助', value: 543764 },
+  //     { name: '儿童康复评定', value: 543767 },
+  //     { name: '精神病人机构康复救助', value: 410528 },
+  //     { name: '辅助器具', value: 410525 },
+  //     { name: '苯丙酮尿症救助', value: 410522 },
+  //     { name: '精神病人住院救助', value: 273689 },
+  //     { name: '医疗救助', value: 273686 },
+  //     { name: '人工耳蜗救助', value: 273683 },
+  //     { name: '偏瘫残疾人机构康复救助', value: 136840 },
+  //   ]
+  // },
   '2-2': {
     grid: [
       {
@@ -81,24 +109,24 @@ const mockData = {
       }
     ]
   },
-  '3-1': {
-    data: [
-      { name: '子女助学金', value: 543769 },
-      { name: '残疾学生奖学金', value: 358125 },
-      { name: '残疾学生助学金', value: 335115 },
-      { name: '盲生交通伙食补贴', value: 255145 },
-      { name: '残疾大学生一次性入学补助', value: 228131 },
-      { name: '临时救助', value: 228131 },
-      { name: '日间照料服务补贴', value: 213154 },
-      { name: '老年重残救助', value: 213154 },
-      { name: '集中托养服务补贴', value: 185354 },
-      { name: '社保补贴', value: 185354 },
-      { name: '辅助性就业资格认定', value: 165854 },
-      { name: '居家安养服务补贴', value: 168853 },
-      { name: '个体创业扶持', value: 165853 },
-      { name: '就业补贴及奖励', value: 164528 },
-    ]
-  }
+  // '3-1': {
+  //   data: [
+  //     { name: '子女助学金', value: 543769 },
+  //     { name: '残疾学生奖学金', value: 358125 },
+  //     { name: '残疾学生助学金', value: 335115 },
+  //     { name: '盲生交通伙食补贴', value: 255145 },
+  //     { name: '残疾大学生一次性入学补助', value: 228131 },
+  //     { name: '临时救助', value: 228131 },
+  //     { name: '日间照料服务补贴', value: 213154 },
+  //     { name: '老年重残救助', value: 213154 },
+  //     { name: '集中托养服务补贴', value: 185354 },
+  //     { name: '社保补贴', value: 185354 },
+  //     { name: '辅助性就业资格认定', value: 165854 },
+  //     { name: '居家安养服务补贴', value: 168853 },
+  //     { name: '个体创业扶持', value: 165853 },
+  //     { name: '就业补贴及奖励', value: 164528 },
+  //   ]
+  // }
 };
 
 // 布局数据
@@ -110,6 +138,8 @@ const layout = [
   { i: '2-2', x: 6, y: 16, w: 12, h: 8 },
   { i: '3-1', x: 18, y: 0, w: 6, h: 24 },
 ];
+
+const params = {};
 
 const ServiceApplications = (props) => {
   // 申请人数量
@@ -127,9 +157,13 @@ const ServiceApplications = (props) => {
   }, [applicantCount]);
   useEffect(() => {
     setApplicantCount(1368422);
+    getServiceTotal(params).then(res => {
+      const { serviceTotal } = res;
+      setApplicantCount(serviceTotal);
+    });
   }, []);
   // echarts图表
-  const [echartsOptions, setEchartsOptions] = useState({
+  const [echartsOptions, mergeEchartsOptions] = useMergeState({
     // 维文
     '1-2': {},
     // 康复
@@ -139,14 +173,32 @@ const ServiceApplications = (props) => {
     // 教就
     '3-1': {},
   });
-  const mergeEchartsOptions = useCallback((mergeData) => {
-    setEchartsOptions(oldData => ({
-      ...oldData,
-      ...mergeData,
-    }))
-  }, []);
   useEffect(() => {
     mergeEchartsOptions(mockData);
+    getServiceWeiwen(params).then(res => {
+      const { wza, dbc } = res;
+      const data = [
+        { name: '无障碍改造', value: wza },
+        { name: '代步车购买', value: dbc },
+      ].sort((a, b) => b.value - a.value);
+      mergeEchartsOptions({ '1-2': { data, unit: '人' } });
+    });
+    getServiceKangfu(params).then(res => {
+      const data = Object.keys(res).map(key => {
+        const name = KANGFU_MAP[key];
+        const value = res[key];
+        return { name, value };
+      }).sort((a, b) => b.value - a.value);
+      mergeEchartsOptions({ '1-3': { data } });
+    });
+    getServiceJiaojiu(params).then(res => {
+      const data = Object.keys(res).map(key => {
+        const name = JIAOJIU_MAP[key];
+        const value = res[key];
+        return { name, value };
+      }).sort((a, b) => b.value - a.value);
+      mergeEchartsOptions({ '3-1': { data } });
+    });
   }, [mergeEchartsOptions]);
   // 弹窗状态
   const [commonModalVisible, setCommonModalVisible] = useState(false);

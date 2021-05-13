@@ -1,10 +1,33 @@
 import ajax from "../config/axios.config";
-import { commonConfig } from "../shared/config/index";
 
-export const loginOut = (requestCode) => {
+export const getServiceTotal = (params) => {
   return ajax({
-    url: ``,
-    method: "get",
-    baseURL: commonConfig.baseURL,
+    url:'service/total',
+    method:'get',
+    params,
+  })
+}
+
+export const getServiceWeiwen = params => {
+  return ajax({
+    url: 'service/weiwen',
+    method: 'get',
+    params,
+  })
+}
+
+export const getServiceKangfu = params => {
+  return ajax({
+    url: 'service/kangfu',
+    method: 'get',
+    params,
+  })
+}
+
+export const getServiceJiaojiu = params => {
+  return ajax({
+    url: 'service/jiaojiu',
+    method: 'get',
+    params,
   })
 }
