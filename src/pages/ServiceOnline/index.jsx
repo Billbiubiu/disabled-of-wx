@@ -1,6 +1,7 @@
-import React, { useMemo, useCallback, useEffect, useState } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import ReactEcharts from 'echarts-for-react';
 import { Layout } from 'antd';
+import { useMergeState } from '../../shared/hooks';
 import {
   CommonNavBar,
   ContainerWithCorner,
@@ -9,6 +10,15 @@ import {
   CommonMap,
   RowChart,
 } from '../../components';
+import {
+  getOnlineServiceZcptUser,
+  getOnlineServiceInteract,
+  getOnlineServicePosition,
+  getOnlineServiceSignLog,
+  getOnlineServiceInteractCnt,
+  getOnlineService,
+  getOnlineServiceBsBuildingFacilityEvalution,
+} from '../../service/ServiceOnline';
 import * as userIcon from '../../assets/images/service-online';
 import './index.scss';
 
@@ -40,7 +50,6 @@ const parseNumber = (number) => {
     .join('');
 }
 
-
 const ServiceOnline = (props) => {
   // 注册人数
   const [registeredCount, setRegisteredCount] = useState(0);
@@ -55,16 +64,33 @@ const ServiceOnline = (props) => {
       return result;
     }, []).reverse();
   }, [registeredCount]);
+  useEffect(() => {
+    setRegisteredCount(1368422);
+  }, []);
   // 用户类型统计
   const [userStatisticsList, setUserStatisticList] = useState([]);
+  useEffect(() => {
+    setUserStatisticList([
+      { name: '普通用户', value: parseNumber(1222), icon: userIcon.ptyh },
+      { name: '持证残疾人', value: parseNumber(1222), icon: userIcon.czcjr },
+      { name: '企业机构', value: parseNumber(1222), icon: userIcon.qyjg },
+    ])
+    getOnlineServiceZcptUser({}).then(res => {
+      setUserStatisticList([
+        { name: '普通用户', value: parseNumber(res['普通用户']), icon: userIcon.ptyh },
+        { name: '持证残疾人', value: parseNumber(res['持证残疾人']), icon: userIcon.czcjr },
+        { name: '企业机构', value: parseNumber(res['企业机构']), icon: userIcon.qyjg },
+      ])
+    });
+  }, []);
   // echarts图表
-  const [echartsOptions, setEchartsOptions] = useState({
+  const [echartsOptions, mergeEchartsOptions] = useMergeState({
     // 互动交流
-    '1-1-2': {},
+    '1-2': {},
     // 业务模块
-    '1-1-3': {},
+    '1-3': {},
     // 热点服务
-    '1-1-4': {},
+    '1-4': {},
     // 康复签到
     '2-2': {},
     // 点击量
@@ -74,162 +100,166 @@ const ServiceOnline = (props) => {
     // 无障碍建筑与设施评分
     '3-3': {},
   });
-  const mergeEchartsOptions = useCallback((mergeData) => {
-    setEchartsOptions(oldData => ({
-      ...oldData,
-      ...mergeData,
-    }))
-  }, []);
   useEffect(() => {
-    setRegisteredCount(1368422);
-    const userStatistics = {
-      ptyh: 1222,
-      czcjr: 1222,
-      qyjg: 1222,
-    };
-    setUserStatisticList([
-      { name: '普通用户', value: parseNumber(userStatistics.ptyh), icon: userIcon.ptyh },
-      { name: '持证残疾人', value: parseNumber(userStatistics.czcjr), icon: userIcon.czcjr },
-      { name: '企业机构', value: parseNumber(userStatistics.qyjg), icon: userIcon.qyjg },
-    ])
-    mergeEchartsOptions({
-      '1-1-2': {
-        color: ['#00A8E7'],
-        grid: [
-          {
-            top: 10,
-            right: 0,
-            bottom: 0,
-            left: 0,
-            containLabel: true,
-          }
-        ],
-        xAxis: [
-          {
-            type: 'category',
-            boundaryGap: true,
-            axisLabel: {
-              interval: 0,
+    // 1-2、1-4
+    getOnlineServiceInteract({}).then(res => {
+      mergeEchartsOptions({
+        '1-2': {
+          color: ['#00A8E7'],
+          grid: [
+            {
+              top: 10,
+              right: 0,
+              bottom: 0,
+              left: 0,
+              containLabel: true,
+            }
+          ],
+          xAxis: [
+            {
+              type: 'category',
+              boundaryGap: true,
+              axisLabel: {
+                interval: 0,
+              },
+              axisTick: {
+                show: false,
+              },
+              data: ['志愿者', '热点回答', '在线咨询', '蚕宝课堂', '网上调查', '残疾人风采']
             },
-            axisTick: {
-              show: false,
+          ],
+          yAxis: [
+            {
+              type: 'value',
+              splitLine: {
+                show: false,
+              },
+              axisLine: {
+                show: true,
+              },
             },
-            data: ['志愿者', '热点回答', '在线咨询', '蚕宝课堂', '网上调查', '残疾人风采']
-          },
-        ],
-        yAxis: [
-          {
-            type: 'value',
-            splitLine: {
-              show: false,
+          ],
+          series: [
+            {
+              type: 'bar',
+              data: ['志愿者', '热点回答', '在线咨询', '蚕宝课堂', '网上调查', '残疾人风采'].map(name => res[name] || 0),
             },
-            axisLine: {
-              show: true,
-            },
-          },
-        ],
-        series: [
-          {
-            type: 'bar',
-            data: [3, 4, 6, 6, 7, 6],
-          },
-        ]
-      },
-      '1-1-3': {
-        color: ['#FF1494', '#01F5FF', '#FF8347'],
-        tooltip: {
-          trigger: 'item',
-          formatter: '{b}:{c} ({d}%)',
-          textStyle: {
-            fontWeight: 50,
-            fontSize: '10'
-          }
+          ]
         },
-        series: [
-          {
-            type: 'pie',
-            label: {
+        '1-4': {
+          data: ['残疾预防', '辅具大厅', '残疾人证查询', '爱心地图',].map(name => ({ name, value: res[name] || 0 })),
+          unit: '人',
+        },
+      })
+    });
+    // 1-3
+    getOnlineServicePosition({}).then(res => {
+      mergeEchartsOptions({
+        '1-3': {
+          color: ['#FF1494', '#01F5FF', '#FF8347'],
+          tooltip: {
+            trigger: 'item',
+            formatter: '{b}:{c} ({d}%)',
+            textStyle: {
               fontWeight: 50,
-              color: 'white',
               fontSize: '10'
-            },
-            radius: '100%',
-            selectedMode: 'single',
-            data: [
-              { value: 15, name: '沟通数' },
-              { value: 25, name: '投递简历数' },
-              { value: 60, name: '发布职位数' },
-            ]
-          }
-        ]
-      },
-      '1-1-4': {
-        data: [
-          { name: '残疾预防', value: 543769 },
-          { name: '辅具大厅', value: 410527 },
-          { name: '残疾人证查询', value: 273684 },
-          { name: '爱心地图', value: 136842 },
-        ],
-        unit: '人',
-      },
-      '2-2': {
-        grid: [
-          {
-            top: 10,
-            right: 0,
-            bottom: 0,
-            left: 0,
-            containLabel: true,
-          }
-        ],
-        xAxis: [
-          {
-            type: 'category',
-            boundaryGap: true,
-            data: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+            }
           },
-        ],
-        yAxis: [
-          {
-            type: 'value',
-            splitLine: {
-              show: false,
+          series: [
+            {
+              type: 'pie',
+              label: {
+                fontWeight: 50,
+                color: 'white',
+                fontSize: '10'
+              },
+              radius: '100%',
+              selectedMode: 'single',
+              data: ['沟通数', '投递简历数', '发布职位数'].map(name => ({ name, value: res[name] || 0 })),
+            }
+          ]
+        },
+      })
+    });
+    // 2-2
+    getOnlineServiceSignLog({}).then(res => {
+      const names = Object.keys(res);
+      const data = names.map(name => res[name]);
+      mergeEchartsOptions({
+        '2-2': {
+          grid: [
+            {
+              top: 10,
+              right: 0,
+              bottom: 0,
+              left: 0,
+              containLabel: true,
+            }
+          ],
+          xAxis: [
+            {
+              type: 'category',
+              boundaryGap: true,
+              data: names,
+              axisLabel: {
+                interval: 0,
+              }
             },
-            axisLine: {
-              show: true,
+          ],
+          yAxis: [
+            {
+              type: 'value',
+              splitLine: {
+                show: false,
+              },
+              axisLine: {
+                show: true,
+              },
             },
-          },
-        ],
-        series: [
-          {
-            type: 'bar',
-            data: [2, 4, 6, 6, 8, 6, 2, 2, 3, 1, 5, 6],
-          },
-          {
-            type: 'line',
-            data: [2, 4, 6, 6, 8, 6, 2, 2, 3, 1, 5, 6],
-          }
-        ]
-      },
-      '3-1': {
-        color: ['#FF1494', '#01F5FF', '#FF8347'],
-        series: [
-          {
-            type: 'pie',
-            radius: ['40%', '80%'],
-            label: {
-              color: "#fff",
-              formatter: `{d}%\n{b}`,
-              backgroundColor: "transparent",
+          ],
+          series: [
+            {
+              type: 'bar',
+              data,
             },
-            data: [
-              { value: 22, name: '政策' },
-              { value: 33, name: '服务' },
-              { value: 45, name: '机构' },
-            ],
-          }
-        ]
-      },
+            {
+              type: 'line',
+              data,
+            }
+          ]
+        },
+      })
+    });
+    // 3-1
+    getOnlineServiceInteractCnt({}).then(res => {
+      mergeEchartsOptions({
+        '3-1': {
+          color: ['#FF1494', '#01F5FF', '#FF8347'],
+          series: [
+            {
+              type: 'pie',
+              radius: ['40%', '80%'],
+              label: {
+                color: "#fff",
+                formatter: `{d}%\n{b}`,
+                backgroundColor: "transparent",
+              },
+              data: Object.keys(res).map(name => ({ name, value: res[name] })),
+            }
+          ]
+        },
+      });
+    });
+    // 3-2
+    getOnlineService({}).then(res => {
+
+    });
+    // 3-3
+    getOnlineServiceBsBuildingFacilityEvalution({}).then(res => {
+
+    });
+    mergeEchartsOptions({
+
       '3-2': {
         color: ['#FF1494', '#01F5FF', '#FF8347'],
         legend: {
@@ -239,7 +269,7 @@ const ServiceOnline = (props) => {
           },
           bottom: 0,
           left: 'center',
-          itemWidth:14,
+          itemWidth: 14,
         },
         series: [
           {
@@ -355,21 +385,21 @@ const ServiceOnline = (props) => {
               <span>互动交流</span>
             </div>
             <ReactEcharts
-              option={echartsOptions['1-1-2']}
+              option={echartsOptions['1-2']}
               className="grid-item-content"
             />
             <div className="grid-item-title">
               <span>业务模块</span>
             </div>
             <ReactEcharts
-              option={echartsOptions['1-1-3']}
+              option={echartsOptions['1-3']}
               className="grid-item-content"
             />
             <div className="grid-item-title">
               <span>热点服务</span>
             </div>
             <RowChart
-              option={echartsOptions['1-1-4']}
+              option={echartsOptions['1-4']}
               className="grid-item-content"
               style={{ height: '200rem', flexShrink: 0 }}
             />
