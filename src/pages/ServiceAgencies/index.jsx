@@ -112,8 +112,6 @@ const parseNumber = (number) => {
     .join('');
 }
 
-const params = {};
-
 const ServiceAgencies = () => {
   // 残疾人康复机构数据统计
   const [agencyStatisticsData, setAgencyStatisticsData] = useState([
@@ -122,7 +120,7 @@ const ServiceAgencies = () => {
     { name: '服务对象数量', value: parseNumber(1183) },
   ]);
   useEffect(() => {
-    getOrganizationTotal(params).then(res => {
+    getOrganizationTotal({}).then(res => {
       const { organizationTotal, workPersonnelSum } = res;
       setAgencyStatisticsData([
         { name: '服务机构数量', value: parseNumber(organizationTotal) },
@@ -149,6 +147,12 @@ const ServiceAgencies = () => {
   // 当前选中的服务机构数据
   useEffect(() => {
     mergeEchartsOptions(mockData);
+    getOrganizationCategoryTotal({}).then(res => {
+      console.log(res);
+    });
+    getOrganizationCategoryWorkPersonnelTotal({}).then(res => {
+      console.log(res);
+    });
   }, [mergeEchartsOptions]);
   // 残疾人服务机构办理事务情况统计
   const [businessStatisticsData, setBusinessStatisticsData] = useState([
@@ -156,7 +160,7 @@ const ServiceAgencies = () => {
     { name: '安置残疾人数', value: 0, unit: '人' },
   ]);
   useEffect(() => {
-    getOrganizationCompanyTotal(params).then(res => {
+    getOrganizationCompanyTotal({}).then(res => {
       const { companyTotal, disabledPeopleSum, companyGroupDisabledPeople } = res;
       setBusinessStatisticsData([
         { name: '单位数量', value: parseNumber(companyTotal), unit: '个' },

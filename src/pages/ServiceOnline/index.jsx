@@ -7,7 +7,6 @@ import {
   ContainerWithCorner,
   GridLayout,
   ContainerWithBorder,
-  CommonMap,
   RowChart,
 } from '../../components';
 import {
@@ -70,11 +69,6 @@ const ServiceOnline = (props) => {
   // 用户类型统计
   const [userStatisticsList, setUserStatisticList] = useState([]);
   useEffect(() => {
-    setUserStatisticList([
-      { name: '普通用户', value: parseNumber(1222), icon: userIcon.ptyh },
-      { name: '持证残疾人', value: parseNumber(1222), icon: userIcon.czcjr },
-      { name: '企业机构', value: parseNumber(1222), icon: userIcon.qyjg },
-    ])
     getOnlineServiceZcptUser({}).then(res => {
       setUserStatisticList([
         { name: '普通用户', value: parseNumber(res['普通用户']), icon: userIcon.ptyh },
@@ -82,6 +76,17 @@ const ServiceOnline = (props) => {
         { name: '企业机构', value: parseNumber(res['企业机构']), icon: userIcon.qyjg },
       ])
     });
+  }, []);
+  // 小程序服务统计
+  const [miniProgramTotal, setMiniProgramTotal] = useState(0);
+  const [miniProgramStatisticsList, setMiniProgramStatisticsList] = useState([]);
+  useEffect(() => {
+    setMiniProgramTotal(parseNumber(12273684));
+    setMiniProgramStatisticsList([
+      { name: "科室1服务数量", value: parseNumber(885369) },
+      { name: "科室2服务数量", value: parseNumber(685369) },
+      { name: "科室3服务数量", value: parseNumber(465369) },
+    ])
   }, []);
   // echarts图表
   const [echartsOptions, mergeEchartsOptions] = useMergeState({
@@ -91,6 +96,8 @@ const ServiceOnline = (props) => {
     '1-3': {},
     // 热点服务
     '1-4': {},
+    // 小程序服务增值服务趋势图
+    '2-1': {},
     // 康复签到
     '2-2': {},
     // 点击量
@@ -181,6 +188,61 @@ const ServiceOnline = (props) => {
         },
       })
     });
+    Promise.resolve().then(() => {
+      const names = Array(30).fill(0).map((d, i) => i + 1);
+      const data = names.map(d => Math.random() * 25 + 25);
+      mergeEchartsOptions({
+        '2-1': {
+          grid: [
+            {
+              top: 10,
+              right: 0,
+              bottom: 0,
+              left: 0,
+              containLabel: true,
+            }
+          ],
+          xAxis: [
+            {
+              type: 'category',
+              boundaryGap: '5%',
+              data: names,
+              axisTick: {
+                show: false,
+              },
+              axisLabel: {
+                interval: 0,
+              },
+            },
+          ],
+          yAxis: [
+            {
+              type: 'value',
+              boundaryGap: '50%',
+              splitLine: {
+                show: true,
+                lineStyle: {
+                  opacity: 0.2
+                }
+              },
+              axisLine: {
+                show: true,
+              },
+            },
+          ],
+          series: [
+            {
+              type: 'line',
+              areaStyle: {
+                opacity: 0.2,
+              },
+              symbol: 'none',
+              data,
+            }
+          ]
+        },
+      })
+    })
     // 2-2
     getOnlineServiceSignLog({}).then(res => {
       const names = Object.keys(res);
@@ -258,87 +320,88 @@ const ServiceOnline = (props) => {
     getOnlineServiceBsBuildingFacilityEvalution({}).then(res => {
 
     });
-    mergeEchartsOptions({
-
-      '3-2': {
-        color: ['#FF1494', '#01F5FF', '#FF8347'],
-        legend: {
-          textStyle: {
-            fontSize: 10,
-            color: 'white'
-          },
-          bottom: 0,
-          left: 'center',
-          itemWidth: 14,
-        },
-        series: [
-          {
-            type: 'pie',
-            radius: ['60%', '70%'],
-            center: ['50%', '40%'],
-            label: {
-              show: false,
-              color: "#fff",
-              fontSize: 20,
-              position: 'center',
-              formatter: `{d}%\n{b}`,
-              backgroundColor: "transparent",
+    Promise.resolve().then(() => {
+      mergeEchartsOptions({
+        '3-2': {
+          color: ['#FF1494', '#01F5FF', '#FF8347'],
+          legend: {
+            textStyle: {
+              fontSize: 10,
+              color: 'white'
             },
-            emphasis: {
-              label: {
-                show: true,
-              }
-            },
-            data: [
-              { value: 70, name: '康复机构' },
-              { value: 10, name: '教育' },
-              { value: 20, name: '就业' },
-            ],
-          }
-        ]
-      },
-      '3-3': {
-        color: ['#00A8E7'],
-        grid: [
-          {
-            top: 10,
-            right: 0,
             bottom: 0,
-            left: 0,
-            containLabel: true,
-          }
-        ],
-        xAxis: [
-          {
-            type: 'category',
-            boundaryGap: true,
-            axisLabel: {
-              interval: 0,
-            },
-            axisTick: {
-              show: false,
-            },
-            data: ['一分', '二分', '三分', '四分', '五分'],
+            left: 'center',
+            itemWidth: 14,
           },
-        ],
-        yAxis: [
-          {
-            type: 'value',
-            splitLine: {
-              show: false,
+          series: [
+            {
+              type: 'pie',
+              radius: ['60%', '70%'],
+              center: ['50%', '40%'],
+              label: {
+                show: false,
+                color: "#fff",
+                fontSize: 20,
+                position: 'center',
+                formatter: `{d}%\n{b}`,
+                backgroundColor: "transparent",
+              },
+              emphasis: {
+                label: {
+                  show: true,
+                }
+              },
+              data: [
+                { value: 70, name: '康复机构' },
+                { value: 10, name: '教育' },
+                { value: 20, name: '就业' },
+              ],
+            }
+          ]
+        },
+        '3-3': {
+          color: ['#00A8E7'],
+          grid: [
+            {
+              top: 10,
+              right: 0,
+              bottom: 0,
+              left: 0,
+              containLabel: true,
+            }
+          ],
+          xAxis: [
+            {
+              type: 'category',
+              boundaryGap: true,
+              axisLabel: {
+                interval: 0,
+              },
+              axisTick: {
+                show: false,
+              },
+              data: ['一分', '二分', '三分', '四分', '五分'],
             },
-            axisLine: {
-              show: true,
+          ],
+          yAxis: [
+            {
+              type: 'value',
+              splitLine: {
+                show: false,
+              },
+              axisLine: {
+                show: true,
+              },
             },
-          },
-        ],
-        series: [
-          {
-            type: 'bar',
-            data: [3, 4, 6, 6, 7],
-          },
-        ]
-      },
+          ],
+          series: [
+            {
+              type: 'bar',
+              data: [3, 4, 6, 6, 7],
+            },
+          ]
+        },
+      })
     })
   }, [mergeEchartsOptions]);
   return (
@@ -404,8 +467,49 @@ const ServiceOnline = (props) => {
               style={{ height: '200rem', flexShrink: 0 }}
             />
           </ContainerWithBorder>
-          <ContainerWithBorder key="2-1" className="grid-item">
-            <CommonMap />
+          <ContainerWithBorder
+            key="2-1"
+            className="grid-item"
+            style={{ color: '#01DEF6', textAlign: 'center' }}
+          >
+            <div style={{
+              fontSize: '25rem',
+            }}>江阴市</div>
+            <div className="mini-program-statistics" style={{ flex: 1 }}>
+              <div style={{
+                width: '30%',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                backgroundColor: 'rgba(4, 49, 128, 0.2)',
+                boxShadow: '0 0 12rem 10rem rgba(4, 49, 128, 0.6) inset',
+                marginRight: '5rem',
+                position: 'relative',
+              }}>
+                <div>小程序服务总数</div>
+                <br />
+                <div style={{ fontSize: '30rem', }}>{miniProgramTotal}</div>
+                <div style={{ width: '10rem', height: '10rem', position: 'absolute', top: '-1rem', left: '-1rem', borderTop: '2rem solid #00A8E7', borderLeft: '2px solid #00A8E7' }}></div>
+                <div style={{ width: '10rem', height: '10rem', position: 'absolute', top: '-1rem', right: '-1rem', borderTop: '2rem solid #00A8E7', borderRight: '2px solid #00A8E7' }}></div>
+                <div style={{ width: '10rem', height: '10rem', position: 'absolute', bottom: '-1rem', right: '-1rem', borderBottom: '2rem solid #00A8E7', borderRight: '2px solid #00A8E7' }}></div>
+                <div style={{ width: '10rem', height: '10rem', position: 'absolute', bottom: '-1rem', left: '-1rem', borderBottom: '2rem solid #00A8E7', borderLeft: '2px solid #00A8E7' }}></div>
+              </div>
+              {miniProgramStatisticsList.map((item, index) => {
+                const { name, value } = item;
+                const key = index;
+                return (
+                  <div key={key} className="mini-program-item" >
+                    <span className="item-value">{value}</span>
+                    <img className="item-icon" src={userIcon.czcjr} alt="" />
+                    <span className="item-name">{name}</span>
+                  </div>
+                )
+              })}
+            </div>
+            <ReactEcharts
+              option={echartsOptions['2-1']}
+              style={{ height: '60%' }}
+            />
           </ContainerWithBorder>
           <ContainerWithBorder key="2-2" className="grid-item">
             <div className="grid-item-title">
