@@ -26,6 +26,44 @@ export const getDisabledNum = (area,startDate,endDate)=>{
       }
     })
 }
+
+//多重残疾人
+export const getMultipleNum = (area,startDate,endDate)=>{
+  return ajax({
+    url:'disabled/multiple',
+    method:'get',
+    params:{
+      area:area,
+      startDate:startDate,
+      endDate:endDate
+    }
+  })
+}
+//重度残疾人
+export const getSevereNum = (area,startDate,endDate)=>{
+  return ajax({
+    url:'disabled/severe',
+    method:'get',
+    params:{
+      area:area,
+      startDate:startDate,
+      endDate:endDate
+    }
+  })
+}
+//疑似残疾人
+export const getSuspectedNum = (area,startDate,endDate)=>{
+  return ajax({
+    url:'disabled/suspected',
+    method:'get',
+    params:{
+      area:area,
+      startDate:startDate,
+      endDate:endDate
+    }
+  })
+}
+
 // 残疾人类型统计
 export const disabeldType = (area,startDate,endDate)=>{
   return ajax({
@@ -74,10 +112,11 @@ export const disabeldStudy = (area,startDate,endDate)=>{
     }
   })
 }
-//残疾人就业占比
-export const disabeldEmploy = (area,startDate,endDate)=>{
+
+//残疾人低保、低收入、一户多残、人均面积
+export const disabeldDbNum = (area,startDate,endDate)=>{
   return ajax({
-    url:'disabled/employ',
+    url:'disabled/db/num',
     method:'get',
     params:{
       area:area,
@@ -86,7 +125,74 @@ export const disabeldEmploy = (area,startDate,endDate)=>{
     }
   })
 }
-//残疾人养老保险缴纳占比
+
+//残疾人人均年收入
+export const disabeldAvg = (area,startDate,endDate)=>{
+  return ajax({
+    url:'disabled/oneincome/avg',
+    method:'get',
+    params:{
+      area:area,
+      startDate:startDate,
+      endDate:endDate
+    }
+  })
+}
+// 市人均年收入最新一年的数据
+export const disabeldPersonAvg = (area,startDate,endDate)=>{
+  return ajax({
+    url:'disabled/city/person/avg',
+    method:'get',
+    params:{
+      area:area,
+      startDate:startDate,
+      endDate:endDate
+    }
+  })
+}
+
+/**  执证残疾人页面1  end */
+
+/**  执证残疾人页面2  start */
+
+// 残疾人文化程度group数量（无、小学、本科。。。）
+export const disabeldDegree = (area,startDate,endDate)=>{
+  return ajax({
+    url:'disabled/education/degree',
+    method:'get',
+    params:{
+      area:area,
+      startDate:startDate,
+      endDate:endDate
+    }
+  })
+}
+//残疾人的特长 group类型和占比
+export const disabeldSpecial = (area,startDate,endDate)=>{
+  return ajax({
+    url:'disabled/special',
+    method:'get',
+    params:{
+      area:area,
+      startDate:startDate,
+      endDate:endDate
+    }
+  })
+}
+//残疾人在读学习group 学历的数量
+export const disabeldEducation = (area,startDate,endDate,studyState)=>{
+  return ajax({
+    url:'disabled/education/degree',
+    method:'get',
+    params:{
+      area:area,
+      startDate:startDate,
+      endDate:endDate,
+      studyState:1
+    }
+  })
+}
+//残疾人养老保险缴纳和未缴纳数量和占比
 export const disabeldYanglaobx = (area,startDate,endDate)=>{
   return ajax({
     url:'disabled/yanglaobx',
@@ -98,7 +204,7 @@ export const disabeldYanglaobx = (area,startDate,endDate)=>{
     }
   })
 }
-//残疾人医疗保险缴纳占比
+//医疗保险缴纳和未缴纳数量和占比
 export const disabeldYiliaobx = (area,startDate,endDate)=>{
   return ajax({
     url:'disabled/yiliaobx',
@@ -110,10 +216,34 @@ export const disabeldYiliaobx = (area,startDate,endDate)=>{
     }
   })
 }
-//残疾人低保、低收入、一户多残、人均面积
-export const disabeldDbNum = (area,startDate,endDate)=>{
+//养老保险分布职工养老和居民养老数量
+export const disabeldYanglaobxJMZG = (area,startDate,endDate)=>{
   return ajax({
-    url:'disabled/db/num',
+    url:'disabled/yanglaobxjmzg',
+    method:'get',
+    params:{
+      area:area,
+      startDate:startDate,
+      endDate:endDate
+    }
+  })
+}
+//医疗保险分布职工养老和居民养老数量
+export const disabeldYiliaobxJMZG = (area,startDate,endDate)=>{
+  return ajax({
+    url:'disabled/yiliaobxjmzg',
+    method:'get',
+    params:{
+      area:area,
+      startDate:startDate,
+      endDate:endDate
+    }
+  })
+}
+//残疾人就业 已就业和未就业数量和占比
+export const disabeldEmploy = (area,startDate,endDate)=>{
+  return ajax({
+    url:'disabled/employ',
     method:'get',
     params:{
       area:area,
@@ -134,27 +264,16 @@ export const disabeldAge = (area,startDate,endDate)=>{
     }
   })
 }
-//残疾人文化程度
-export const disabeldEducation = (area,startDate,endDate)=>{
+//已就业的残疾中 残疾人的类型和占比
+export const disabeldTypeForYJY = (area,startDate,endDate)=>{
   return ajax({
-    url:'disabled/education/degree',
+    url:'disabled/type',
     method:'get',
     params:{
       area:area,
       startDate:startDate,
-      endDate:endDate
-    }
-  })
-}
-//残疾人特长
-export const disabeldSpecial = (area,startDate,endDate)=>{
-  return ajax({
-    url:'disabled/special',
-    method:'get',
-    params:{
-      area:area,
-      startDate:startDate,
-      endDate:endDate
+      endDate:endDate,
+      employState:1
     }
   })
 }
@@ -170,6 +289,7 @@ export const disabeldEmployment = (area,startDate,endDate)=>{
     }
   })
 }
+
 //残疾人就业单位性质分类
 export const disabeldUnit = (area,startDate,endDate)=>{
   return ajax({
@@ -182,17 +302,55 @@ export const disabeldUnit = (area,startDate,endDate)=>{
     }
   })
 }
-//残疾人人均年收入
-export const disabeldAvg = (area,startDate,endDate)=>{
+
+/**  执证残疾人页面2  end */
+
+/** 满意度页面 start */
+
+//全年办理总量
+export const yearTotal = ()=>{
   return ajax({
-    url:'disabled/oneincome/avg',
+    url:'satisfaction/transact/year/total',
+    method:'get',
+  })
+}
+//本月办理总量
+export const monthTotal = ()=>{
+  return ajax({
+    url:'satisfaction/transact/month/total',
+    method:'get',
+  })
+}
+// 去年全市满意度
+export const lastYear = ()=>{
+  return ajax({
+    url:'satisfaction/last/year',
+    method:'get',
+  })
+}
+//各区平均满意度
+export const areaSatisfaction = ()=>{
+  return ajax({
+    url:'satisfaction/area',
+    method:'get',
+  })
+}
+//机构满意度 每年满意度 变化趋势
+export const areaEveryYear = ()=>{
+  return ajax({
+    url:'satisfaction/area/every/year',
+    method:'get',
+  })
+}
+//各区的详细满意度
+export const areaDetail = (area)=>{
+  return ajax({
+    url:'satisfaction/area/detail',
     method:'get',
     params:{
-      area:area,
-      startDate:startDate,
-      endDate:endDate
+      area:area
     }
   })
 }
 
-/**  执证残疾人页面 end */
+/** 满意度页面 end */

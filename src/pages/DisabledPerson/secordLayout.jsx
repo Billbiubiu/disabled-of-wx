@@ -6,6 +6,7 @@ import {
   CommonMap,
   RowChart
 } from '../../components';
+import {disabeldDegree,disabeldSpecial,disabeldEducation,disabeldYanglaobx,disabeldYiliaobx,disabeldYanglaobxJMZG,disabeldYiliaobxJMZG,disabeldEmploy,disabeldAge,disabeldTypeForYJY,disabeldEmployment,disabeldUnit} from '../../service/index'
 import * as Icons from '../../assets/images/disabled-person';
 import './secord.scss';
 
@@ -36,367 +37,420 @@ const parseNumber = (number) => {
 
 
 const SecordLayout = (props) => {
+  const {area,timeRange} = props
+  // 残疾人就业 已就业和未就业数量和占比
+  const [jyNum, setJyNum] = useState({})
   // echarts图表
   const [echartsOptions, setEchartsOptions] = useState({
-    '1-1': {
-      grid: {
-        top: "5%",
-        left: "10%",
-        bottom: "13%"
-      },
-      color: ['#00a8e8'],
-      xAxis: {
-        type: 'category',
-        axisLine: {
-          lineStyle: {
-            color: 'white'
-          }
-        },
-        data: ['无', '小学', '初中', '高中', '大专', '本科', '硕士', '博士']
-      },
-      tooltip: {
-        show: true,
-      },
-      yAxis: {
-        type: 'value',
-        axisLine: {
-          lineStyle: {
-            color: 'white'
-          }
-        },
-      },
-      series: [{
-        data: [120, 200, 150, 80, 70, 110, 130, 23],
-        radius: [80, 100],
-        type: 'bar'
-      }]
-    },
-    '1-2': {
-      color: ['#0263ff', '#ff1493', '#00f5ff'],
-      tooltip: {
-        trigger: 'item',
-        formatter: '{b}:{c} ({d}%)',
-        textStyle: {
-          fontWeight: 50,
-          fontSize: '10'
-        }
-      },
-      series: [
-        {
-          name: '面积模式',
-          type: 'pie',
-          radius: [80, 90],
-          roseType: 'area',
-          label: {
-            fontSize: '10',
-            color: "#fff",
-            backgroundColor: "transparent",
-          },
-
-          itemStyle: {
-            borderRadius: 8
-          },
-          data: [
-            { value: 40, name: '特长1' },
-            { value: 38, name: '特长2' },
-            { value: 32, name: '特长3' },
-          ]
-        }
-      ]
-    },
+    '1-1': {},
+    '1-2': {},
     '1-3': {
-      data: [
-        { name: '小学', value: 8768 },
-        { name: '初中', value: 8642 },
-        { name: '高中', value: 8537 },
-        { name: '本科', value: 8422 },
-        { name: '大专', value: 8322 },
-        { name: '本科', value: 8122 },
-        { name: '硕士', value: 7922 },
-        { name: '博士', value: 5622 },
-      ]
+      data: []
     },
-    '2-1-1': {
-      color: ['#ff1493', '#00f5ff'],
-      title: {
-        text: '医疗保险',
-        left: 'center',
-        top: 0,
-        textStyle: {
-          color: 'white',
-          fontSize: '10'
-        }
-      },
-      legend: {
-        textStyle: {
-          fontSize: 10,
-          color: 'white'
-        },
-        width: 1000,
-        bottom: '1',
-        left: 'center',
-        itemWidth: 14,
-      },
-      series: [
-        {
-          name: '医疗保险',
-          type: 'pie',
-          radius: ['40%', '80%'],
-          label: {
-            show: false,
-            position: 'center',
-            color: "#fff",
-            backgroundColor: "transparent",
-          },
-          emphasis: {
-            label: {
-              show: true,
-              fontSize: '10',
-              formatter: `{d}%
-
-{b}`,
-            }
-          },
-          data: [
-            { value: 335, name: '已参保' },
-            { value: 310, name: '未参保' },
-          ],
-          roseType: 'radius',
-        }
-      ]
-    },
-    '2-1-2': {
-      color: ['#ff1493', '#00f5ff'],
-      title: {
-        text: '养老保险',
-        left: 'center',
-        top: 0,
-        textStyle: {
-          color: 'white',
-          fontSize: '10'
-        }
-      },
-      legend: {
-        textStyle: {
-          fontSize: 10,
-          color: 'white'
-        },
-        width: 1000,
-        bottom: '1',
-        left: 'center',
-        itemWidth: 14,
-      },
-      series: [
-        {
-          name: '养老保险',
-          type: 'pie',
-          radius: ['40%', '80%'],
-          label: {
-            show: false,
-            position: 'center',
-            color: "#fff",
-            backgroundColor: "transparent",
-          },
-          emphasis: {
-            label: {
-              show: true,
-              fontSize: '10',
-              formatter: `{d}%
-
-{b}`,
-            }
-          },
-          data: [
-            { value: 335, name: '已参保' },
-            { value: 310, name: '未参保' },
-          ],
-          roseType: 'radius',
-        }
-      ]
-    },
-    '2-1-3': {
-      color: ['#ff1493', '#00f5ff'],
-      title: {
-        text: '养老保险分布',
-        left: 'center',
-        top: '0',
-        textStyle: {
-          color: 'white',
-          fontSize: '10'
-        }
-      },
-      legend: {
-        textStyle: {
-          fontSize: 10,
-          color: 'white'
-        },
-        width: 1000,
-        bottom: '1',
-        left: 'center',
-        itemWidth: 14,
-      },
-      series: [
-        {
-          name: '养老保险分布',
-          type: 'pie',
-          radius: ['40%', '80%'],
-          label: {
-            show: false,
-            position: 'center',
-            color: "#fff",
-            backgroundColor: "transparent",
-          },
-          emphasis: {
-            label: {
-              show: true,
-              fontSize: '10',
-              formatter: `{d}%
-
-{b}`,
-            }
-          },
-          data: [
-            { value: 335, name: '职工养老' },
-            { value: 310, name: '居民养老' },
-          ],
-          roseType: 'radius',
-        }
-      ]
-    },
-    '2-1-4': {
-      color: ['#ff1493', '#00f5ff'],
-      title: {
-        text: '医疗保险分布',
-        left: 'center',
-        top: 0,
-        textStyle: {
-          color: 'white',
-          fontSize: '10'
-        }
-      },
-      legend: {
-        textStyle: {
-          fontSize: 10,
-          color: 'white'
-        },
-        width: 1000,
-        bottom: '1',
-        left: 'center',
-        itemWidth: 14,
-      },
-      series: [
-        {
-          name: '医疗保险分布',
-          type: 'pie',
-          radius: ['40%', '80%'],
-          label: {
-            show: false,
-            position: 'center',
-            color: "#fff",
-            backgroundColor: "transparent",
-          },
-          emphasis: {
-            label: {
-              show: true,
-              fontSize: '10',
-              formatter: `{d}%
-
-{b}`,
-            }
-          },
-          data: [
-            { value: 335, name: '职工医疗' },
-            { value: 310, name: '居民医疗' },
-          ],
-          roseType: 'radius',
-        }
-      ]
-    },
-    '3-1-1': {
-      color: ['#ff1493', '#00f5ff', '#3c98ff', '#ffdb5c', '#f0732e', '#7fce67'],
-      title: {
-        text: '残疾人类别统计',
-        left: 'center',
-        top: 19,
-        textStyle: {
-          color: 'white',
-          fontSize: '10'
-        }
-      },
-      tooltip: {
-        show: true
-      },
-      series: [
-        {
-          name: '残疾人类别统计',
-          type: 'pie',
-          label: {
-            show: false
-          },
-          data: [
-            { value: 335, name: '类型1' },
-            { value: 310, name: '类型2' },
-            { value: 310, name: '类型3' },
-            { value: 310, name: '类型4' },
-            { value: 310, name: '类型5' },
-            { value: 310, name: '类型6' },
-          ],
-          roseType: 'radius',
-        }
-      ]
-    },
-    '3-1-2': {
-      color: ['#ff1493', '#00f5ff', '#3c98ff', '#ffdb5c', '#f0732e', '#7fce67'],
-      title: {
-        text: '残疾人年龄统计',
-        left: 'center',
-        top: 19,
-        textStyle: {
-          color: 'white',
-          fontSize: '10'
-        }
-      },
-      tooltip: {
-        show: true
-      },
-      series: [
-        {
-          name: '残疾人年龄统计',
-          type: 'pie',
-          label: {
-            show: false
-          },
-          data: [
-            { value: 335, name: '18 以下' },
-            { value: 310, name: '19 - 25' },
-            { value: 310, name: '26 - 35' },
-            { value: 310, name: '35 - 55' },
-            { value: 310, name: '55 - 70' },
-            { value: 310, name: '70 以上' },
-          ],
-          roseType: 'radius',
-        }
-      ]
-    },
-    '3-2': {
-      data: [
-        { name: '录用', value: 8768 },
-        { name: '聘用', value: 8642 },
-        { name: '自主创业', value: 8537 },
-        { name: '定向创业', value: 8422 },
-      ]
-    },
-    '3-3': {
-      data: [
-        { name: '国有企业', value: 8768 },
-        { name: '民营企业', value: 8642 },
-        { name: '合资企业', value: 8537 },
-        { name: '外商独资企业', value: 8422 },
-        { name: '政府机关', value: 8322 },
-        { name: '事业单位', value: 8122 },
-      ]
-    }
+    '2-1-1': {},
+    '2-1-2': {},
+    '2-1-3': {},
+    '2-1-4': {},
+    '3-1-1': {},
+    '3-1-2': {},
+    '3-2': {},
+    '3-3':{}
   })
+
+
+  useEffect(()=>{
+    Promise.all([
+      // 残疾人文化程度group数量（无、小学、本科。。。）
+      new Promise((resolve)=>{
+        // disabeldDegree(area, timeRange.startDate, timeRange.endDate).then((res)=>{
+          const options = {
+            grid: {
+              top: "5%",
+              left: "10%",
+              bottom: "13%"
+            },
+            color: ['#00a8e8'],
+            xAxis: {
+              type: 'category',
+              axisLine: {
+                lineStyle: {
+                  color: 'white'
+                }
+              },
+              data: ['无', '小学', '初中', '高中', '大专', '本科', '硕士', '博士']
+            },
+            tooltip: {
+              show: true,
+            },
+            yAxis: {
+              type: 'value',
+              axisLine: {
+                lineStyle: {
+                  color: 'white'
+                }
+              },
+            },
+            series: [{
+              data: [120, 200, 150, 80, 70, 110, 130, 23],
+              radius: [80, 100],
+              type: 'bar'
+            }]
+          } 
+          resolve(options)
+        // })
+      }),
+      // 残疾人的特长 group类型和占比
+      new Promise((resolve)=>{
+        disabeldSpecial(area, timeRange.startDate, timeRange.endDate).then((res)=>{
+          const options = {
+            color: ['#0263ff', '#ff1493', '#00f5ff'],
+            tooltip: {
+              trigger: 'item',
+              formatter: '{b}:{c} ({d}%)',
+              textStyle: {
+                fontWeight: 50,
+                fontSize: '10'
+              }
+            },
+            series: [
+              {
+                name: '面积模式',
+                type: 'pie',
+                radius: [80, 90],
+                roseType: 'area',
+                label: {
+                  fontSize: '10',
+                  color: "#fff",
+                  backgroundColor: "transparent",
+                },
+      
+                itemStyle: {
+                  borderRadius: 8
+                },
+                data: Object.keys(res).map((key)=>{return {name:key,value:res[key]}})
+              }
+            ]
+          }
+          resolve(options)
+        })
+      }),
+      //残疾人在读学习group 学历的数量
+      new Promise((resolve)=>{
+        // disabeldEducation(area, timeRange.startDate, timeRange.endDate).then((res)=>{
+          resolve([
+            { name: '小学', value: 8768 },
+            { name: '初中', value: 8642 },
+            { name: '高中', value: 8537 },
+            { name: '本科', value: 8422 },
+            { name: '大专', value: 8322 },
+            { name: '本科', value: 8122 },
+            { name: '硕士', value: 7922 },
+            { name: '博士', value: 5622 },
+          ])
+        // })
+      }),
+      //医疗保险缴纳和未缴纳数量和占比
+      new Promise((resolve)=>{
+        disabeldYiliaobx(area, timeRange.startDate, timeRange.endDate).then((res)=>{
+          resolve({
+            color: ['#ff1493', '#00f5ff'],
+            title: {
+              text: '医疗保险',
+              left: 'center',
+              top: 0,
+              textStyle: {
+                color: 'white',
+                fontSize: '10'
+              }
+            },
+            legend: {
+              textStyle: {
+                fontSize: 10,
+                color: 'white'
+              },
+              width: 1000,
+              bottom: '1',
+              left: 'center',
+              itemWidth: 14,
+            },
+            series: [
+              {
+                name: '医疗保险',
+                type: 'pie',
+                radius: ['40%', '80%'],
+                label: {
+                  show: false,
+                  position: 'center',
+                  color: "#fff",
+                  backgroundColor: "transparent",
+                },
+                emphasis: {
+                  label: {
+                    show: true,
+                    fontSize: '10',
+                    formatter: `{d}%
+      
+{b}`,
+                  }
+                },
+                data: Object.keys(res).map((key)=>{return {name:key==='wj'?"未参保":"已参保",value:res[key]}}),
+                
+              }
+            ]
+          })
+        })
+      }),
+      //残疾人养老保险缴纳和未缴纳数量和占比
+      new Promise((resolve)=>{
+        disabeldYanglaobx(area, timeRange.startDate, timeRange.endDate).then((res)=>{
+          resolve({
+            color: ['#ff1493', '#00f5ff'],
+            title: {
+              text: '养老保险',
+              left: 'center',
+              top: 0,
+              textStyle: {
+                color: 'white',
+                fontSize: '10'
+              }
+            },
+            legend: {
+              textStyle: {
+                fontSize: 10,
+                color: 'white'
+              },
+              width: 1000,
+              bottom: '1',
+              left: 'center',
+              itemWidth: 14,
+            },
+            series: [
+              {
+                name: '养老保险',
+                type: 'pie',
+                radius: ['40%', '80%'],
+                label: {
+                  show: false,
+                  position: 'center',
+                  color: "#fff",
+                  backgroundColor: "transparent",
+                },
+                emphasis: {
+                  label: {
+                    show: true,
+                    fontSize: '10',
+                    formatter: `{d}%
+      
+{b}`,
+                  }
+                },
+                data: Object.keys(res).map((key)=>{return {name:key==='wj'?"未参保":"已参保",value:res[key]}}),
+                
+              }
+            ]
+          })
+        })
+      }),
+      //养老保险分布职工养老和居民养老数量
+      new Promise((resolve)=>{
+        disabeldYanglaobxJMZG(area, timeRange.startDate, timeRange.endDate).then((res)=>{
+          resolve({
+            color: ['#ff1493', '#00f5ff'],
+            title: {
+              text: '养老保险分布',
+              left: 'center',
+              top: '0',
+              textStyle: {
+                color: 'white',
+                fontSize: '10'
+              }
+            },
+            legend: {
+              textStyle: {
+                fontSize: 10,
+                color: 'white'
+              },
+              width: 1000,
+              bottom: '1',
+              left: 'center',
+              itemWidth: 14,
+            },
+            series: [
+              {
+                name: '养老保险分布',
+                type: 'pie',
+                radius: ['40%', '80%'],
+                label: {
+                  show: false,
+                  position: 'center',
+                  color: "#fff",
+                  backgroundColor: "transparent",
+                },
+                emphasis: {
+                  label: {
+                    show: true,
+                    fontSize: '10',
+                    formatter: `{d}%
+      
+{b}`,
+                  }
+                },
+                data: Object.keys(res).map((key)=>{return {name:key==='resident'?"居民医疗":"职工医疗",value:res[key]}}),
+                
+              }
+            ]
+          })
+        })
+      }),
+      //医疗保险分布职工养老和居民养老数量
+      new Promise((resolve)=>{
+        disabeldYiliaobxJMZG(area, timeRange.startDate, timeRange.endDate).then((res)=>{
+          resolve({
+            color: ['#ff1493', '#00f5ff'],
+            title: {
+              text: '医疗保险分布',
+              left: 'center',
+              top: 0,
+              textStyle: {
+                color: 'white',
+                fontSize: '10'
+              }
+            },
+            legend: {
+              textStyle: {
+                fontSize: 10,
+                color: 'white'
+              },
+              width: 1000,
+              bottom: '1',
+              left: 'center',
+              itemWidth: 14,
+            },
+            series: [
+              {
+                name: '医疗保险分布',
+                type: 'pie',
+                radius: ['40%', '80%'],
+                label: {
+                  show: false,
+                  position: 'center',
+                  color: "#fff",
+                  backgroundColor: "transparent",
+                },
+                emphasis: {
+                  label: {
+                    show: true,
+                    fontSize: '10',
+                    formatter: `{d}%
+      
+{b}`,
+                  }
+                },
+                data: Object.keys(res).map((key)=>{return {name:key==='resident'?"居民医疗":"职工医疗",value:res[key]}}),
+              }
+            ]
+          })
+        })
+      }),
+      //残疾人就业 已就业和未就业数量和占比
+      new Promise((resolve)=>{
+        disabeldEmploy(area, timeRange.startDate, timeRange.endDate).then((res)=>{
+          setJyNum(res)
+          resolve({})
+        })
+      }),
+      //已就业的残疾人中，年龄段的数量
+      new Promise((resolve)=>{
+        disabeldAge(area, timeRange.startDate, timeRange.endDate).then((res)=>{
+          resolve({
+            color: ['#ff1493', '#00f5ff', '#3c98ff', '#ffdb5c', '#f0732e', '#7fce67'],
+            title: {
+              text: '残疾人年龄统计',
+              left: 'center',
+              top: 19,
+              textStyle: {
+                color: 'white',
+                fontSize: '10'
+              }
+            },
+            tooltip: {
+              show: true
+            },
+            series: [
+              {
+                name: '残疾人年龄统计',
+                type: 'pie',
+                label: {
+                  show: false
+                },
+                data: Object.keys(res).map((key)=>{return {name:key,value:res[key]}}),
+              }
+            ]
+          })
+        })
+      }),
+      //已就业的残疾中 残疾人的类型和占比
+      new Promise((resolve)=>{
+        disabeldTypeForYJY(area, timeRange.startDate, timeRange.endDate).then((res)=>{
+          resolve({
+            color: ['#ff1493', '#00f5ff', '#3c98ff', '#ffdb5c', '#f0732e', '#7fce67'],
+            title: {
+              text: '残疾人类别统计',
+              left: 'center',
+              top: 19,
+              textStyle: {
+                color: 'white',
+                fontSize: '10'
+              }
+            },
+            tooltip: {
+              show: true
+            },
+            series: [
+              {
+                name: '残疾人类别统计',
+                type: 'pie',
+                label: {
+                  show: false
+                },
+                data: Object.keys(res).map((key)=>{return {name:key,value:res[key]}}),
+              }
+            ]
+          })
+        })
+      }),
+      //残疾人就业形式分类
+      new Promise((resolve)=>{
+        disabeldEmployment(area, timeRange.startDate, timeRange.endDate).then((res)=>{
+            resolve({
+              data: Object.keys(res).map((key)=>{return {name:key,value:res[key]}}),
+            })
+        })
+      }),
+      //残疾人就业单位性质分类
+      new Promise((resolve)=>{
+        disabeldUnit(area, timeRange.startDate, timeRange.endDate).then((res)=>{
+            resolve( {
+              data: Object.keys(res).map((key)=>{return {name:key,value:res[key]}})
+            })
+        })
+      }),
+    ]).then((res)=>{
+      setEchartsOptions({...echartsOptions,
+        '1-1':res[0],
+        '1-2':res[1],
+        '1-3':{data:res[2]},
+        '2-1-1':res[3],
+        '2-1-2':res[4],
+        '2-1-3':res[5],
+        '2-1-4':res[6],
+        '3-1-1':res[9],
+        '3-1-2':res[8],
+        '3-2':res[10],
+        '3-3':res[11]
+      })
+    })
+  },[area, timeRange])
 
   return (
     <GridLayout layout={layout}>
@@ -436,21 +490,21 @@ const SecordLayout = (props) => {
         <div className="grid-item-content sex-analysis">
           <div className="sex-rate">
             <div className="rate-container">
-              <div className="rate-man" style={{ width: "64%" }}></div>
+              <div className="rate-man" style={{ width: jyNum.jy * 100 / (jyNum.jy + jyNum.wjy) + "%" }}></div>
               <div className="rate-icon">
                 <div className="rate-bc"></div>
               </div>
-              <div className="rate-woman" style={{ width: "36%" }}></div>
+              <div className="rate-woman" style={{ width: jyNum.wjy * 100 / (jyNum.jy + jyNum.wjy) + "%" }}></div>
             </div>
           </div>
           <div className="memo">
             <div className="man-memo">
-              <div style={{ fontSize: '6rem' }}>就业：64%</div>
-              <span><span style={{ fontSize: '6rem' }}>12311</span>人</span>
+              <div style={{ fontSize: '6rem' }}>就业：{(jyNum.jy * 100 / (jyNum.jy + jyNum.wjy)).toFixed(2) + "%"}</div>
+              <span><span style={{ fontSize: '6rem' }}>{jyNum.jy}</span>人</span>
             </div>
             <div className="woman-memo">
-              <div style={{ fontSize: '6rem' }}>未就业：36%</div>
-              <span><span style={{ fontSize: '6rem' }}>12311</span>人</span>
+              <div style={{ fontSize: '6rem' }}>未就业：{(jyNum.wjy * 100 / (jyNum.jy + jyNum.wjy)).toFixed(2) + "%"}</div>
+              <span><span style={{ fontSize: '6rem' }}>{jyNum.wjy}</span>人</span>
             </div>
           </div>
         </div>

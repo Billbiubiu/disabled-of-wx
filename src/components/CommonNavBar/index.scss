@@ -17,6 +17,16 @@
     font-size: 30px;
     text-align: center;
   }
+  .ant-picker{
+    input,.ant-picker-range-separator,.ant-picker-suffix{
+      color: #fff;
+      span{
+      color: #fff;
+
+      }
+    }
+    background-color: unset;
+  }
 
   .bar-btn {
     width: 450px;
