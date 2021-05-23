@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import ReactEcharts from 'echarts-for-react';
 import { Layout, Spin } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
@@ -49,7 +49,14 @@ const parseNumber = (number) => {
 }
 
 const ServiceAgencies = () => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [params, setParams] = useReducer((state, newState) => ({
+    ...state,
+    ...newState,
+  }), null);
+  const onAreaChange = useCallback(({ name }) => {
+    setParams({ area: name });
+  }, []);
   // 残疾人康复机构数据统计
   const [agencyStatisticsData, setAgencyStatisticsData] = useState([]);
   // echarts图表配置
@@ -72,9 +79,11 @@ const ServiceAgencies = () => {
   const [businessStatisticsData, setBusinessStatisticsData] = useState([]);
   // 当前选中的服务机构数据
   useEffect(() => {
+    if (!params) return;
+    setLoading(true);
     Promise.all([
       // 1-1
-      getOrganizationTotal({}).then(res => {
+      getOrganizationTotal(params).then(res => {
         const { organizationTotal, workPersonnelSum } = res;
         setAgencyStatisticsData([
           { name: '服务机构数量', value: parseNumber(organizationTotal) },
@@ -83,7 +92,7 @@ const ServiceAgencies = () => {
         ])
       }),
       // 1-2
-      getOrganizationCategoryTotal({}).then(res => {
+      getOrganizationCategoryTotal(params).then(res => {
         console.log(res);
         mergeEchartsOptions({
           '1-2': {
@@ -97,7 +106,7 @@ const ServiceAgencies = () => {
         })
       }),
       // 不知道干嘛的
-      getOrganizationCategoryWorkPersonnelTotal({}).then(res => {
+      getOrganizationCategoryWorkPersonnelTotal(params).then(res => {
         console.log(res);
       }),
       // 2-2
@@ -145,7 +154,7 @@ const ServiceAgencies = () => {
         })
       }),
       // 3-1
-      getOrganizationCompanyTotal({}).then(res => {
+      getOrganizationCompanyTotal(params).then(res => {
         const { companyTotal, disabledPeopleSum, companyGroupDisabledPeople } = res;
         setBusinessStatisticsData([
           { name: '单位数量', value: parseNumber(companyTotal), unit: '个' },
@@ -174,7 +183,7 @@ const ServiceAgencies = () => {
     ]).finally(() => {
       setLoading(false);
     });
-  }, []);
+  }, [params]);
   // 弹窗状态
   const [commonModalVisible, setCommonModalVisible] = useState(false);
   return (
@@ -183,106 +192,108 @@ const ServiceAgencies = () => {
       <ContainerWithCorner
         component={Content}
         className="service-agencies-content">
-        {loading ? (
-          <Spin loading={loading} style={{
+        <GridLayout layout={layout} style={{ visibility: loading ? 'hidden' : 'visible' }}>
+          <ContainerWithBorder key="1-1" className="grid-item">
+            <div className="grid-item-title">
+              <span>残疾人康复机构数据统计</span>
+            </div>
+            <div className="grid-item-content agency-statistics">
+              {agencyStatisticsData.map((item, index) => {
+                const { name, value } = item;
+                const key = index;
+                return (
+                  <div key={key} className="agency-statistics-item">
+                    <div className="agency-statistics-value">
+                      <img
+                        alt=""
+                        src={icons.agencyStatisticsIcon}
+                        className="agency-statistics-icon"
+                      />
+                      {value}
+                    </div>
+                    <div className="agency-statistics-name">{name}</div>
+                  </div>
+                )
+              })}
+            </div>
+            <div className="grid-item-title">
+              <span>服务机构数据</span>
+            </div>
+            <div
+              className="grid-item-content"
+              style={{ flex: 4 }}
+            >
+              <StachChart
+                option={echartsOptions['1-2']}
+                style={{ flex: 1 }}
+              />
+            </div>
+          </ContainerWithBorder>
+          <ContainerWithBorder key="2-1" className="grid-item">
+            <CommonMap callBack={onAreaChange} />
+          </ContainerWithBorder>
+          <ContainerWithBorder key="2-2" className="grid-item">
+            <div className="grid-item-title">
+              <span>机构每月残疾人变化趋势</span>
+            </div>
+            <ReactEcharts
+              option={echartsOptions['2-2']}
+              className="grid-item-content"
+            />
+            <div style={{ position: 'absolute', top: '20rem', right: '20rem' }}>
+              <MenuOutlined
+                onClick={() => setCommonModalVisible(true)}
+                style={{ fontSize: '1.5em' }}
+              />
+            </div>
+          </ContainerWithBorder>
+          <ContainerWithBorder key="3-1" className="grid-item">
+            <div className="grid-item-title">
+              <span>残疾人服务机构办理事务情况统计</span>
+            </div>
+            <div className="grid-item-content business-statistics">
+              {businessStatisticsData.map((item, index) => {
+                const { name, value, unit } = item;
+                const key = index;
+                return (
+                  <div
+                    key={key}
+                    className="business-statistics-item"
+                  >
+                    <div>
+                      <div>
+                        <span className="business-statistics-value">{value}</span>
+                        <span>&nbsp;</span>
+                        <span className="business-statistics-unit">{unit}</span>
+                      </div>
+                      <div className="business-statistics-name">{name}</div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </ContainerWithBorder>
+          <ContainerWithBorder key="3-2" className="grid-item">
+            <div className="grid-item-title">
+              <span>残联机构</span>
+            </div>
+            <RowChart
+              option={echartsOptions['3-2']}
+              className="grid-item-content"
+            />
+          </ContainerWithBorder>
+        </GridLayout>
+        {loading && (
+          <Spin style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
             width: '100%',
             height: '100%',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
           }} />
-        ) : (
-          <GridLayout layout={layout}>
-            <ContainerWithBorder key="1-1" className="grid-item">
-              <div className="grid-item-title">
-                <span>残疾人康复机构数据统计</span>
-              </div>
-              <div className="grid-item-content agency-statistics">
-                {agencyStatisticsData.map((item, index) => {
-                  const { name, value } = item;
-                  const key = index;
-                  return (
-                    <div key={key} className="agency-statistics-item">
-                      <div className="agency-statistics-value">
-                        <img
-                          alt=""
-                          src={icons.agencyStatisticsIcon}
-                          className="agency-statistics-icon"
-                        />
-                        {value}
-                      </div>
-                      <div className="agency-statistics-name">{name}</div>
-                    </div>
-                  )
-                })}
-              </div>
-              <div className="grid-item-title">
-                <span>服务机构数据</span>
-              </div>
-              <div
-                className="grid-item-content"
-                style={{ flex: 4 }}
-              >
-                <StachChart
-                  option={echartsOptions['1-2']}
-                  style={{ flex: 1 }}
-                />
-              </div>
-            </ContainerWithBorder>
-            <ContainerWithBorder key="2-1" className="grid-item">
-              <CommonMap />
-            </ContainerWithBorder>
-            <ContainerWithBorder key="2-2" className="grid-item">
-              <div className="grid-item-title">
-                <span>机构每月残疾人变化趋势</span>
-              </div>
-              <ReactEcharts
-                option={echartsOptions['2-2']}
-                className="grid-item-content"
-              />
-              <div style={{ position: 'absolute', top: '20rem', right: '20rem' }}>
-                <MenuOutlined
-                  onClick={() => setCommonModalVisible(true)}
-                  style={{ fontSize: '1.5em' }}
-                />
-              </div>
-            </ContainerWithBorder>
-            <ContainerWithBorder key="3-1" className="grid-item">
-              <div className="grid-item-title">
-                <span>残疾人服务机构办理事务情况统计</span>
-              </div>
-              <div className="grid-item-content business-statistics">
-                {businessStatisticsData.map((item, index) => {
-                  const { name, value, unit } = item;
-                  const key = index;
-                  return (
-                    <div
-                      key={key}
-                      className="business-statistics-item"
-                    >
-                      <div>
-                        <div>
-                          <span className="business-statistics-value">{value}</span>
-                          <span>&nbsp;</span>
-                          <span className="business-statistics-unit">{unit}</span>
-                        </div>
-                        <div className="business-statistics-name">{name}</div>
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            </ContainerWithBorder>
-            <ContainerWithBorder key="3-2" className="grid-item">
-              <div className="grid-item-title">
-                <span>残联机构</span>
-              </div>
-              <RowChart
-                option={echartsOptions['3-2']}
-                className="grid-item-content"
-              />
-            </ContainerWithBorder>
-          </GridLayout>
         )}
       </ContainerWithCorner>
       <CommonModal

@@ -49,7 +49,7 @@ const parseNumber = (number) => {
 }
 
 const ServiceOnline = (props) => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   // 注册人数
   const [registeredCount, setRegisteredCount] = useState(0);
   const registeredCountList = useMemo(() => {
@@ -91,6 +91,7 @@ const ServiceOnline = (props) => {
     '3-3': {},
   });
   useEffect(() => {
+    setLoading(true);
     Promise.all([
       // 1-1
       Promise.resolve().then(() => {
@@ -425,153 +426,155 @@ const ServiceOnline = (props) => {
       <ContainerWithCorner
         component={Content}
         className="service-online-content">
-        {loading ? (
-          <Spin loading={loading} style={{
+        <GridLayout layout={layout} style={{ visibility: loading ? 'hidden' : 'visible' }}>
+          <ContainerWithBorder key="1-1" className="grid-item">
+            <div className="grid-item-title">
+              <span>注册人数据统计</span>
+            </div>
+            <div className="grid-item-content" style={{ flex: 'none' }}>
+              <div className="registered-count">
+                <span className="registered-count-label">残疾人数</span>
+                <span className="registered-count-value">
+                  {registeredCountList.map((item, index) => {
+                    const key = index;
+                    const className = item === ',' ? 'registered-count-separate' : 'registered-count-number';
+                    return (
+                      <span key={key} className={className}>{item}</span>
+                    )
+                  })}
+                </span>
+              </div>
+              <div className="user-statistics">
+                {userStatisticsList.map((item, index) => {
+                  const { name, value, icon } = item;
+                  const key = index;
+                  return (
+                    <div key={key} className="user-statistics-item">
+                      <img alt="" src={icon} className="item-icon" />
+                      <div>
+                        <div className="item-value">{value}</div>
+                        <div className="item-name">{name}</div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="grid-item-title">
+              <span>互动交流</span>
+            </div>
+            <ReactEcharts
+              option={echartsOptions['1-2']}
+              className="grid-item-content"
+            />
+            <div className="grid-item-title">
+              <span>业务模块</span>
+            </div>
+            <ReactEcharts
+              option={echartsOptions['1-3']}
+              className="grid-item-content"
+            />
+            <div className="grid-item-title">
+              <span>热点服务</span>
+            </div>
+            <RowChart
+              option={echartsOptions['1-4']}
+              className="grid-item-content"
+              style={{ height: '200rem', flexShrink: 0 }}
+            />
+          </ContainerWithBorder >
+          <ContainerWithBorder
+            key="2-1"
+            className="grid-item"
+            style={{ color: '#01DEF6', textAlign: 'center' }}
+          >
+            <div style={{
+              fontSize: '25rem',
+            }}>江阴市</div>
+            <div className="mini-program-statistics" style={{ flex: 1 }}>
+              <div style={{
+                width: '30%',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                backgroundColor: 'rgba(4, 49, 128, 0.2)',
+                boxShadow: '0 0 12rem 10rem rgba(4, 49, 128, 0.6) inset',
+                marginRight: '5rem',
+                position: 'relative',
+              }}>
+                <div>小程序服务总数</div>
+                <br />
+                <div style={{ fontSize: '30rem', }}>{miniProgramTotal}</div>
+                <div style={{ width: '10rem', height: '10rem', position: 'absolute', top: '-1rem', left: '-1rem', borderTop: '2rem solid #00A8E7', borderLeft: '2px solid #00A8E7' }}></div>
+                <div style={{ width: '10rem', height: '10rem', position: 'absolute', top: '-1rem', right: '-1rem', borderTop: '2rem solid #00A8E7', borderRight: '2px solid #00A8E7' }}></div>
+                <div style={{ width: '10rem', height: '10rem', position: 'absolute', bottom: '-1rem', right: '-1rem', borderBottom: '2rem solid #00A8E7', borderRight: '2px solid #00A8E7' }}></div>
+                <div style={{ width: '10rem', height: '10rem', position: 'absolute', bottom: '-1rem', left: '-1rem', borderBottom: '2rem solid #00A8E7', borderLeft: '2px solid #00A8E7' }}></div>
+              </div>
+              {miniProgramStatisticsList.map((item, index) => {
+                const { name, value } = item;
+                const key = index;
+                return (
+                  <div key={key} className="mini-program-item" >
+                    <span className="item-value">{value}</span>
+                    <img className="item-icon" src={icons.computer} alt="" />
+                    <span className="item-name">{name}</span>
+                  </div>
+                )
+              })}
+            </div>
+            <ReactEcharts
+              option={echartsOptions['2-1']}
+              style={{ height: '60%' }}
+            />
+          </ContainerWithBorder>
+          <ContainerWithBorder key="2-2" className="grid-item">
+            <div className="grid-item-title">
+              <span>康复签到</span>
+            </div>
+            <ReactEcharts
+              option={echartsOptions['2-2']}
+              className="grid-item-content"
+            />
+          </ContainerWithBorder>
+          <ContainerWithBorder key="3-1" className="grid-item">
+            <div className="grid-item-title">
+              <span>点击量</span>
+            </div>
+            <ReactEcharts
+              option={echartsOptions['3-1']}
+              className="grid-item-content"
+            />
+          </ContainerWithBorder>
+          <ContainerWithBorder key="3-2" className="grid-item">
+            <div className="grid-item-title">
+              <span>无障碍地图</span>
+            </div>
+            <ReactEcharts
+              option={echartsOptions['3-2']}
+              className="grid-item-content"
+            />
+          </ContainerWithBorder>
+          <ContainerWithBorder key="3-3" className="grid-item">
+            <div className="grid-item-title">
+              <span>无障碍建筑与设施评分</span>
+            </div>
+            <ReactEcharts
+              option={echartsOptions['3-3']}
+              className="grid-item-content"
+            />
+          </ContainerWithBorder>
+        </GridLayout >
+        {loading && (
+          <Spin style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
             width: '100%',
             height: '100%',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
           }} />
-        ) : (
-          <GridLayout layout={layout}>
-            <ContainerWithBorder key="1-1" className="grid-item">
-              <div className="grid-item-title">
-                <span>注册人数据统计</span>
-              </div>
-              <div className="grid-item-content" style={{ flex: 'none' }}>
-                <div className="registered-count">
-                  <span className="registered-count-label">残疾人数</span>
-                  <span className="registered-count-value">
-                    {registeredCountList.map((item, index) => {
-                      const key = index;
-                      const className = item === ',' ? 'registered-count-separate' : 'registered-count-number';
-                      return (
-                        <span key={key} className={className}>{item}</span>
-                      )
-                    })}
-                  </span>
-                </div>
-                <div className="user-statistics">
-                  {userStatisticsList.map((item, index) => {
-                    const { name, value, icon } = item;
-                    const key = index;
-                    return (
-                      <div key={key} className="user-statistics-item">
-                        <img alt="" src={icon} className="item-icon" />
-                        <div>
-                          <div className="item-value">{value}</div>
-                          <div className="item-name">{name}</div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-              <div className="grid-item-title">
-                <span>互动交流</span>
-              </div>
-              <ReactEcharts
-                option={echartsOptions['1-2']}
-                className="grid-item-content"
-              />
-              <div className="grid-item-title">
-                <span>业务模块</span>
-              </div>
-              <ReactEcharts
-                option={echartsOptions['1-3']}
-                className="grid-item-content"
-              />
-              <div className="grid-item-title">
-                <span>热点服务</span>
-              </div>
-              <RowChart
-                option={echartsOptions['1-4']}
-                className="grid-item-content"
-                style={{ height: '200rem', flexShrink: 0 }}
-              />
-            </ContainerWithBorder >
-            <ContainerWithBorder
-              key="2-1"
-              className="grid-item"
-              style={{ color: '#01DEF6', textAlign: 'center' }}
-            >
-              <div style={{
-                fontSize: '25rem',
-              }}>江阴市</div>
-              <div className="mini-program-statistics" style={{ flex: 1 }}>
-                <div style={{
-                  width: '30%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  backgroundColor: 'rgba(4, 49, 128, 0.2)',
-                  boxShadow: '0 0 12rem 10rem rgba(4, 49, 128, 0.6) inset',
-                  marginRight: '5rem',
-                  position: 'relative',
-                }}>
-                  <div>小程序服务总数</div>
-                  <br />
-                  <div style={{ fontSize: '30rem', }}>{miniProgramTotal}</div>
-                  <div style={{ width: '10rem', height: '10rem', position: 'absolute', top: '-1rem', left: '-1rem', borderTop: '2rem solid #00A8E7', borderLeft: '2px solid #00A8E7' }}></div>
-                  <div style={{ width: '10rem', height: '10rem', position: 'absolute', top: '-1rem', right: '-1rem', borderTop: '2rem solid #00A8E7', borderRight: '2px solid #00A8E7' }}></div>
-                  <div style={{ width: '10rem', height: '10rem', position: 'absolute', bottom: '-1rem', right: '-1rem', borderBottom: '2rem solid #00A8E7', borderRight: '2px solid #00A8E7' }}></div>
-                  <div style={{ width: '10rem', height: '10rem', position: 'absolute', bottom: '-1rem', left: '-1rem', borderBottom: '2rem solid #00A8E7', borderLeft: '2px solid #00A8E7' }}></div>
-                </div>
-                {miniProgramStatisticsList.map((item, index) => {
-                  const { name, value } = item;
-                  const key = index;
-                  return (
-                    <div key={key} className="mini-program-item" >
-                      <span className="item-value">{value}</span>
-                      <img className="item-icon" src={icons.computer} alt="" />
-                      <span className="item-name">{name}</span>
-                    </div>
-                  )
-                })}
-              </div>
-              <ReactEcharts
-                option={echartsOptions['2-1']}
-                style={{ height: '60%' }}
-              />
-            </ContainerWithBorder>
-            <ContainerWithBorder key="2-2" className="grid-item">
-              <div className="grid-item-title">
-                <span>康复签到</span>
-              </div>
-              <ReactEcharts
-                option={echartsOptions['2-2']}
-                className="grid-item-content"
-              />
-            </ContainerWithBorder>
-            <ContainerWithBorder key="3-1" className="grid-item">
-              <div className="grid-item-title">
-                <span>点击量</span>
-              </div>
-              <ReactEcharts
-                option={echartsOptions['3-1']}
-                className="grid-item-content"
-              />
-            </ContainerWithBorder>
-            <ContainerWithBorder key="3-2" className="grid-item">
-              <div className="grid-item-title">
-                <span>无障碍地图</span>
-              </div>
-              <ReactEcharts
-                option={echartsOptions['3-2']}
-                className="grid-item-content"
-              />
-            </ContainerWithBorder>
-            <ContainerWithBorder key="3-3" className="grid-item">
-              <div className="grid-item-title">
-                <span>无障碍建筑与设施评分</span>
-              </div>
-              <ReactEcharts
-                option={echartsOptions['3-3']}
-                className="grid-item-content"
-              />
-            </ContainerWithBorder>
-          </GridLayout >
         )}
       </ContainerWithCorner >
     </Layout >

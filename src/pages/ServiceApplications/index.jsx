@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useReducer, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import ReactEcharts from 'echarts-for-react';
 import { Layout, Spin } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
@@ -61,6 +61,13 @@ const layout = [
 
 const ServiceApplications = (props) => {
   const [loading, setLoading] = useState(true);
+  const [params, setParams] = useReducer((state, newState) => ({
+    ...state,
+    ...newState,
+  }), null);
+  const onAreaChange = useCallback(({ name }) => {
+    setParams({ area: name });
+  }, []);
   // 申请人数量
   const [applicantCount, setApplicantCount] = useState(0);
   const applicantCountList = useMemo(() => {
@@ -91,13 +98,15 @@ const ServiceApplications = (props) => {
     '3-1': {},
   });
   useEffect(() => {
+    if (!params) return;
+    setLoading(true);
     Promise.all([
-      getServiceTotal({}).then(res => {
+      getServiceTotal(params).then(res => {
         const { serviceTotal } = res;
         setApplicantCount(serviceTotal);
       }),
       // 1-2
-      getServiceWeiwen({}).then(res => {
+      getServiceWeiwen(params).then(res => {
         const { wza, dbc } = res;
         const data = [
           { name: '无障碍改造', value: wza },
@@ -106,7 +115,7 @@ const ServiceApplications = (props) => {
         mergeEchartsOptions({ '1-2': { data, unit: '人' } });
       }),
       // 1-3
-      getServiceKangfu({}).then(res => {
+      getServiceKangfu(params).then(res => {
         const data = Object.keys(res).map(key => {
           const name = KANGFU_MAP[key];
           const value = res[key];
@@ -115,7 +124,7 @@ const ServiceApplications = (props) => {
         mergeEchartsOptions({ '1-3': { data } });
       }),
       // 2-2
-      getServiceEveryMonth({}).then(res => {
+      getServiceEveryMonth(params).then(res => {
         const names = Object.keys(res);
         const values = names.map(key => res[key]);
         mergeEchartsOptions({
@@ -161,7 +170,7 @@ const ServiceApplications = (props) => {
         });
       }),
       // 2-3
-      getServiceEveryYear({}).then(res => {
+      getServiceEveryYear(params).then(res => {
         const names = Object.keys(res);
         const values = names.map(key => res[key]);
         mergeEchartsOptions({
@@ -207,7 +216,7 @@ const ServiceApplications = (props) => {
         });
       }),
       // 3-1
-      getServiceJiaojiu({}).then(res => {
+      getServiceJiaojiu(params).then(res => {
         const data = Object.keys(res).map(key => {
           const name = JIAOJIU_MAP[key];
           const value = res[key];
@@ -218,7 +227,7 @@ const ServiceApplications = (props) => {
     ]).finally(() => {
       setLoading(false);
     });
-  }, []);
+  }, [params]);
   // 弹窗状态
   const [commonModalVisible, setCommonModalVisible] = useState(false);
   return (
@@ -227,81 +236,83 @@ const ServiceApplications = (props) => {
       <ContainerWithCorner
         component={Content}
         className="service-applications-content">
-        {loading ? (
-          <Spin loading={loading} style={{
+        <GridLayout layout={layout} style={{ visibility: loading ? 'hidden' : 'visible' }}>
+          <ContainerWithBorder key="1-1" className="grid-item">
+            <div className="grid-item-title">
+              <span>服务申请人数统计</span>
+            </div>
+            <div className="grid-item-content applicant-count">
+              <span className="applicant-count-label">申请人数量</span>
+              <span className="applicant-count-value">
+                {
+                  applicantCountList.map((item, index) => {
+                    const key = index;
+                    const className = item === ',' ? 'applicant-count-separate' : 'applicant-count-number';
+                    return (
+                      <span key={key} className={className}>{item}</span>
+                    )
+                  })
+                }
+              </span>
+            </div>
+          </ContainerWithBorder>
+          <ContainerWithBorder key="1-2" className="grid-item">
+            <div className="grid-item-title">
+              <span>维文</span>
+            </div>
+            <RowChart
+              option={echartsOptions['1-2']}
+              className="grid-item-content"
+            />
+          </ContainerWithBorder>
+          <ContainerWithBorder key="1-3" className="grid-item">
+            <div className="grid-item-title">
+              <span>康复</span>
+            </div>
+            <RowChart
+              option={echartsOptions['1-3']}
+              className="grid-item-content"
+            />
+          </ContainerWithBorder>
+          <ContainerWithBorder key="2-1" className="grid-item">
+            <CommonMap callBack={onAreaChange} />
+          </ContainerWithBorder>
+          <ContainerWithBorder key="2-2" className="grid-item">
+            <div className="grid-item-title">
+              <span>机构每月残疾人服务申请变化趋势</span>
+            </div>
+            <ReactEcharts
+              option={echartsOptions['2-2']}
+              className="grid-item-content"
+            />
+            <div style={{ position: 'absolute', top: '20rem', right: '20rem' }}>
+              <MenuOutlined
+                onClick={() => setCommonModalVisible(true)}
+                style={{ fontSize: '1.5em' }}
+              />
+            </div>
+          </ContainerWithBorder>
+          <ContainerWithBorder key="3-1" className="grid-item">
+            <div className="grid-item-title">
+              <span>教就</span>
+            </div>
+            <RowChart
+              option={echartsOptions['3-1']}
+              className="grid-item-content"
+            />
+          </ContainerWithBorder>
+        </GridLayout>
+        {loading && (
+          <Spin style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
             width: '100%',
             height: '100%',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
           }} />
-        ) : (
-          <GridLayout layout={layout} margin={[5, 5]}>
-            <ContainerWithBorder key="1-1" className="grid-item">
-              <div className="grid-item-title">
-                <span>服务申请人数统计</span>
-              </div>
-              <div className="grid-item-content applicant-count">
-                <span className="applicant-count-label">申请人数量</span>
-                <span className="applicant-count-value">
-                  {
-                    applicantCountList.map((item, index) => {
-                      const key = index;
-                      const className = item === ',' ? 'applicant-count-separate' : 'applicant-count-number';
-                      return (
-                        <span key={key} className={className}>{item}</span>
-                      )
-                    })
-                  }
-                </span>
-              </div>
-            </ContainerWithBorder>
-            <ContainerWithBorder key="1-2" className="grid-item">
-              <div className="grid-item-title">
-                <span>维文</span>
-              </div>
-              <RowChart
-                option={echartsOptions['1-2']}
-                className="grid-item-content"
-              />
-            </ContainerWithBorder>
-            <ContainerWithBorder key="1-3" className="grid-item">
-              <div className="grid-item-title">
-                <span>康复</span>
-              </div>
-              <RowChart
-                option={echartsOptions['1-3']}
-                className="grid-item-content"
-              />
-            </ContainerWithBorder>
-            <ContainerWithBorder key="2-1" className="grid-item">
-              <CommonMap />
-            </ContainerWithBorder>
-            <ContainerWithBorder key="2-2" className="grid-item">
-              <div className="grid-item-title">
-                <span>机构每月残疾人服务申请变化趋势</span>
-              </div>
-              <ReactEcharts
-                option={echartsOptions['2-2']}
-                className="grid-item-content"
-              />
-              <div style={{ position: 'absolute', top: '20rem', right: '20rem' }}>
-                <MenuOutlined
-                  onClick={() => setCommonModalVisible(true)}
-                  style={{ fontSize: '1.5em' }}
-                />
-              </div>
-            </ContainerWithBorder>
-            <ContainerWithBorder key="3-1" className="grid-item">
-              <div className="grid-item-title">
-                <span>教就</span>
-              </div>
-              <RowChart
-                option={echartsOptions['3-1']}
-                className="grid-item-content"
-              />
-            </ContainerWithBorder>
-          </GridLayout>
         )}
       </ContainerWithCorner>
       <CommonModal
