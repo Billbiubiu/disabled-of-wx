@@ -9,7 +9,7 @@ import {
 import { Spin } from 'antd'
 import * as Icons from '../../assets/images/disabled-person';
 import './firstLayout.scss';
-import { getDisabledNum, disabeldType, disabeldSex, disabeldMarry, disabeldDbNum,disabeldAvg} from '../../service/index'
+import { getDisabledNum, disabeldType, disabeldSex, disabeldMarry, disabeldDbNum,disabeldAvg,getMultipleNum,getSevereNum,getSuspectedNum,disabeldPersonAvg} from '../../service/index'
 
 // 布局数据
 const layout = [
@@ -39,6 +39,7 @@ const parseNumber = (number) => {
 
 
 const FirstLayout = (props) => {
+  const {area,setArea,timeRange} = props
   // 残疾人数
   const [disabledCount, setDisabledCount] = useState(0);
   //残疾人类型总数
@@ -47,14 +48,9 @@ const FirstLayout = (props) => {
   const [disabledAnalysis, setDisabledAnalysis] = useState([])
   // 残疾人收入统计
   const [disabledMoney, setDisabledMoney] = useState([])
-  //选择地图的区域
-  const [area, setArea] = useState()
   // 残疾人性别数量
   const [sexNum, setSexNum] = useState({})
-  // 是否切换到第二屏幕
-  const [switchFlag, setSwtichFlag] = useState(false)
-  // 时间范围
-  const [timeRange, setTimeRange] = useState({})
+
   //是否加载完毕
   const [loading, setLoading] = useState()
 
@@ -204,7 +200,6 @@ const FirstLayout = (props) => {
             { value: 335, name: '直接访问' },
             { value: 310, name: '邮件营销' },
           ],
-          roseType: 'radius',
         }
       ]
     },
@@ -215,7 +210,8 @@ const FirstLayout = (props) => {
   });
 
   useEffect(() => {
-    setLoading(false)
+    // setLoading(false)
+    setLoading(true)
     Promise.all([
       //执证残疾人总数
       new Promise((resolve) => {
@@ -308,47 +304,56 @@ const FirstLayout = (props) => {
           })
         })
       }),
-      //
+      // 残疾人人均年收入
       new Promise((resolve)=>{
         disabeldAvg(area, timeRange.startDate, timeRange.endDate).then((res)=>{
           resolve(res)
         })
-      })
-    
+      }),
+      //多重残疾人
+      new Promise((resolve)=>{
+        getMultipleNum(area, timeRange.startDate, timeRange.endDate).then((res) => {
+          resolve(res.multiple)
+        })
+      }),
+      //重度残疾人
+      new Promise((resolve)=>{
+        getSevereNum(area, timeRange.startDate, timeRange.endDate).then((res) => {
+          resolve(res.severe)
+        })
+      }),
+      //疑似残疾人
+      new Promise((resolve)=>{
+        getSuspectedNum(area, timeRange.startDate, timeRange.endDate).then((res) => {
+          resolve(res.suspected)
+        })
+      }),
+      // 市人均年收入最新一年的数据
+      new Promise((resolve)=>{
+        disabeldPersonAvg(area, timeRange.startDate, timeRange.endDate).then((res) => {
+          resolve(res)
+        })
+      }),
+      // 孤独症人数统计
+      // 执证残疾人、疑似残疾人、残疾军人数量和占比
+      // 家庭医生签约和未签订数量和占比
+      // 残疾人人均年收入年度增长率 和市人均年收入增长率 每年的折线图
     ]).then((res) => {
         setDisabledMoney([
           { title: "残疾人人均年收入", num: res[5].oneincomeAvg, img: Icons.cjr_big },
-          { title: "市人均年收入", num: res[5].oneincomeAvg, img: Icons.people },
+          { title: "市人均年收入", num: res[9].cityPersonAvg, img: Icons.people },
         ])
         setEchartsOptions({
           ...echartsOptions, '1-2': res[1],'3-2-2':res[4]
         })
+        const list = [
+          { title: "重度残疾人", num: parseNumber(res[7]) },
+          { title: "多重残疾人", num: parseNumber(res[6]) },
+          { title: "孤独症残疾人", num: parseNumber(res[8]) },
+        ]
+        setDisabledStatisticsList(list)
         setLoading(true)
       })
-
-    const num = {
-      zdcjr: '185369',
-      dccjr: "23369",
-      gdzcjr: "11247"
-    }
-    const list = [
-      { title: "重度残疾人", num: parseNumber(num.zdcjr) },
-      { title: "多重残疾人", num: parseNumber(num.dccjr) },
-      { title: "孤独症残疾人", num: parseNumber(num.gdzcjr) },
-    ]
-    const disabledNum = {
-      db: 5369,
-      dsr: 85369,
-      yhdc: 3125,
-      rjzfmj: 33.25
-    }
-
-    const moneyNum = {
-      cjrrjnsr: '185369',
-      srjnsr: "23369",
-    }
-    setDisabledStatisticsList(list)
-    setDisabledCount(1368422);
   }, [area, timeRange]);
 
 
@@ -406,11 +411,11 @@ const FirstLayout = (props) => {
           </div>
           <div className="memo">
             <div className="man-memo">
-              <div style={{ fontSize: '6rem' }}>男性：{sexNum.man * 100 / (sexNum.man + sexNum.women) + "%"}</div>
+              <div style={{ fontSize: '6rem' }}>男性：{(sexNum.man * 100 / (sexNum.man + sexNum.women)).toFixed(2) + "%"}</div>
               <span><span style={{ fontSize: '18rem' }}>{sexNum.man}</span>人</span>
             </div>
             <div className="woman-memo">
-              <div style={{ fontSize: '6rem' }}>女性：{sexNum.women * 100 / (sexNum.man + sexNum.women) + "%"}</div>
+              <div style={{ fontSize: '6rem' }}>女性：{(sexNum.women * 100 / (sexNum.man + sexNum.women)).toFixed(2) + "%"}</div>
               <span><span style={{ fontSize: '18rem' }}>{sexNum.women}</span>人</span>
             </div>
           </div>
