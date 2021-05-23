@@ -1,8 +1,7 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useReducer, useState } from 'react';
 import ReactEcharts from 'echarts-for-react';
-import { Layout } from 'antd';
+import { Layout, Spin } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
-import { useMergeState } from '../../shared/hooks';
 import {
   CommonNavBar,
   ContainerWithCorner,
@@ -17,6 +16,8 @@ import {
   getServiceWeiwen,
   getServiceKangfu,
   getServiceJiaojiu,
+  getServiceEveryMonth,
+  getServiceEveryYear,
 } from '../../service/ServiceApplications';
 import './index.scss';
 
@@ -58,9 +59,8 @@ const layout = [
   { i: '3-1', x: 18, y: 0, w: 6, h: 24 },
 ];
 
-const params = {};
-
 const ServiceApplications = (props) => {
+  const [loading, setLoading] = useState(true);
   // 申请人数量
   const [applicantCount, setApplicantCount] = useState(0);
   const applicantCountList = useMemo(() => {
@@ -74,94 +74,151 @@ const ServiceApplications = (props) => {
       return result;
     }, []).reverse();
   }, [applicantCount]);
-  useEffect(() => {
-    getServiceTotal(params).then(res => {
-      const { serviceTotal } = res;
-      setApplicantCount(serviceTotal);
-    });
-  }, []);
   // echarts图表
-  const [echartsOptions, mergeEchartsOptions] = useMergeState({
+  const [echartsOptions, mergeEchartsOptions] = useReducer((state, newState) => ({
+    ...state,
+    ...newState,
+  }), {
     // 维文
     '1-2': {},
     // 康复
     '1-3': {},
     // 机构每月残疾人服务申请变化趋势
     '2-2': {},
+    // 年度统计
+    '2-3': {},
     // 教就
     '3-1': {},
   });
   useEffect(() => {
-    // 1-2
-    getServiceWeiwen(params).then(res => {
-      const { wza, dbc } = res;
-      const data = [
-        { name: '无障碍改造', value: wza },
-        { name: '代步车购买', value: dbc },
-      ].sort((a, b) => b.value - a.value);
-      mergeEchartsOptions({ '1-2': { data, unit: '人' } });
-    });
-    // 1-3
-    getServiceKangfu(params).then(res => {
-      const data = Object.keys(res).map(key => {
-        const name = KANGFU_MAP[key];
-        const value = res[key];
-        return { name, value };
-      }).sort((a, b) => b.value - a.value);
-      mergeEchartsOptions({ '1-3': { data } });
-    });
-    // 2-2
-    mergeEchartsOptions({
-      '2-2': {
-        grid: [
-          {
-            top: 10,
-            right: 0,
-            bottom: 0,
-            left: 0,
-            containLabel: true,
+    Promise.all([
+      getServiceTotal({}).then(res => {
+        const { serviceTotal } = res;
+        setApplicantCount(serviceTotal);
+      }),
+      // 1-2
+      getServiceWeiwen({}).then(res => {
+        const { wza, dbc } = res;
+        const data = [
+          { name: '无障碍改造', value: wza },
+          { name: '代步车购买', value: dbc },
+        ].sort((a, b) => b.value - a.value);
+        mergeEchartsOptions({ '1-2': { data, unit: '人' } });
+      }),
+      // 1-3
+      getServiceKangfu({}).then(res => {
+        const data = Object.keys(res).map(key => {
+          const name = KANGFU_MAP[key];
+          const value = res[key];
+          return { name, value };
+        }).sort((a, b) => b.value - a.value);
+        mergeEchartsOptions({ '1-3': { data } });
+      }),
+      // 2-2
+      getServiceEveryMonth({}).then(res => {
+        const names = Object.keys(res);
+        const values = names.map(key => res[key]);
+        mergeEchartsOptions({
+          '2-2': {
+            grid: [
+              {
+                top: 10,
+                right: 0,
+                bottom: 0,
+                left: 0,
+                containLabel: true,
+              }
+            ],
+            xAxis: [
+              {
+                type: 'category',
+                boundaryGap: true,
+                data: names,
+              },
+            ],
+            yAxis: [
+              {
+                type: 'value',
+                splitLine: {
+                  show: false,
+                },
+                axisLine: {
+                  show: true,
+                },
+              },
+            ],
+            series: [
+              {
+                type: 'bar',
+                data: values,
+              },
+              {
+                type: 'line',
+                data: values,
+              }
+            ]
+          },
+        });
+      }),
+      // 2-3
+      getServiceEveryYear({}).then(res => {
+        const names = Object.keys(res);
+        const values = names.map(key => res[key]);
+        mergeEchartsOptions({
+          '2-3': {
+            grid: [
+              {
+                top: 10,
+                right: 0,
+                bottom: 0,
+                left: 0,
+                containLabel: true,
+              }
+            ],
+            xAxis: [
+              {
+                type: 'category',
+                boundaryGap: true,
+                data: names,
+              },
+            ],
+            yAxis: [
+              {
+                type: 'value',
+                splitLine: {
+                  show: false,
+                },
+                axisLine: {
+                  show: true,
+                },
+              },
+            ],
+            series: [
+              {
+                type: 'bar',
+                data: values,
+              },
+              {
+                type: 'line',
+                data: values,
+              },
+            ]
           }
-        ],
-        xAxis: [
-          {
-            type: 'category',
-            boundaryGap: true,
-            data: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
-          },
-        ],
-        yAxis: [
-          {
-            type: 'value',
-            splitLine: {
-              show: false,
-            },
-            axisLine: {
-              show: true,
-            },
-          },
-        ],
-        series: [
-          {
-            type: 'bar',
-            data: [2, 4, 6, 6, 8, 6, 2, 2, 3, 1, 5, 6],
-          },
-          {
-            type: 'line',
-            data: [2, 4, 6, 6, 8, 6, 2, 2, 3, 1, 5, 6],
-          }
-        ]
-      },
+        });
+      }),
+      // 3-1
+      getServiceJiaojiu({}).then(res => {
+        const data = Object.keys(res).map(key => {
+          const name = JIAOJIU_MAP[key];
+          const value = res[key];
+          return { name, value };
+        }).sort((a, b) => b.value - a.value);
+        mergeEchartsOptions({ '3-1': { data } });
+      }),
+    ]).finally(() => {
+      setLoading(false);
     });
-    // 3-1
-    getServiceJiaojiu(params).then(res => {
-      const data = Object.keys(res).map(key => {
-        const name = JIAOJIU_MAP[key];
-        const value = res[key];
-        return { name, value };
-      }).sort((a, b) => b.value - a.value);
-      mergeEchartsOptions({ '3-1': { data } });
-    });
-  }, [mergeEchartsOptions]);
+  }, []);
   // 弹窗状态
   const [commonModalVisible, setCommonModalVisible] = useState(false);
   return (
@@ -170,74 +227,88 @@ const ServiceApplications = (props) => {
       <ContainerWithCorner
         component={Content}
         className="service-applications-content">
-        <GridLayout layout={layout} margin={[5, 5]}>
-          <ContainerWithBorder key="1-1" className="grid-item">
-            <div className="grid-item-title">
-              <span>服务申请人数统计</span>
-            </div>
-            <div className="grid-item-content applicant-count">
-              <span className="applicant-count-label">申请人数量</span>
-              <span className="applicant-count-value">
-                {
-                  applicantCountList.map((item, index) => {
-                    const key = index;
-                    const className = item === ',' ? 'applicant-count-separate' : 'applicant-count-number';
-                    return (
-                      <span key={key} className={className}>{item}</span>
-                    )
-                  })
-                }
-              </span>
-            </div>
-          </ContainerWithBorder>
-          <ContainerWithBorder key="1-2" className="grid-item">
-            <div className="grid-item-title">
-              <span>维文</span>
-            </div>
-            <RowChart
-              option={echartsOptions['1-2']}
-              className="grid-item-content"
-            />
-          </ContainerWithBorder>
-          <ContainerWithBorder key="1-3" className="grid-item">
-            <div className="grid-item-title">
-              <span>康复</span>
-            </div>
-            <RowChart
-              option={echartsOptions['1-3']}
-              className="grid-item-content"
-            />
-          </ContainerWithBorder>
-          <ContainerWithBorder key="2-1" className="grid-item">
-            <CommonMap />
-          </ContainerWithBorder>
-          <ContainerWithBorder key="2-2" className="grid-item">
-            <div className="grid-item-title">
-              <span>机构每月残疾人服务申请变化趋势</span>
-            </div>
-            <ReactEcharts
-              option={echartsOptions['2-2']}
-              className="grid-item-content"
-            />
-            <div style={{ position: 'absolute', top: '20rem', right: '20rem' }}>
-              <MenuOutlined
-                onClick={() => setCommonModalVisible(true)}
-                style={{ fontSize: '1.5em' }}
+        {loading ? (
+          <Spin loading={loading} style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }} />
+        ) : (
+          <GridLayout layout={layout} margin={[5, 5]}>
+            <ContainerWithBorder key="1-1" className="grid-item">
+              <div className="grid-item-title">
+                <span>服务申请人数统计</span>
+              </div>
+              <div className="grid-item-content applicant-count">
+                <span className="applicant-count-label">申请人数量</span>
+                <span className="applicant-count-value">
+                  {
+                    applicantCountList.map((item, index) => {
+                      const key = index;
+                      const className = item === ',' ? 'applicant-count-separate' : 'applicant-count-number';
+                      return (
+                        <span key={key} className={className}>{item}</span>
+                      )
+                    })
+                  }
+                </span>
+              </div>
+            </ContainerWithBorder>
+            <ContainerWithBorder key="1-2" className="grid-item">
+              <div className="grid-item-title">
+                <span>维文</span>
+              </div>
+              <RowChart
+                option={echartsOptions['1-2']}
+                className="grid-item-content"
               />
-            </div>
-          </ContainerWithBorder>
-          <ContainerWithBorder key="3-1" className="grid-item">
-            <div className="grid-item-title">
-              <span>教就</span>
-            </div>
-            <RowChart
-              option={echartsOptions['3-1']}
-              className="grid-item-content"
-            />
-          </ContainerWithBorder>
-        </GridLayout>
+            </ContainerWithBorder>
+            <ContainerWithBorder key="1-3" className="grid-item">
+              <div className="grid-item-title">
+                <span>康复</span>
+              </div>
+              <RowChart
+                option={echartsOptions['1-3']}
+                className="grid-item-content"
+              />
+            </ContainerWithBorder>
+            <ContainerWithBorder key="2-1" className="grid-item">
+              <CommonMap />
+            </ContainerWithBorder>
+            <ContainerWithBorder key="2-2" className="grid-item">
+              <div className="grid-item-title">
+                <span>机构每月残疾人服务申请变化趋势</span>
+              </div>
+              <ReactEcharts
+                option={echartsOptions['2-2']}
+                className="grid-item-content"
+              />
+              <div style={{ position: 'absolute', top: '20rem', right: '20rem' }}>
+                <MenuOutlined
+                  onClick={() => setCommonModalVisible(true)}
+                  style={{ fontSize: '1.5em' }}
+                />
+              </div>
+            </ContainerWithBorder>
+            <ContainerWithBorder key="3-1" className="grid-item">
+              <div className="grid-item-title">
+                <span>教就</span>
+              </div>
+              <RowChart
+                option={echartsOptions['3-1']}
+                className="grid-item-content"
+              />
+            </ContainerWithBorder>
+          </GridLayout>
+        )}
       </ContainerWithCorner>
       <CommonModal
+        options={{
+          '1-1': echartsOptions['2-2'],
+          '1-2': echartsOptions['2-3'],
+        }}
         visible={commonModalVisible}
         setVisible={() => setCommonModalVisible(false)}
       />

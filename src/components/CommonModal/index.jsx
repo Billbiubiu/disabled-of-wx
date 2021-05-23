@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ReactEcharts from 'echarts-for-react';
 import { Modal, Button } from 'antd';
 
-const echartsOptions = {
+const defaultOptions = {
   '1': {
     grid: [
       {
@@ -107,9 +107,11 @@ const echartsOptions = {
 
 const CommonModal = (props) => {
   const {
+    options = {},
     visible = false,
     setVisible = () => { },
   } = props;
+  const echartsOptions = { ...defaultOptions, ...options };
   const [activeKey, setActiveKey] = useState('1');
   return (
     <Modal
