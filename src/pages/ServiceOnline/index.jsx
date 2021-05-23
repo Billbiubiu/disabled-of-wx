@@ -104,16 +104,6 @@ const ServiceOnline = (props) => {
           { name: '企业机构', value: parseNumber(res['企业机构']), icon: icons.qyjg },
         ])
       }),
-      // 2-1
-      Promise.resolve().then(() => {
-        setMiniProgramTotal(parseNumber(12273684));
-      }),
-      // 2-1
-      setMiniProgramStatisticsList([
-        { name: "科室1服务数量", value: parseNumber(885369) },
-        { name: "科室2服务数量", value: parseNumber(685369) },
-        { name: "科室3服务数量", value: parseNumber(465369) },
-      ]),
       // 1-2、1-4
       getOnlineServiceInteract({}).then(res => {
         mergeEchartsOptions({
@@ -193,6 +183,15 @@ const ServiceOnline = (props) => {
             ]
           },
         })
+      }),
+      // 2-1
+      Promise.resolve().then(() => {
+        setMiniProgramTotal(parseNumber(12273684));
+        setMiniProgramStatisticsList([
+          { name: "科室1服务数量", value: parseNumber(885369) },
+          { name: "科室2服务数量", value: parseNumber(685369) },
+          { name: "科室3服务数量", value: parseNumber(465369) },
+        ]);
       }),
       // 2-1
       Promise.resolve().then(() => {
