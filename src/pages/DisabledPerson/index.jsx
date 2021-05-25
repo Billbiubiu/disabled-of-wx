@@ -25,7 +25,7 @@ const DisabledPerson = (props) => {
 
   return (
     <Layout className="disabled-person">
-      <CommonNavBar showRangeDate={false} timeRange={timeRange} setTimeRange={setTimeRange} showTime={true} title="执证残疾人" btnType="back" />
+      <CommonNavBar showRangeDate={true} timeRange={timeRange} setTimeRange={setTimeRange} showTime={true} title="执证残疾人" btnType="back" />
       <ContainerWithCorner
         component={Content}
         className="disabled-person-content">

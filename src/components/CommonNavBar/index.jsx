@@ -41,6 +41,7 @@ const CommonNavBar = (props) => {
       clearInterval(interval);
     }
   }, [showTime])
+
   return (
     <div className="common-bar">
       <div className="bar-time">
