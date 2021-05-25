@@ -51,6 +51,18 @@ export const getSevereNum = (area,startDate,endDate)=>{
     }
   })
 }
+//孤独症人数
+export const getAutismNum = (area,startDate,endDate)=>{
+  return ajax({
+    url:'disabled/autism',
+    method:'get',
+    params:{
+      area:area,
+      startDate:startDate,
+      endDate:endDate
+    }
+  })
+}
 //疑似残疾人
 export const getSuspectedNum = (area,startDate,endDate)=>{
   return ajax({

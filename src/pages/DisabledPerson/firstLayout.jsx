@@ -9,7 +9,7 @@ import {
 import { Spin } from 'antd'
 import * as Icons from '../../assets/images/disabled-person';
 import './firstLayout.scss';
-import { getDisabledNum, disabeldType, disabeldSex, disabeldMarry, disabeldDbNum,disabeldAvg,getMultipleNum,getSevereNum,getSuspectedNum,disabeldPersonAvg} from '../../service/index'
+import { getDisabledNum, getAutismNum,disabeldType, disabeldSex, disabeldMarry, disabeldDbNum,disabeldAvg,getMultipleNum,getSevereNum,getSuspectedNum,disabeldPersonAvg} from '../../service/index'
 
 // 布局数据
 const layout = [
@@ -245,7 +245,7 @@ const FirstLayout = (props) => {
             { title: "低保人数", num: parseNumber(res.dbNum), unit: "人" },
             { title: "低收入人数", num: parseNumber(res.dsrNum), unit: "人" },
             { title: "一户多残数量", num: parseNumber(res.yhdcNum), unit: "人" },
-            { title: "人均住房面积", num: res.rjmjNum, unit: "平米" },
+            { title: "人均住房面积", num: parseFloat(res.rjmjNum).toFixed(2), unit: "平米" },
           ])
         })
       }),
@@ -335,6 +335,11 @@ const FirstLayout = (props) => {
         })
       }),
       // 孤独症人数统计
+      new Promise((resolve)=>{
+        getAutismNum(area, timeRange.startDate, timeRange.endDate).then((res) => {
+          resolve(res)
+        })
+      }),
       // 执证残疾人、疑似残疾人、残疾军人数量和占比
       // 家庭医生签约和未签订数量和占比
       // 残疾人人均年收入年度增长率 和市人均年收入增长率 每年的折线图
