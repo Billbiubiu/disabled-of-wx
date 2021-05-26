@@ -9,7 +9,7 @@ import {
 import { Spin } from 'antd'
 import * as Icons from '../../assets/images/disabled-person';
 import './firstLayout.scss';
-import { getDisabledNum, getAutismNum,disabeldType, disabeldSex, disabeldMarry, disabeldDbNum,disabeldAvg,getMultipleNum,getSevereNum,getSuspectedNum,disabeldPersonAvg} from '../../service/index'
+import { disabeldIncome,getDisabledNum, getAutismNum,disabeldType, disabeldSex, disabeldMarry, disabeldDbNum,disabeldAvg,getMultipleNum,getSevereNum,getSuspectedNum,disabeldPersonAvg} from '../../service/index'
 
 // 布局数据
 const layout = [
@@ -71,89 +71,9 @@ const FirstLayout = (props) => {
     // 残疾人类型统计
     '1-2': {},
     // 残疾人数据统计
-    '1-3': {
-      color: ['#0263ff', '#ff1493', '#00f5ff'],
-      tooltip: {
-        trigger: 'item',
-        formatter: '{b}:{c} ({d}%)',
-        textStyle: {
-          fontWeight: 50,
-          fontSize: '10'
-        }
-      },
-      series: [
-        {
-          type: 'pie',
-          label: {
-            fontWeight: 50,
-            color: 'white',
-            fontSize: '10'
-          },
-          radius: '100%',
-          selectedMode: 'single',
-          data: [
-            { value: 735, name: '残疾军人' },
-            { value: 510, name: '执证残疾人' },
-            { value: 434, name: '疑是残疾人' },
-          ]
-        }
-      ]
-    },
+    '1-3': {},
     // 残疾人增长趋势图
-    '2-2': {
-      color: ['#a4d915', '#00f5ff'],
-      legend: {
-        right: 0,
-        top: -5,
-        data: ['残疾人人均年收入', '市人均年收入'],
-        textStyle: {
-          color: 'white'
-        }
-      },
-      tooltip: {
-        trigger: 'axis',
-      },
-      grid: {
-        left: '3%',
-        right: '4%',
-        top: '16%',
-        bottom: '3%',
-        containLabel: true
-      },
-      xAxis: {
-        axisLine: {
-          lineStyle: {
-            color: 'white'
-          }
-        },
-        type: 'category',
-        boundaryGap: false,
-        data: ['20010年', '2011年', '2012年', '2013年', '2014年', '2015年', '2016年', '2017年', '2018年', '2019年', '2020年', '2021年']
-      },
-      yAxis: {
-        axisLine: {
-          lineStyle: {
-            color: 'white'
-          }
-        },
-        type: 'value'
-      },
-      series: [
-        {
-          name: '残疾人人均年收入',
-          type: 'line',
-          stack: '总量',
-          data: [120, 132, 101, 134, 90, 230, 210, 110, 513, 444, 111, 333]
-        },
-        {
-          name: '市人均年收入',
-          type: 'line',
-          stack: '总量',
-          data: [220, 182, 191, 234, 290, 330, 310, 120, 132, 101, 134, 441]
-        },
-
-      ]
-    },
+    '2-2': {},
     // 残疾人数据统计1
     '3-2-1': {
       color: ['#ff1493', '#00f5ff'],
@@ -216,8 +136,7 @@ const FirstLayout = (props) => {
       //执证残疾人总数
       new Promise((resolve) => {
         getDisabledNum(area, timeRange.startDate, timeRange.endDate).then((res) => {
-          setDisabledCount(res.sum)
-          resolve()
+          resolve(res.sum)
         })
       }),
       // 残疾人类型统计
@@ -337,24 +256,109 @@ const FirstLayout = (props) => {
       // 孤独症人数统计
       new Promise((resolve)=>{
         getAutismNum(area, timeRange.startDate, timeRange.endDate).then((res) => {
-          resolve(res)
+          resolve(res.autism)
         })
       }),
-      // 执证残疾人、疑似残疾人、残疾军人数量和占比
-      // 家庭医生签约和未签订数量和占比
       // 残疾人人均年收入年度增长率 和市人均年收入增长率 每年的折线图
+      new Promise((resolve)=>{
+        disabeldIncome().then((res)=>{
+          resolve({
+            color: ['#a4d915', '#00f5ff'],
+            legend: {
+              right: 0,
+              top: -5,
+              data: ['残疾人人均年收入', '市人均年收入'],
+              textStyle: {
+                color: 'white'
+              }
+            },
+            tooltip: {
+              trigger: 'axis',
+            },
+            grid: {
+              left: '3%',
+              right: '4%',
+              top: '16%',
+              bottom: '3%',
+              containLabel: true
+            },
+            xAxis: {
+              axisLine: {
+                lineStyle: {
+                  color: 'white'
+                }
+              },
+              type: 'category',
+              boundaryGap: false,
+              data: Object.keys(res)
+            },
+            yAxis: {
+              axisLine: {
+                lineStyle: {
+                  color: 'white'
+                }
+              },
+              type: 'value'
+            },
+            series: [
+              {
+                name: '残疾人人均年收入',
+                type: 'line',
+                stack: '总量',
+                data: Object.values(res).map((item)=>item.disabledPerson)
+              },
+              {
+                name: '市人均年收入',
+                type: 'line',
+                stack: '总量',
+                data: Object.values(res).map((item)=>item.cityPerson)
+              },
+      
+            ]
+          })
+        })
+      })
+      // 家庭医生签约和未签订数量和占比
     ]).then((res) => {
+      console.log(res)
+      setDisabledCount(res[0])
         setDisabledMoney([
           { title: "残疾人人均年收入", num: res[5].oneincomeAvg, img: Icons.cjr_big },
           { title: "市人均年收入", num: res[9].cityPersonAvg, img: Icons.people },
         ])
         setEchartsOptions({
-          ...echartsOptions, '1-2': res[1],'3-2-2':res[4]
+          ...echartsOptions, '1-2': res[1],'3-2-2':res[4],'2-2':res[11],'1-3':{
+            color: ['#0263ff', '#ff1493', '#00f5ff'],
+            tooltip: {
+              trigger: 'item',
+              formatter: '{b}:{c} ({d}%)',
+              textStyle: {
+                fontWeight: 50,
+                fontSize: '10'
+              }
+            },
+            series: [
+              {
+                type: 'pie',
+                label: {
+                  fontWeight: 50,
+                  color: 'white',
+                  fontSize: '10'
+                },
+                radius: '100%',
+                selectedMode: 'single',
+                data: [
+                  { value: res[0], name: '执证残疾人' },
+                  { value: res[8], name: '疑似残疾人' },
+                ]
+              }
+            ]
+          }
         })
         const list = [
           { title: "重度残疾人", num: parseNumber(res[7]) },
           { title: "多重残疾人", num: parseNumber(res[6]) },
-          { title: "孤独症残疾人", num: parseNumber(res[8]) },
+          { title: "孤独症残疾人", num: parseNumber(res[10]) },
         ]
         setDisabledStatisticsList(list)
         setLoading(true)
