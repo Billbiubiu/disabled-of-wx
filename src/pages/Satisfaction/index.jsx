@@ -65,20 +65,21 @@ const Satisfaction = (props) => {
       //各区的详细满意度
       new Promise((resolve)=>{
         areaDetail(area).then((res)=>{
+          console.log(res[1])
           setEveryArea1([
-            {name:'对政府和社会各界对残疾人的关爱满意度',rate:res[0].B7,compare:`${res[0].往年同比增长}`.substring(1),compareStatus:`${res[0].往年同比增长}`.substring(0,1)==="-"?"down":'up'},
-            {name:'对各级残联组织和设参工作部门的工作满意度',rate:res[1].B8,compare:`${res[1].往年同比增长}`.substring(1),compareStatus:`${res[1].往年同比增长}`.substring(0,1)==="-"?"down":'up'},
-            {name:'残疾人信息核对人数占比情况',rate:res[2].B9,compare:`${res[2].往年同比增长}`.substring(1),compareStatus:`${res[2].往年同比增长}`.substring(0,1)==="-"?"down":'up'},
-            {name:'需求反应是否及时反馈情况（反馈率）',rate:res[3].B10,compare:`${res[3].往年同比增长}`.substring(1),compareStatus:`${res[3].往年同比增长}`.substring(0,1)==="-"?"down":'up'},
-            {name:'社区（村）开展残疾人文体生活满意度',rate:res[4].B11,compare:`${res[4].往年同比增长}`.substring(1),compareStatus:`${res[4].往年同比增长}`.substring(0,1)==="-"?"down":'up'},
+            {name:'对政府和社会各界对残疾人的关爱满意度',rate:res[0]?.B7,compare:`${res[0]?.往年同比增长}`.substring(1),compareStatus:`${res[0]?.往年同比增长}`.substring(0,1)==="-"?"down":'up'},
+            {name:'对各级残联组织和设参工作部门的工作满意度',rate:res[1]?.B8,compare:`${res[1]?.往年同比增长}`.substring(1),compareStatus:`${res[1]?.往年同比增长}`.substring(0,1)==="-"?"down":'up'},
+            {name:'残疾人信息核对人数占比情况',rate:res[2]?.B9,compare:`${res[2]?.往年同比增长}`.substring(1),compareStatus:`${res[2]?.往年同比增长}`.substring(0,1)==="-"?"down":'up'},
+            {name:'需求反应是否及时反馈情况（反馈率）',rate:res[3]?.B10,compare:`${res[3]?.往年同比增长}`.substring(1),compareStatus:`${res[3]?.往年同比增长}`.substring(0,1)==="-"?"down":'up'},
+            {name:'社区（村）开展残疾人文体生活满意度',rate:res[4]?.B11,compare:`${res[4]?.往年同比增长}`.substring(1),compareStatus:`${res[4]?.往年同比增长}`.substring(0,1)==="-"?"down":'up'},
           ])
           setEveryArea2([
-            {name:'经过社会团体、单位或个人的帮扶人数占比',rate:res[5].B12,compare:`${res[5].往年同比增长}`.substring(1),compareStatus:`${res[5].往年同比增长}`.substring(0,1)==="-"?"down":'up'},
-            {name:'惠残政策宣传率情况',rate:res[6].B13,compare:`${res[6].往年同比增长}`.substring(1),compareStatus:`${res[6].往年同比增长}`.substring(0,1)==="-"?"down":'up'},
-            {name:'近几年来残疾人生活水平变化情况（提高率）',rate:res[7].B14,compare:`${res[7].往年同比增长}`.substring(1),compareStatus:`${res[7].往年同比增长}`.substring(0,1)==="-"?"down":'up'},
-            {name:'残疾人平等参与社会生活的环境改善情况（改善率）',rate:res[8].B15,compare:`${res[8].往年同比增长}`.substring(1),compareStatus:`${res[8].往年同比增长}`.substring(0,1)==="-"?"down":'up'},
-            {name:'惠残政策知晓率',rate:res[9].B16,compare:`${res[9].往年同比增长}`.substring(1),compareStatus:`${res[9].往年同比增长}`.substring(0,1)==="-"?"down":'up'},
-            {name:'对街道、社区（村）提供的日常服务满意度',rate:res[10].B17,compare:`${res[10].往年同比增长}`.substring(1),compareStatus:`${res[10].往年同比增长}`.substring(0,1)==="-"?"down":'up'},
+            {name:'经过社会团体、单位或个人的帮扶人数占比',rate:res[5]?.B12,compare:`${res[5]?.往年同比增长}`.substring(1),compareStatus:`${res[5]?.往年同比增长}`.substring(0,1)==="-"?"down":'up'},
+            {name:'惠残政策宣传率情况',rate:res[6]?.B13,compare:`${res[6]?.往年同比增长}`.substring(1),compareStatus:`${res[6]?.往年同比增长}`.substring(0,1)==="-"?"down":'up'},
+            {name:'近几年来残疾人生活水平变化情况（提高率）',rate:res[7]?.B14,compare:`${res[7]?.往年同比增长}`.substring(1),compareStatus:`${res[7]?.往年同比增长}`.substring(0,1)==="-"?"down":'up'},
+            {name:'残疾人平等参与社会生活的环境改善情况（改善率）',rate:res[8]?.B15,compare:`${res[8]?.往年同比增长}`.substring(1),compareStatus:`${res[8]?.往年同比增长}`.substring(0,1)==="-"?"down":'up'},
+            {name:'惠残政策知晓率',rate:res[9]?.B16,compare:`${res[9]?.往年同比增长}`.substring(1),compareStatus:`${res[9]?.往年同比增长}`.substring(0,1)==="-"?"down":'up'},
+            {name:'对街道、社区（村）提供的日常服务满意度',rate:res[10]?.B17,compare:`${res[10]?.往年同比增长}`.substring(1),compareStatus:`${res[10]?.往年同比增长}`.substring(0,1)==="-"?"down":'up'},
           ])
           resolve()
         })
