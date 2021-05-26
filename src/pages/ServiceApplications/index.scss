@@ -23,13 +23,13 @@
   .applicant-count {
     color: #08e5ff;
     font-weight: bold;
-    line-height: 55rem;
     display: flex;
     align-items: center;
     .applicant-count-label {
       font-size: 19rem;
     }
     .applicant-count-value {
+      height: 100%;
       flex: 1;
       display: flex;
       align-items: flex-end;
@@ -37,8 +37,7 @@
     .applicant-count-number {
       flex: 1;
       margin: 3rem;
-      height: 56rem;
-      font-size: 33rem;
+      font-size: 28rem;
       text-align: center;
       background-color: rgba(4, 49, 128, 0.6);
     }

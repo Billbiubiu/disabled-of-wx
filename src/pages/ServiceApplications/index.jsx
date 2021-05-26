@@ -1,15 +1,16 @@
-import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
-import ReactEcharts from 'echarts-for-react';
+import React, { useCallback, useMemo, useReducer, useState } from 'react';
+import moment from 'moment';
 import { Layout, Spin } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
 import {
-  CommonNavBar,
-  ContainerWithCorner,
-  GridLayout,
-  ContainerWithBorder,
-  RowChart,
   CommonMap,
   CommonModal,
+  CommonNavBar,
+  ContainerWithCorner,
+  ContainerWithBorder,
+  Echarts,
+  GridLayout,
+  RowChart,
 } from '../../components';
 import {
   getServiceTotal,
@@ -59,15 +60,8 @@ const layout = [
   { i: '3-1', x: 18, y: 0, w: 6, h: 24 },
 ];
 
-const ServiceApplications = (props) => {
+const ServiceApplications = () => {
   const [loading, setLoading] = useState(true);
-  const [params, setParams] = useReducer((state, newState) => ({
-    ...state,
-    ...newState,
-  }), null);
-  const onAreaChange = useCallback(({ name }) => {
-    setParams({ area: name });
-  }, []);
   // 申请人数量
   const [applicantCount, setApplicantCount] = useState(0);
   const applicantCountList = useMemo(() => {
@@ -87,18 +81,18 @@ const ServiceApplications = (props) => {
     ...newState,
   }), {
     // 维文
-    '1-2': {},
+    '1-2': null,
     // 康复
-    '1-3': {},
+    '1-3': null,
     // 机构每月残疾人服务申请变化趋势
-    '2-2': {},
+    '2-2': null,
     // 年度统计
-    '2-3': {},
+    '2-3': null,
     // 教就
-    '3-1': {},
+    '3-1': null,
   });
-  useEffect(() => {
-    if (!params) return;
+  // 请求数据
+  const getData = useCallback((params) => {
     setLoading(true);
     Promise.all([
       getServiceTotal(params).then(res => {
@@ -227,12 +221,31 @@ const ServiceApplications = (props) => {
     ]).finally(() => {
       setLoading(false);
     });
-  }, [params]);
+  }, []);
+  // 请求参数
+  const [params, setParams] = useReducer((state, newState) => {
+    const newParams = { ...state, ...newState };
+    getData(newParams);
+    return newParams;
+  }, {
+    startDate: moment().subtract(1, 'years').format('YYYY-MM-DD'),
+    endDate: moment().format('YYYY-MM-DD'),
+  });
+  const setArea = useCallback(({ name }) => {
+    setParams({ area: name });
+  }, []);
   // 弹窗状态
   const [commonModalVisible, setCommonModalVisible] = useState(false);
   return (
     <Layout className="service-applications">
-      <CommonNavBar showTime={true} title="服务申请" btnType="back" />
+      <CommonNavBar
+        showRangeDate
+        timeRange={params}
+        setTimeRange={setParams}
+        showTime={true}
+        title="服务申请"
+        btnType="back"
+      />
       <ContainerWithCorner
         component={Content}
         className="service-applications-content">
@@ -275,13 +288,13 @@ const ServiceApplications = (props) => {
             />
           </ContainerWithBorder>
           <ContainerWithBorder key="2-1" className="grid-item">
-            <CommonMap callBack={onAreaChange} />
+            <CommonMap callBack={setArea} />
           </ContainerWithBorder>
           <ContainerWithBorder key="2-2" className="grid-item">
             <div className="grid-item-title">
               <span>机构每月残疾人服务申请变化趋势</span>
             </div>
-            <ReactEcharts
+            <Echarts
               option={echartsOptions['2-2']}
               className="grid-item-content"
             />

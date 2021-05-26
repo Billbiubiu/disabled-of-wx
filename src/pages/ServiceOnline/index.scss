@@ -57,8 +57,9 @@
       color: #08e5ff;
     }
     .item-icon {
-      width: 56rem;
-      height: 56rem;
+      width: 45rem;
+      height: 45rem;
+      margin-right: 10rem;
     }
     .item-value {
       font-size: 14rem;
@@ -67,7 +68,6 @@
       font-size: 16rem;
     }
   }
-
   .mini-program-statistics {
     margin: 4rem 0;
     display: flex;

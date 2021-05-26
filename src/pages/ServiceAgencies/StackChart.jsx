@@ -10,11 +10,10 @@ const rowList = [
 
 const StackChart = (props) => {
   const {
-    option: {
-      data = [],
-    } = {},
+    option = {},
     onRowClick = () => { },
   } = props;
+  const { data = [] } = option || {};
 
   const [activeIndex, setActiveIndex] = useState(0);
 

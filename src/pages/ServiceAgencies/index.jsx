@@ -1,15 +1,16 @@
-import React, { useCallback, useEffect, useReducer, useState } from 'react';
-import ReactEcharts from 'echarts-for-react';
+import React, { useCallback, useReducer, useState } from 'react';
+import moment from 'moment';
 import { Layout, Spin } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
 import {
-  CommonNavBar,
-  ContainerWithCorner,
-  GridLayout,
-  ContainerWithBorder,
-  RowChart,
   CommonMap,
   CommonModal,
+  CommonNavBar,
+  ContainerWithCorner,
+  ContainerWithBorder,
+  Echarts,
+  GridLayout,
+  RowChart,
 } from '../../components';
 import * as icons from '../../assets/images/service-agency';
 import {
@@ -50,36 +51,35 @@ const parseNumber = (number) => {
 
 const ServiceAgencies = () => {
   const [loading, setLoading] = useState(false);
-  const [params, setParams] = useReducer((state, newState) => ({
-    ...state,
-    ...newState,
-  }), null);
-  const onAreaChange = useCallback(({ name }) => {
-    setParams({ area: name });
-  }, []);
   // 残疾人康复机构数据统计
-  const [agencyStatisticsData, setAgencyStatisticsData] = useState([]);
+  const [agencyStatisticsData, setAgencyStatisticsData] = useState([
+    { name: '服务机构数量', value: 0 },
+    { name: '工作人员数量', value: 0 },
+    { name: '服务对象数量', value: 0 },
+  ]);
   // echarts图表配置
   const [echartsOptions, mergeEchartsOptions] = useReducer((state, newState) => ({
     ...state,
     ...newState,
   }), {
     // 服务机构数据
-    '1-2': {},
+    '1-2': null,
     // 机构每月残疾人变化趋势
-    '2-2': {},
+    '2-2': null,
     // 残联机构
-    '3-2': {},
+    '3-2': null,
     // 月度统计
-    '4-1': {},
+    '4-1': null,
     // 年度统计
-    '4-2': {},
+    '4-2': null,
   });
   // 残疾人服务机构办理事务情况统计
-  const [businessStatisticsData, setBusinessStatisticsData] = useState([]);
-  // 当前选中的服务机构数据
-  useEffect(() => {
-    if (!params) return;
+  const [businessStatisticsData, setBusinessStatisticsData] = useState([
+    { name: '单位数量', value: 0, unit: '个' },
+    { name: '安置残疾人数', value: 0, unit: '人' },
+  ]);
+  // 请求数据
+  const getData = useCallback((params) => {
     setLoading(true);
     Promise.all([
       // 1-1
@@ -94,6 +94,7 @@ const ServiceAgencies = () => {
       // 1-2
       getOrganizationCategoryTotal(params).then(res => {
         console.log(res);
+      }).finally(() => {
         mergeEchartsOptions({
           '1-2': {
             data: [
@@ -183,12 +184,31 @@ const ServiceAgencies = () => {
     ]).finally(() => {
       setLoading(false);
     });
-  }, [params]);
+  }, []);
+  // 请求参数
+  const [params, setParams] = useReducer((state, newState) => {
+    const newParams = { ...state, ...newState };
+    getData(newParams);
+    return newParams;
+  }, {
+    startDate: moment().subtract(1, 'years').format('YYYY-MM-DD'),
+    endDate: moment().format('YYYY-MM-DD'),
+  });
+  const setArea = useCallback(({ name }) => {
+    setParams({ area: name });
+  }, []);
   // 弹窗状态
   const [commonModalVisible, setCommonModalVisible] = useState(false);
   return (
     <Layout className="service-agencies">
-      <CommonNavBar showTime={true} title="服务机构" btnType="back" />
+      <CommonNavBar
+        showRangeDate
+        timeRange={params}
+        setTimeRange={setParams}
+        showTime={true}
+        title="服务机构"
+        btnType="back"
+      />
       <ContainerWithCorner
         component={Content}
         className="service-agencies-content">
@@ -230,13 +250,13 @@ const ServiceAgencies = () => {
             </div>
           </ContainerWithBorder>
           <ContainerWithBorder key="2-1" className="grid-item">
-            <CommonMap callBack={onAreaChange} />
+            <CommonMap callBack={setArea} />
           </ContainerWithBorder>
           <ContainerWithBorder key="2-2" className="grid-item">
             <div className="grid-item-title">
               <span>机构每月残疾人变化趋势</span>
             </div>
-            <ReactEcharts
+            <Echarts
               option={echartsOptions['2-2']}
               className="grid-item-content"
             />

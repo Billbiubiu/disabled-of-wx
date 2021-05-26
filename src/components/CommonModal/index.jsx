@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import ReactEcharts from 'echarts-for-react';
 import { Modal, Button } from 'antd';
+import Echarts from '../Echarts';
 
 const defaultOptions = {
   '1': {
@@ -122,7 +122,7 @@ const CommonModal = (props) => {
       onCancel={() => setVisible(false)}
     >
       <div style={{ width: '50vw', height: '50vh', position: 'relative' }}>
-        <ReactEcharts
+        <Echarts
           notMerge
           option={echartsOptions[activeKey]}
           style={{ width: '100%', height: '100%' }}

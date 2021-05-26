@@ -6,10 +6,7 @@ import white from '../../assets/images/white.png'
 
 const RowChart = (props) => {
   const {
-    option: {
-      data = [], // 数据
-      unit = '', // 单位
-    } = {},
+    option = {},
     ifShowArrow = false,// 是否展示箭头,有箭头代表可以点击
     arrowInitIndex = 0,// 有箭头 默认展示下标
     clickCallBack = () => { }, // 点击事件的回调
@@ -23,9 +20,11 @@ const RowChart = (props) => {
     rowBodyStyle = {},
     rowFooterStyle = {},
   } = props;
-
+  const {
+    data = [], // 数据
+    unit = '', // 单位
+  } = option || {};
   const [clickIndex, setClickIndex] = useState(arrowInitIndex)
-
   const parsedData = useMemo(() => {
     return data.map(item => {
       const { value } = item;
@@ -37,19 +36,16 @@ const RowChart = (props) => {
       return a.value - b.value;
     });
   }, [data]);
-
   const maxValue = useMemo(() => {
     const values = parsedData.map(item => item.value);
     return Math.max.apply(null, values) || Number.MAX_SAFE_INTEGER;
   }, [parsedData]);
   if (!data || !data.length) return null;
-
   // 可点击后触发的事件
   const arrowClick = (key) => {
     setClickIndex(key)
     clickCallBack(key)
   }
-
   return (
     <div
       className={classNames('row-chart', className)}

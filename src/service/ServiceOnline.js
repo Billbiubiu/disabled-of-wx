@@ -41,9 +41,9 @@ export const getOnlineServiceInteractCnt = (params) => {
   })
 }
 // 6.无障碍地图: 康复机构,教育,就业 数量和占比
-export const getOnlineService = (params) => {
+export const getOnlineServiceBsBuild = (params) => {
   return ajax({
-    url:'online/service',
+    url:'online/service/bsBuild',
     method:'get',
     params,
   })

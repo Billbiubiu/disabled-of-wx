@@ -1,11 +1,12 @@
-import React, { useMemo, useEffect, useState, useReducer } from 'react';
-import ReactEcharts from 'echarts-for-react';
+import React, { useMemo, useEffect, useState, useReducer, useCallback } from 'react';
+import moment from 'moment';
 import { Layout, Spin } from 'antd';
 import {
   CommonNavBar,
   ContainerWithCorner,
-  GridLayout,
   ContainerWithBorder,
+  Echarts,
+  GridLayout,
   RowChart,
 } from '../../components';
 import {
@@ -14,14 +15,13 @@ import {
   getOnlineServicePosition,
   getOnlineServiceSignLog,
   getOnlineServiceInteractCnt,
-  getOnlineService,
+  getOnlineServiceBsBuild,
   getOnlineServiceBsBuildingFacilityEvalution,
 } from '../../service/ServiceOnline';
 import * as icons from '../../assets/images/service-online';
 import './index.scss';
 
 const { Content } = Layout;
-
 // 布局数据
 const layout = [
   { i: '1-1', x: 0, y: 0, w: 6, h: 24 },
@@ -48,7 +48,7 @@ const parseNumber = (number) => {
     .join('');
 }
 
-const ServiceOnline = (props) => {
+const ServiceOnline = () => {
   const [loading, setLoading] = useState(false);
   // 注册人数
   const [registeredCount, setRegisteredCount] = useState(0);
@@ -64,33 +64,42 @@ const ServiceOnline = (props) => {
     }, []).reverse();
   }, [registeredCount]);
   // 用户类型统计
-  const [userStatisticsList, setUserStatisticList] = useState([]);
+  const [userStatisticsList, setUserStatisticList] = useState([
+    { name: '普通用户', value: 0, icon: icons.ptyh },
+    { name: '持证残疾人', value: 0, icon: icons.czcjr },
+    { name: '企业机构', value: 0, icon: icons.qyjg },
+  ]);
   // 小程序服务统计
   const [miniProgramTotal, setMiniProgramTotal] = useState(0);
-  const [miniProgramStatisticsList, setMiniProgramStatisticsList] = useState([]);
+  const [miniProgramStatisticsList, setMiniProgramStatisticsList] = useState([
+    { name: "科室1服务数量", value: 0 },
+    { name: "科室2服务数量", value: 0 },
+    { name: "科室3服务数量", value: 0 },
+  ]);
   // echarts图表
   const [echartsOptions, mergeEchartsOptions] = useReducer((state, newState) => ({
     ...state,
     ...newState,
   }), {
     // 互动交流
-    '1-2': {},
+    '1-2': null,
     // 业务模块
-    '1-3': {},
+    '1-3': null,
     // 热点服务
-    '1-4': {},
+    '1-4': null,
     // 小程序服务增值服务趋势图
-    '2-1': {},
+    '2-1': null,
     // 康复签到
-    '2-2': {},
+    '2-2': null,
     // 点击量
-    '3-1': {},
+    '3-1': null,
     // 无障碍地图
-    '3-2': {},
+    '3-2': null,
     // 无障碍建筑与设施评分
-    '3-3': {},
+    '3-3': null,
   });
-  useEffect(() => {
+  // 请求数据
+  const getData = useCallback((params) => {
     setLoading(true);
     Promise.all([
       // 1-1
@@ -98,7 +107,7 @@ const ServiceOnline = (props) => {
         setRegisteredCount(1368422);
       }),
       // 1-2
-      getOnlineServiceZcptUser({}).then(res => {
+      getOnlineServiceZcptUser(params).then(res => {
         setUserStatisticList([
           { name: '普通用户', value: parseNumber(res['普通用户']), icon: icons.ptyh },
           { name: '持证残疾人', value: parseNumber(res['持证残疾人']), icon: icons.czcjr },
@@ -106,7 +115,7 @@ const ServiceOnline = (props) => {
         ])
       }),
       // 1-2、1-4
-      getOnlineServiceInteract({}).then(res => {
+      getOnlineServiceInteract(params).then(res => {
         mergeEchartsOptions({
           '1-2': {
             color: ['#00A8E7'],
@@ -157,7 +166,7 @@ const ServiceOnline = (props) => {
         })
       }),
       // 1-3
-      getOnlineServicePosition({}).then(res => {
+      getOnlineServicePosition(params).then(res => {
         mergeEchartsOptions({
           '1-3': {
             color: ['#FF1494', '#01F5FF', '#FF8347'],
@@ -251,9 +260,11 @@ const ServiceOnline = (props) => {
         })
       }),
       // 2-2
-      getOnlineServiceSignLog({}).then(res => {
+      getOnlineServiceSignLog(params).then(res => {
         const names = Object.keys(res);
         const data = names.map(name => res[name]);
+        // 没有数据
+        if (!data.length) return;
         mergeEchartsOptions({
           '2-2': {
             grid: [
@@ -300,7 +311,11 @@ const ServiceOnline = (props) => {
         })
       }),
       // 3-1
-      getOnlineServiceInteractCnt({}).then(res => {
+      getOnlineServiceInteractCnt(params).then(res => {
+        const names = Object.keys(res);
+        const data = names.map(name => ({ name, value: res[name] }));
+        // 没有数据
+        if (!data.length) return;
         mergeEchartsOptions({
           '3-1': {
             color: ['#FF1494', '#01F5FF', '#FF8347'],
@@ -313,60 +328,55 @@ const ServiceOnline = (props) => {
                   formatter: `{d}%\n{b}`,
                   backgroundColor: "transparent",
                 },
-                data: Object.keys(res).map(name => ({ name, value: res[name] })),
+                data,
               }
             ]
           },
         });
       }),
       // 3-2
-      getOnlineService({}).then(res => {
-        console.log(res);
-      }).finally(() => {
-        Promise.resolve().then(() => {
-          mergeEchartsOptions({
-            '3-2': {
-              color: ['#FF1494', '#01F5FF', '#FF8347'],
-              legend: {
-                textStyle: {
-                  fontSize: 10,
-                  color: 'white'
+      getOnlineServiceBsBuild(params).then(res => {
+        const names = Object.keys(res);
+        const data = names.map(name => ({ name, value: res[name] }));
+        if (!data.length) return;
+        mergeEchartsOptions({
+          '3-2': {
+            color: ['#FF1494', '#01F5FF', '#FF8347'],
+            // legend: {
+            //   textStyle: {
+            //     fontSize: 10,
+            //     color: 'white'
+            //   },
+            //   bottom: 0,
+            //   left: 'center',
+            //   itemWidth: 14,
+            // },
+            series: [
+              {
+                type: 'pie',
+                radius: ['60%', '70%'],
+                center: ['50%', '40%'],
+                label: {
+                  show: false,
+                  color: "#fff",
+                  fontSize: 20,
+                  position: 'center',
+                  formatter: `{d}%\n{b}`,
+                  backgroundColor: "transparent",
                 },
-                bottom: 0,
-                left: 'center',
-                itemWidth: 14,
-              },
-              series: [
-                {
-                  type: 'pie',
-                  radius: ['60%', '70%'],
-                  center: ['50%', '40%'],
+                emphasis: {
                   label: {
-                    show: false,
-                    color: "#fff",
-                    fontSize: 20,
-                    position: 'center',
-                    formatter: `{d}%\n{b}`,
-                    backgroundColor: "transparent",
-                  },
-                  emphasis: {
-                    label: {
-                      show: true,
-                    }
-                  },
-                  data: [
-                    { value: 70, name: '康复机构' },
-                    { value: 10, name: '教育' },
-                    { value: 20, name: '就业' },
-                  ],
-                }
-              ]
-            },
-          })
+                    show: true,
+                  }
+                },
+                data,
+              }
+            ]
+          },
         })
       }),
       // 3-3
-      getOnlineServiceBsBuildingFacilityEvalution({}).then(res => {
+      getOnlineServiceBsBuildingFacilityEvalution(params).then(res => {
         console.log(res);
       }).finally(() => {
         Promise.resolve().then(() => {
@@ -420,9 +430,29 @@ const ServiceOnline = (props) => {
       setLoading(false);
     });
   }, []);
+  // 请求参数
+  const [params, setParams] = useReducer((state, newState) => {
+    const newParams = { ...state, ...newState };
+    getData(newParams);
+    return newParams;
+  }, {
+    startDate: moment().subtract(1, 'years').format('YYYY-MM-DD'),
+    endDate: moment().format('YYYY-MM-DD'),
+  });
+  // 触发首次请求
+  useEffect(() => {
+    setParams({});
+  }, []);
   return (
     <Layout className="service-online">
-      <CommonNavBar showTime={true} title="网上服务" btnType="back" />
+      <CommonNavBar
+        showRangeDate
+        timeRange={params}
+        setTimeRange={setParams}
+        showTime={true}
+        title="网上服务"
+        btnType="back"
+      />
       <ContainerWithCorner
         component={Content}
         className="service-online-content">
@@ -463,14 +493,14 @@ const ServiceOnline = (props) => {
             <div className="grid-item-title">
               <span>互动交流</span>
             </div>
-            <ReactEcharts
+            <Echarts
               option={echartsOptions['1-2']}
               className="grid-item-content"
             />
             <div className="grid-item-title">
               <span>业务模块</span>
             </div>
-            <ReactEcharts
+            <Echarts
               option={echartsOptions['1-3']}
               className="grid-item-content"
             />
@@ -522,7 +552,7 @@ const ServiceOnline = (props) => {
                 )
               })}
             </div>
-            <ReactEcharts
+            <Echarts
               option={echartsOptions['2-1']}
               style={{ height: '60%' }}
             />
@@ -531,7 +561,7 @@ const ServiceOnline = (props) => {
             <div className="grid-item-title">
               <span>康复签到</span>
             </div>
-            <ReactEcharts
+            <Echarts
               option={echartsOptions['2-2']}
               className="grid-item-content"
             />
@@ -540,7 +570,7 @@ const ServiceOnline = (props) => {
             <div className="grid-item-title">
               <span>点击量</span>
             </div>
-            <ReactEcharts
+            <Echarts
               option={echartsOptions['3-1']}
               className="grid-item-content"
             />
@@ -549,7 +579,7 @@ const ServiceOnline = (props) => {
             <div className="grid-item-title">
               <span>无障碍地图</span>
             </div>
-            <ReactEcharts
+            <Echarts
               option={echartsOptions['3-2']}
               className="grid-item-content"
             />
@@ -558,7 +588,7 @@ const ServiceOnline = (props) => {
             <div className="grid-item-title">
               <span>无障碍建筑与设施评分</span>
             </div>
-            <ReactEcharts
+            <Echarts
               option={echartsOptions['3-3']}
               className="grid-item-content"
             />
