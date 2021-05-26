@@ -163,6 +163,14 @@ export const disabeldPersonAvg = (area,startDate,endDate)=>{
   })
 }
 
+//残疾人人均年收入年度增长率和市人均年收入增长率 每年的折线图
+export const disabeldIncome = ()=>{
+  return ajax({
+    url:'disabled/Income',
+    method:'get',
+  })
+}
+
 /**  执证残疾人页面1  end */
 
 /**  执证残疾人页面2  start */
@@ -364,5 +372,15 @@ export const areaDetail = (area)=>{
     }
   })
 }
-
+//添加满意度
+export const addSatisfaction = (data,year)=>{
+  return ajax({
+    url:'satisfaction/add',
+    method:'post',
+    data:{
+      data:data,
+      year:year
+    }
+  })
+}
 /** 满意度页面 end */

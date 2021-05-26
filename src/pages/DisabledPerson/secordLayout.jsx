@@ -62,7 +62,7 @@ const SecordLayout = (props) => {
     Promise.all([
       // 残疾人文化程度group数量（无、小学、本科。。。）
       new Promise((resolve)=>{
-        // disabeldDegree(area, timeRange.startDate, timeRange.endDate).then((res)=>{
+        disabeldDegree(area, timeRange.startDate, timeRange.endDate).then((res)=>{
           const options = {
             grid: {
               top: "5%",
@@ -77,7 +77,7 @@ const SecordLayout = (props) => {
                   color: 'white'
                 }
               },
-              data: ['无', '小学', '初中', '高中', '大专', '本科', '硕士', '博士']
+              data: Object.keys(res)
             },
             tooltip: {
               show: true,
@@ -91,13 +91,13 @@ const SecordLayout = (props) => {
               },
             },
             series: [{
-              data: [120, 200, 150, 80, 70, 110, 130, 23],
+              data: Object.values(res),
               radius: [80, 100],
               type: 'bar'
             }]
           } 
           resolve(options)
-        // })
+        })
       }),
       // 残疾人的特长 group类型和占比
       new Promise((resolve)=>{
