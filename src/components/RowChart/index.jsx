@@ -40,7 +40,6 @@ const RowChart = (props) => {
     const values = parsedData.map(item => item.value);
     return Math.max.apply(null, values) || Number.MAX_SAFE_INTEGER;
   }, [parsedData]);
-  if (!data || !data.length) return null;
   // 可点击后触发的事件
   const arrowClick = (key) => {
     setClickIndex(key)
@@ -51,7 +50,7 @@ const RowChart = (props) => {
       className={classNames('row-chart', className)}
       style={style}
     >
-      {data.map((item, index) => {
+      {data.length ? data.map((item, index) => {
         const key = index;
         const { name, value } = item;
         return (
@@ -99,7 +98,16 @@ const RowChart = (props) => {
             }
           </div>
         )
-      })}
+      }) : (
+        <div style={{
+          height: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+          <span>暂无数据</span>
+        </div>
+      )}
     </div>
   )
 };
