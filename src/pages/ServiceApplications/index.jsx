@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useReducer, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import moment from 'moment';
 import { Layout, Spin } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
@@ -119,7 +119,11 @@ const ServiceApplications = () => {
       }),
       // 2-2
       getServiceEveryMonth(params).then(res => {
-        const names = Object.keys(res);
+        // 按月份排序
+        const names = Object.keys(res)
+          .map(name => moment(name).valueOf())
+          .sort()
+          .map(name => moment(name).format('YYYY-MM'));
         const values = names.map(key => res[key]);
         mergeEchartsOptions({
           '2-2': {
@@ -165,7 +169,7 @@ const ServiceApplications = () => {
       }),
       // 2-3
       getServiceEveryYear(params).then(res => {
-        const names = Object.keys(res);
+        const names = Object.keys(res).map(name => parseInt(name)).sort();
         const values = names.map(key => res[key]);
         mergeEchartsOptions({
           '2-3': {
@@ -234,6 +238,10 @@ const ServiceApplications = () => {
   const setArea = useCallback(({ name }) => {
     setParams({ area: name });
   }, []);
+  // 触发首次加载
+  useEffect(() => {
+    setParams({});
+  }, [])
   // 弹窗状态
   const [commonModalVisible, setCommonModalVisible] = useState(false);
   return (
@@ -248,8 +256,9 @@ const ServiceApplications = () => {
       />
       <ContainerWithCorner
         component={Content}
-        className="service-applications-content">
-        <GridLayout layout={layout} style={{ visibility: loading ? 'hidden' : 'visible' }}>
+        className="service-applications-content"
+      >
+        <GridLayout layout={layout}>
           <ContainerWithBorder key="1-1" className="grid-item">
             <div className="grid-item-title">
               <span>服务申请人数统计</span>
@@ -288,7 +297,7 @@ const ServiceApplications = () => {
             />
           </ContainerWithBorder>
           <ContainerWithBorder key="2-1" className="grid-item">
-            <CommonMap callBack={setArea} />
+            <CommonMap initData={0} callBack={setArea} />
           </ContainerWithBorder>
           <ContainerWithBorder key="2-2" className="grid-item">
             <div className="grid-item-title">
@@ -330,8 +339,8 @@ const ServiceApplications = () => {
       </ContainerWithCorner>
       <CommonModal
         options={{
-          '1-1': echartsOptions['2-2'],
-          '1-2': echartsOptions['2-3'],
+          '1': echartsOptions['2-2'],
+          '2': echartsOptions['2-3'],
         }}
         visible={commonModalVisible}
         setVisible={() => setCommonModalVisible(false)}

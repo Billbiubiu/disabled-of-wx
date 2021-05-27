@@ -211,8 +211,9 @@ const ServiceAgencies = () => {
       />
       <ContainerWithCorner
         component={Content}
-        className="service-agencies-content">
-        <GridLayout layout={layout} style={{ visibility: loading ? 'hidden' : 'visible' }}>
+        className="service-agencies-content"
+      >
+        <GridLayout layout={layout}>
           <ContainerWithBorder key="1-1" className="grid-item">
             <div className="grid-item-title">
               <span>残疾人康复机构数据统计</span>
@@ -317,8 +318,10 @@ const ServiceAgencies = () => {
         )}
       </ContainerWithCorner>
       <CommonModal
+        options={{
+          '1': echartsOptions['2-2']
+        }}
         visible={commonModalVisible}
-        echartsOptions={echartsOptions}
         setVisible={() => setCommonModalVisible(false)}
       />
     </Layout>

@@ -83,7 +83,7 @@ const ServiceOnline = () => {
   }), {
     // 互动交流
     '1-2': null,
-    // 业务模块
+    // 求职招聘
     '1-3': null,
     // 热点服务
     '1-4': null,
@@ -102,16 +102,13 @@ const ServiceOnline = () => {
   const getData = useCallback((params) => {
     setLoading(true);
     Promise.all([
-      // 1-1
-      Promise.resolve().then(() => {
-        setRegisteredCount(1368422);
-      }),
       // 1-2
       getOnlineServiceZcptUser(params).then(res => {
+        setRegisteredCount(res['注册总人数'] || 0);
         setUserStatisticList([
-          { name: '普通用户', value: parseNumber(res['普通用户']), icon: icons.ptyh },
-          { name: '持证残疾人', value: parseNumber(res['持证残疾人']), icon: icons.czcjr },
-          { name: '企业机构', value: parseNumber(res['企业机构']), icon: icons.qyjg },
+          { name: '普通用户', value: parseNumber(res['普通用户'] || 0), icon: icons.ptyh },
+          { name: '持证残疾人', value: parseNumber(res['持证残疾人'] || 0), icon: icons.czcjr },
+          { name: '企业机构', value: parseNumber(res['企业机构'] || 0), icon: icons.qyjg },
         ])
       }),
       // 1-2、1-4
@@ -188,7 +185,7 @@ const ServiceOnline = () => {
                 },
                 radius: '100%',
                 selectedMode: 'single',
-                data: ['沟通数', '投递简历数', '发布职位数'].map(name => ({ name, value: res[name] || 0 })),
+                data: ['投递简历数', '发布职位数'].map(name => ({ name, value: res[name] || 0 })),
               }
             ]
           },
@@ -456,7 +453,7 @@ const ServiceOnline = () => {
       <ContainerWithCorner
         component={Content}
         className="service-online-content">
-        <GridLayout layout={layout} style={{ visibility: loading ? 'hidden' : 'visible' }}>
+        <GridLayout layout={layout}>
           <ContainerWithBorder key="1-1" className="grid-item">
             <div className="grid-item-title">
               <span>注册人数据统计</span>
@@ -498,7 +495,7 @@ const ServiceOnline = () => {
               className="grid-item-content"
             />
             <div className="grid-item-title">
-              <span>业务模块</span>
+              <span>求职招聘</span>
             </div>
             <Echarts
               option={echartsOptions['1-3']}
@@ -518,9 +515,6 @@ const ServiceOnline = () => {
             className="grid-item"
             style={{ color: '#01DEF6', textAlign: 'center' }}
           >
-            <div style={{
-              fontSize: '25rem',
-            }}>江阴市</div>
             <div className="mini-program-statistics" style={{ flex: 1 }}>
               <div style={{
                 width: '30%',
@@ -554,7 +548,7 @@ const ServiceOnline = () => {
             </div>
             <Echarts
               option={echartsOptions['2-1']}
-              style={{ height: '60%' }}
+              style={{ height: '65%' }}
             />
           </ContainerWithBorder>
           <ContainerWithBorder key="2-2" className="grid-item">
