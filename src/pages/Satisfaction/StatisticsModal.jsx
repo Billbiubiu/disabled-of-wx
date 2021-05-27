@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useRef, useMemo, useState, useEffect, useCallback } from 'react';
 import { Button, Col, Modal, Row, Table, Form, Input, message } from 'antd';
 import { ContainerWithBorder } from '../../components';
+import moment from 'moment'
+import {addSatisfaction} from '../../service/index'
 
 const EditableContext = createContext();
 
@@ -137,6 +139,11 @@ const defaultColumns = [
     title: '平均满意度',
     dataIndex: 'average',
   },
+  {
+    title: '人均年收入',
+    dataIndex: '人均收入',
+    editable: true,
+  },
 ]
 const defaultDataSource = [
   { area: '无锡市' },
@@ -156,6 +163,7 @@ const StatisticsModal = (props) => {
     setVisible = () => { },
   } = props;
   const [dataSource, setDataSource] = useState(defaultDataSource);
+  const [year,setYear] = useState(moment().year())
   const handleSave = useCallback((row) => {
     setDataSource(oldDataSource => {
       const newDataSource = [...oldDataSource];
@@ -194,7 +202,7 @@ const StatisticsModal = (props) => {
   const parsedDataSource = useMemo(() => {
     return dataSource.map(item => {
       let { area, average, ...data } = item;
-      const values = Object.values(data).filter(Boolean);
+      const values = Object.keys(data).filter((key)=>data[key]&&key!=="人均收入").map((key)=>data[key])
       average = parseFloat((values.reduce((t, d) => t + d, 0) / values.length).toFixed(2)) || '';
       return {
         ...item,
@@ -202,14 +210,40 @@ const StatisticsModal = (props) => {
       }
     });
   }, [dataSource])
+
+  // 提交满意度
+  const submitStatistics=()=>{
+    const newData = []
+    dataSource.map((item)=>{
+      Object.keys(item).map((key)=>{
+        if(key !=="area" && key !=="averIncome" && key !=="average"){
+          newData.push({dateType:key.toLowerCase(),area:item.area,value:item[key]})
+        }
+      })
+    })
+    
+    addSatisfaction(newData,year).then((res)=>{
+      if(res.code == 1){
+        setVisible(false)
+        message.success(res.message)
+      }else{
+        message.error(res.message)
+      }
+    })
+  }
+
+  useEffect(()=>{
+    if(!visible)
+    setDataSource(defaultDataSource)
+  },[visible])
   return (
     <Modal
       centered
-      width="100em"
+      width="105em"
       visible={visible}
       onCancel={() => setVisible(false)}
       className="statistics-modal"
-      title="2019年各区满意度指标情况表"
+      title={<div><input className="title-input" onChange={(e)=>setYear(e.target.value)} value={year} />年各区满意度指标情况表</div>}
       modalRender={node => {
         return (
           <ContainerWithBorder>
@@ -253,7 +287,7 @@ const StatisticsModal = (props) => {
         </Col>
       </Row>
       <div style={{ padding: '20rem', textAlign: 'center' }}>
-        <Button type="primary" onClick={() => setVisible(false)}>提交</Button>
+        <Button type="primary" onClick={() =>submitStatistics()}>提交</Button>
       </div>
     </Modal>
   )

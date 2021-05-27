@@ -20,8 +20,8 @@ const DisabledPerson = (props) => {
   //选择地图的区域
   const [area, setArea] = useState()
   // 时间范围
-  // const [timeRange, setTimeRange] = useState({startDate:moment().format('YYYY-MM-DD'),endDate:moment().format('YYYY-MM-DD')})
-  const [timeRange, setTimeRange] = useState({})
+  const [timeRange, setTimeRange] = useState({startDate:moment().subtract(1, "years").format('YYYY-MM-DD'),endDate:moment().format('YYYY-MM-DD')})
+  // const [timeRange, setTimeRange] = useState({})
 
   return (
     <Layout className="disabled-person">
