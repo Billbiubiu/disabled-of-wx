@@ -517,13 +517,13 @@ const SecordLayout = (props) => {
       </ContainerWithBorder>
       <ContainerWithBorder key="3-2" className="grid-item">
         <div className="grid-item-title">
-          <span>就业形势分类</span>
+          <span>就业形式分类</span>
         </div>
         <RowChart rowIndxStyle={{ color: 'white' }} rowBodyStyle={{ backgroundColor: '#bb3d00' }} rowFooterStyle={{ backgroundColor: '#bb3d00' }} option={echartsOptions['3-2']} className="grid-item-content"></RowChart>
       </ContainerWithBorder>
       <ContainerWithBorder key="3-3" className="grid-item">
         <div className="grid-item-title">
-          <span>单位形势分类</span>
+          <span>单位性质分类</span>
         </div>
         <RowChart rowIndxStyle={{ color: 'white' }} option={echartsOptions['3-3']} className="grid-item-content"></RowChart>
       </ContainerWithBorder>

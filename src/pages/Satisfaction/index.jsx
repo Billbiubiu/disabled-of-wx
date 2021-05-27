@@ -65,7 +65,6 @@ const Satisfaction = (props) => {
       //各区的详细满意度
       new Promise((resolve)=>{
         areaDetail(area).then((res)=>{
-          console.log(res[1])
           setEveryArea1([
             {name:'对政府和社会各界对残疾人的关爱满意度',rate:res[0]?.B7,compare:`${res[0]?.往年同比增长}`.substring(1),compareStatus:`${res[0]?.往年同比增长}`.substring(0,1)==="-"?"down":'up'},
             {name:'对各级残联组织和设参工作部门的工作满意度',rate:res[1]?.B8,compare:`${res[1]?.往年同比增长}`.substring(1),compareStatus:`${res[1]?.往年同比增长}`.substring(0,1)==="-"?"down":'up'},
@@ -149,9 +148,9 @@ const Satisfaction = (props) => {
       })
     ]).then((res)=>{
       setTjData([
-        { title: "办理单位数量", num: res[0] },
-        { title: "本月办理事务数量", num: res[1].transactMonthTotal, scale: `${res[1].增长率}`.substring(1)+'%', status: `${res[1].增长率}`.substring(0,1) =='-'?'down':'up'},
-        { title: "平均满意度", num: res[5][area], scale: '14.2', status: 'up' },
+        { title: "全市满意度", num: res[0] },
+        { title: "往年满意度", num: res[1].transactMonthTotal},
+        { title: "同比增长",scale: res[5][area], status: 'up' },
       ])
       setEchartsOptions({...echartsOptions,'2-2':res[4]})
     })
@@ -205,7 +204,7 @@ const Satisfaction = (props) => {
             </div>
           </ContainerWithBorder>
           <ContainerWithBorder key="2-1" className="grid-item">
-            <CommonMap callBack={(e) => { setArea(e.name) }}></CommonMap>
+            <CommonMap initData={0} callBack={(e) => { setArea(e.name) }}></CommonMap>
           </ContainerWithBorder>
           <ContainerWithBorder key="2-2" className="grid-item">
             <div className="grid-item-title">

@@ -98,7 +98,7 @@ const FirstLayout = (props) => {
       },
       series: [
         {
-          name: '访问来源',
+          name: '已签约',
           type: 'pie',
           radius: ['40%', '80%'],
           label: {
@@ -117,8 +117,8 @@ const FirstLayout = (props) => {
             }
           },
           data: [
-            { value: 335, name: '直接访问' },
-            { value: 310, name: '邮件营销' },
+            { value: 335, name: '已签约' },
+            { value: 310, name: '未签约' },
           ],
         }
       ]
@@ -159,13 +159,7 @@ const FirstLayout = (props) => {
       //残疾人低保人数、低收入、一户多残、人均住房面积数量
       new Promise((resolve) => {
         disabeldDbNum(area, timeRange.startDate, timeRange.endDate).then((res) => {
-          resolve()
-          setDisabledAnalysis([
-            { title: "低保人数", num: parseNumber(res.dbNum), unit: "人" },
-            { title: "低收入人数", num: parseNumber(res.dsrNum), unit: "人" },
-            { title: "一户多残数量", num: parseNumber(res.yhdcNum), unit: "人" },
-            { title: "人均住房面积", num: parseFloat(res.rjmjNum).toFixed(2), unit: "平米" },
-          ])
+          resolve(res)
         })
       }),
       // 残疾人婚姻状况
@@ -267,7 +261,7 @@ const FirstLayout = (props) => {
             legend: {
               right: 0,
               top: -5,
-              data: ['残疾人人均年收入', '市人均年收入'],
+              data: ['残疾人人均年收入', '社会人均年收入'],
               textStyle: {
                 color: 'white'
               }
@@ -308,7 +302,7 @@ const FirstLayout = (props) => {
                 data: Object.values(res).map((item)=>item.disabledPerson)
               },
               {
-                name: '市人均年收入',
+                name: '社会人均年收入',
                 type: 'line',
                 stack: '总量',
                 data: Object.values(res).map((item)=>item.cityPerson)
@@ -320,11 +314,10 @@ const FirstLayout = (props) => {
       })
       // 家庭医生签约和未签订数量和占比
     ]).then((res) => {
-      console.log(res)
       setDisabledCount(res[0])
         setDisabledMoney([
           { title: "残疾人人均年收入", num: res[5].oneincomeAvg, img: Icons.cjr_big },
-          { title: "市人均年收入", num: res[9].cityPersonAvg, img: Icons.people },
+          { title: "社会人均年收入", num: res[9].cityPersonAvg, img: Icons.people },
         ])
         setEchartsOptions({
           ...echartsOptions, '1-2': res[1],'3-2-2':res[4],'2-2':res[11],'1-3':{
@@ -355,9 +348,15 @@ const FirstLayout = (props) => {
             ]
           }
         })
+        setDisabledAnalysis([
+          { title: "重度残疾人", num: parseNumber(res[7]), unit: "人" },
+          { title: "多重残疾人", num: parseNumber(res[6]), unit: "人" },
+          { title: "一户多残数量", num: parseNumber(res[3].yhdcNum), unit: "人" },
+          { title: "人均住房面积", num: parseFloat(res[3].rjmjNum).toFixed(2), unit: "平米" },
+        ])
         const list = [
-          { title: "重度残疾人", num: parseNumber(res[7]) },
-          { title: "多重残疾人", num: parseNumber(res[6]) },
+          { title: "低保人数", num: parseNumber(res[3].dbNum) },
+          { title: "低收入人数", num: parseNumber(res[3].dsrNum) },
           { title: "孤独症残疾人", num: parseNumber(res[10]) },
         ]
         setDisabledStatisticsList(list)
@@ -400,11 +399,7 @@ const FirstLayout = (props) => {
           </div>
         </div>
         <div className="grid-item-title">
-          <span>残疾人类型统计</span>
-        </div>
-        <RowChart option={echartsOptions['1-2']} className="grid-item-content" style={{ height: '50rem', }}></RowChart>
-        <div className="grid-item-title">
-          <span>残疾人性别统计</span>
+          <span>性别统计</span>
         </div>
         <div className="grid-item-content sex-analysis">
           <div className="sex-rate">
@@ -430,7 +425,11 @@ const FirstLayout = (props) => {
           </div>
         </div>
         <div className="grid-item-title">
-          <span>残疾人数据统计</span>
+          <span>残疾人类型统计</span>
+        </div>
+        <RowChart option={echartsOptions['1-2']} className="grid-item-content" style={{ height: '50rem', }}></RowChart>
+        <div className="grid-item-title">
+          <span>残疾人年龄统计</span>
         </div>
         <ReactEcharts
           option={echartsOptions['1-3']}
@@ -438,11 +437,11 @@ const FirstLayout = (props) => {
         />
       </ContainerWithBorder>
       <ContainerWithBorder key="2-1" className="grid-item">
-        <CommonMap callBack={(e) => { setArea(e.name) }}></CommonMap>
+        <CommonMap initData={0} callBack={(e) => { setArea(e.name) }}></CommonMap>
       </ContainerWithBorder>
       <ContainerWithBorder key="2-2" className="grid-item">
         <div className="grid-item-title">
-          <span>残疾人和全市人均收入增长趋势图</span>
+          <span>残疾人和社会人均年收入增长趋势图</span>
         </div>
         <ReactEcharts
           option={echartsOptions['2-2']}
@@ -482,7 +481,7 @@ const FirstLayout = (props) => {
       </ContainerWithBorder>
       <ContainerWithBorder key="3-3" className="grid-item">
         <div className="grid-item-title">
-          <span>残疾人收入统计</span>
+          <span>人均年收入统计</span>
         </div>
         <div className="disabled-money">
           {
