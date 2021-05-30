@@ -66,8 +66,8 @@ const SecordLayout = (props) => {
           const options = {
             grid: {
               top: "5%",
-              left: "10%",
-              bottom: "13%"
+              left: "12%",
+              bottom: "15%"
             },
             color: ['#00a8e8'],
             xAxis: {
@@ -77,6 +77,10 @@ const SecordLayout = (props) => {
                   color: 'white'
                 }
               },
+              axisLabel: {  
+                interval:0,  
+                rotate:20  
+             },
               data: Object.keys(res)
             },
             tooltip: {
@@ -92,7 +96,7 @@ const SecordLayout = (props) => {
             },
             series: [{
               data: Object.values(res),
-              radius: [80, 100],
+              radius: [100, 100],
               type: 'bar'
             }]
           } 
@@ -136,18 +140,9 @@ const SecordLayout = (props) => {
       }),
       //残疾人在读学习group 学历的数量
       new Promise((resolve)=>{
-        // disabeldEducation(area, timeRange.startDate, timeRange.endDate).then((res)=>{
-          resolve([
-            { name: '小学', value: 8768 },
-            { name: '初中', value: 8642 },
-            { name: '高中', value: 8537 },
-            { name: '本科', value: 8422 },
-            { name: '大专', value: 8322 },
-            { name: '本科', value: 8122 },
-            { name: '硕士', value: 7922 },
-            { name: '博士', value: 5622 },
-          ])
-        // })
+        disabeldEducation(area, timeRange.startDate, timeRange.endDate).then((res)=>{
+          resolve(Object.keys(res).map((key)=>{return {name:key,value:res[key]}}))
+        })
       }),
       //医疗保险缴纳和未缴纳数量和占比
       new Promise((resolve)=>{
@@ -367,7 +362,7 @@ const SecordLayout = (props) => {
             title: {
               text: '残疾人年龄统计',
               left: 'center',
-              top: 19,
+              top: 10,
               textStyle: {
                 color: 'white',
                 fontSize: '10'
@@ -397,7 +392,7 @@ const SecordLayout = (props) => {
             title: {
               text: '残疾人类别统计',
               left: 'center',
-              top: 19,
+              top: 10,
               textStyle: {
                 color: 'white',
                 fontSize: '10'
