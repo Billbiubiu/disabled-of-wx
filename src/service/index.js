@@ -26,6 +26,18 @@ export const getDisabledNum = (area,startDate,endDate)=>{
       }
     })
 }
+//执证残疾人年纪
+export const getAgeGroup = (area,startDate,endDate)=>{
+  return ajax({
+    url:'disabled/age/group',
+    method:'get',
+    params:{
+      area:area,
+      startDate:startDate,
+      endDate:endDate
+    }
+  })
+}
 
 //多重残疾人
 export const getMultipleNum = (area,startDate,endDate)=>{
@@ -327,24 +339,10 @@ export const disabeldUnit = (area,startDate,endDate)=>{
 
 /** 满意度页面 start */
 
-//全年办理总量
-export const yearTotal = ()=>{
+//满意统计
+export const satisfactionCitywide = ()=>{
   return ajax({
-    url:'satisfaction/transact/year/total',
-    method:'get',
-  })
-}
-//本月办理总量
-export const monthTotal = ()=>{
-  return ajax({
-    url:'satisfaction/transact/month/total',
-    method:'get',
-  })
-}
-// 去年全市满意度
-export const lastYear = ()=>{
-  return ajax({
-    url:'satisfaction/last/year',
+    url:'satisfaction/citywide',
     method:'get',
   })
 }

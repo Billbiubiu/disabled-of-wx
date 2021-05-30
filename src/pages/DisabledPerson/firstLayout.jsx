@@ -9,7 +9,7 @@ import {
 import { Spin } from 'antd'
 import * as Icons from '../../assets/images/disabled-person';
 import './firstLayout.scss';
-import { disabeldIncome,getDisabledNum, getAutismNum,disabeldType, disabeldSex, disabeldMarry, disabeldDbNum,disabeldAvg,getMultipleNum,getSevereNum,getSuspectedNum,disabeldPersonAvg} from '../../service/index'
+import { disabeldIncome,getAgeGroup,getDisabledNum, getAutismNum,disabeldType, disabeldSex, disabeldMarry, disabeldDbNum,disabeldAvg,getMultipleNum,getSevereNum,getSuspectedNum,disabeldPersonAvg} from '../../service/index'
 
 // 布局数据
 const layout = [
@@ -235,10 +235,10 @@ const FirstLayout = (props) => {
           resolve(res.severe)
         })
       }),
-      //疑似残疾人
-      new Promise((resolve)=>{
-        getSuspectedNum(area, timeRange.startDate, timeRange.endDate).then((res) => {
-          resolve(res.suspected)
+      //残疾人年纪统计
+      new Promise((resolve) => {
+        getAgeGroup(area, timeRange.startDate, timeRange.endDate).then((res) => {
+          resolve(res)
         })
       }),
       // 市人均年收入最新一年的数据
@@ -338,12 +338,9 @@ const FirstLayout = (props) => {
                   color: 'white',
                   fontSize: '10'
                 },
-                radius: '100%',
+                radius: '80%',
                 selectedMode: 'single',
-                data: [
-                  { value: res[0], name: '执证残疾人' },
-                  { value: res[8], name: '疑似残疾人' },
-                ]
+                data: Object.keys(res[8]).map((item)=>{return {name:item,value:res[8][item]}})
               }
             ]
           }
@@ -352,7 +349,7 @@ const FirstLayout = (props) => {
           { title: "重度残疾人", num: parseNumber(res[7]), unit: "人" },
           { title: "多重残疾人", num: parseNumber(res[6]), unit: "人" },
           { title: "一户多残数量", num: parseNumber(res[3].yhdcNum), unit: "人" },
-          { title: "人均住房面积", num: parseFloat(res[3].rjmjNum).toFixed(2), unit: "平米" },
+          { title: "劳动残疾人数", num: parseNumber(res[3].劳动残疾人数), unit: "人" },
         ])
         const list = [
           { title: "低保人数", num: parseNumber(res[3].dbNum) },
