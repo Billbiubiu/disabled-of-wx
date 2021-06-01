@@ -6,7 +6,7 @@ import {
   CommonMap,
   RowChart
 } from '../../components';
-import {disabeldDegree,disabeldSpecial,disabeldEducation,disabeldYanglaobx,disabeldYiliaobx,disabeldYanglaobxJMZG,disabeldYiliaobxJMZG,disabeldEmploy,disabeldAge,disabeldTypeForYJY,disabeldEmployment,disabeldUnit} from '../../service/index'
+import {disabeldDegree,disabeldSpecial,disabeldEducation,disabeldYanglaobx,disabeldYiliaobx,disabeldYanglaobxJMZG,disabeldYiliaobxJMZG,disabeldEmploy,disabeldLevel,disabeldTypeForYJY,disabeldEmployment,disabeldUnit} from '../../service/index'
 import * as Icons from '../../assets/images/disabled-person';
 import './secord.scss';
 
@@ -356,11 +356,11 @@ const SecordLayout = (props) => {
       }),
       //已就业的残疾人中，年龄段的数量
       new Promise((resolve)=>{
-        disabeldAge(area, timeRange.startDate, timeRange.endDate).then((res)=>{
+        disabeldLevel(area, timeRange.startDate, timeRange.endDate).then((res)=>{
           resolve({
             color: ['#ff1493', '#00f5ff', '#3c98ff', '#ffdb5c', '#f0732e', '#7fce67'],
             title: {
-              text: '残疾人年龄统计',
+              text: '残疾等级（I II III Ⅳ）',
               left: 'center',
               top: 10,
               textStyle: {
@@ -373,7 +373,7 @@ const SecordLayout = (props) => {
             },
             series: [
               {
-                name: '残疾人年龄统计',
+                name: '残疾等级（I II III Ⅳ）',
                 type: 'pie',
                 label: {
                   show: false

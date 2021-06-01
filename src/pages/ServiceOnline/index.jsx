@@ -125,13 +125,17 @@ const ServiceOnline = () => {
                 containLabel: true,
               }
             ],
+            tooltip: {
+              show: true,
+            },
             xAxis: [
               {
                 type: 'category',
                 boundaryGap: true,
-                axisLabel: {
-                  interval: 0,
-                },
+                axisLabel: {  
+                  interval:0,  
+                  rotate:20  
+               },
                 axisTick: {
                   show: false,
                 },
@@ -283,6 +287,9 @@ const ServiceOnline = () => {
                 }
               },
             ],
+            tooltip: {
+              show: true,
+            },
             yAxis: [
               {
                 type: 'value',
@@ -316,6 +323,9 @@ const ServiceOnline = () => {
         mergeEchartsOptions({
           '3-1': {
             color: ['#FF1494', '#01F5FF', '#FF8347'],
+            tooltip: {
+              show: true,
+            },
             series: [
               {
                 type: 'pie',
@@ -389,6 +399,9 @@ const ServiceOnline = () => {
                   containLabel: true,
                 }
               ],
+              tooltip: {
+                show: true,
+              },
               xAxis: [
                 {
                   type: 'category',

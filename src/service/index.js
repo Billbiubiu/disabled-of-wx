@@ -285,9 +285,9 @@ export const disabeldEmploy = (area,startDate,endDate)=>{
   })
 }
 //已就业的残疾人中，年龄段的数量
-export const disabeldAge = (area,startDate,endDate)=>{
+export const disabeldLevel = (area,startDate,endDate)=>{
   return ajax({
-    url:'disabled/age',
+    url:'disabled/level',
     method:'get',
     params:{
       area:area,

@@ -354,7 +354,7 @@ const FirstLayout = (props) => {
         const list = [
           { title: "低保人数", num: parseNumber(res[3].dbNum) },
           { title: "低收入人数", num: parseNumber(res[3].dsrNum) },
-          { title: "孤独症残疾人", num: parseNumber(res[10]) },
+          { title: "孤独症儿童", num: parseNumber(res[10]) },
         ]
         setDisabledStatisticsList(list)
         setLoading(true)
