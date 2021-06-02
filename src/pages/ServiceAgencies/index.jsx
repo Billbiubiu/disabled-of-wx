@@ -64,7 +64,7 @@ const ServiceAgencies = () => {
   }), {
     // 服务机构数据
     '1-2': null,
-    // 机构每月残疾人变化趋势
+    // 残疾人变化趋势
     '2-2': null,
     // 残联机构
     '3-2': null,
@@ -255,7 +255,7 @@ const ServiceAgencies = () => {
           </ContainerWithBorder>
           <ContainerWithBorder key="2-2" className="grid-item">
             <div className="grid-item-title">
-              <span>机构每月残疾人变化趋势</span>
+              <span>残疾人变化趋势</span>
             </div>
             <Echarts
               option={echartsOptions['2-2']}
@@ -270,7 +270,7 @@ const ServiceAgencies = () => {
           </ContainerWithBorder>
           <ContainerWithBorder key="3-1" className="grid-item">
             <div className="grid-item-title">
-              <span>残疾人服务机构办理事务情况统计</span>
+              <span>按比例就业情况统计</span>
             </div>
             <div className="grid-item-content business-statistics">
               {businessStatisticsData.map((item, index) => {

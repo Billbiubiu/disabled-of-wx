@@ -84,7 +84,7 @@ const ServiceApplications = () => {
     '1-2': null,
     // 康复
     '1-3': null,
-    // 机构每月残疾人服务申请变化趋势
+    // 残疾人服务申请变化趋势
     '2-2': null,
     // 年度统计
     '2-3': null,
@@ -301,7 +301,7 @@ const ServiceApplications = () => {
           </ContainerWithBorder>
           <ContainerWithBorder key="2-2" className="grid-item">
             <div className="grid-item-title">
-              <span>机构每月残疾人服务申请变化趋势</span>
+              <span>残疾人服务申请变化趋势</span>
             </div>
             <Echarts
               option={echartsOptions['2-2']}

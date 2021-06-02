@@ -32,7 +32,7 @@ export const getServiceJiaojiu = params => {
     params,
   })
 }
-// 5、机构每月申请服务变化趋势
+// 5、申请服务变化趋势
 export const getServiceEveryMonth = params => {
   return ajax({
     url: 'service/every/month',
