@@ -260,7 +260,7 @@ const ServiceAgencies = () => {
             />
           </ContainerWithBorder>
           <ContainerWithBorder key="2-1" className="grid-item">
-            <CommonMap callBack={setArea} />
+            <CommonMap initData={0} callBack={setArea} />
           </ContainerWithBorder>
           <ContainerWithBorder key="2-2" className="grid-item">
             <div className="grid-item-title">
