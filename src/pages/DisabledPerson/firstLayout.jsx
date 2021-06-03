@@ -340,7 +340,7 @@ const FirstLayout = (props) => {
                 },
                 radius: '80%',
                 selectedMode: 'single',
-                data: Object.keys(res[8]).map((item)=>{return {name:item,value:res[8][item]}})
+                data: Object.keys(res[8]).map((item)=>{return {name:item+'岁',value:res[8][item]}})
               }
             ]
           }

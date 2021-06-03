@@ -129,12 +129,12 @@ const Satisfaction = (props) => {
             series: [
               {
                 type: 'bar',
-                name: 'bar',
+                name: '数值',
                 data: Object.values(res),
               },
               {
                 type: 'line',
-                name: 'line',
+                name: '数值',
                 data:  Object.values(res),
               }
             ]
