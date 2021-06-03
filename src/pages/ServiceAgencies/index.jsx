@@ -17,6 +17,7 @@ import {
   getOrganizationTotal,
   getOrganizationCategoryTotal,
   getOrganizationCategoryWorkPersonnelTotal,
+  getOrganizationCategoryServiceObjectTotal,
   getOrganizationCompanyTotal,
 } from '../../service/ServiceAgencies';
 import StachChart from './StackChart';
@@ -84,31 +85,43 @@ const ServiceAgencies = () => {
     Promise.all([
       // 1-1
       getOrganizationTotal(params).then(res => {
-        const { organizationTotal, workPersonnelSum } = res;
+        const { organizationTotal, workPersonnelSum, 服务对象数量 } = res;
         setAgencyStatisticsData([
           { name: '服务机构数量', value: parseNumber(organizationTotal) },
           { name: '工作人员数量', value: parseNumber(workPersonnelSum) },
-          { name: '服务对象数量', value: parseNumber(1183) },
+          { name: '服务对象数量', value: parseNumber(服务对象数量) },
         ])
       }),
-      // 1-2
-      getOrganizationCategoryTotal(params).then(res => {
-        console.log(res);
-      }).finally(() => {
+      Promise.all([
+        // 1-2
+        getOrganizationCategoryTotal(params).then(res => {
+          return res;
+        }),
+        // 1-2
+        getOrganizationCategoryWorkPersonnelTotal(params).then(res => {
+          return res;
+        }),
+        // 1-2
+        getOrganizationCategoryServiceObjectTotal(params).then(res => {
+          return res;
+        }),
+      ]).then(res => {
+        const data = [res[0] || {}, res[1] || {}, res[2] || {}];
+        const namesSet = new Set([...Object.keys({ ...data[0], ...data[1], ...data[2] })]);
+        namesSet.delete('其他');
+        const names = [...namesSet, '其他'];
         mergeEchartsOptions({
           '1-2': {
-            data: [
-              { name: '残联机构', values: [51, 35, 45] },
-              { name: '康复机构', values: [47, 50, 40] },
-              { name: '托养机构', values: [49, 40, 18] },
-              { name: '残疾人之家', values: [48, 50, 45] },
-            ]
+            data: names.map(name => ({
+              name,
+              values: [
+                data[0][name] || 0,
+                data[1][name] || 0,
+                data[2][name] || 0,
+              ],
+            })),
           },
         })
-      }),
-      // 不知道干嘛的
-      getOrganizationCategoryWorkPersonnelTotal(params).then(res => {
-        console.log(res);
       }),
       // 2-2
       Promise.resolve().then(() => {
@@ -156,7 +169,7 @@ const ServiceAgencies = () => {
       }),
       // 3-1
       getOrganizationCompanyTotal(params).then(res => {
-        const { companyTotal, disabledPeopleSum, companyGroupDisabledPeople } = res;
+        const { companyTotal, disabledPeopleSum } = res;
         setBusinessStatisticsData([
           { name: '单位数量', value: parseNumber(companyTotal), unit: '个' },
           { name: '安置残疾人数', value: parseNumber(disabledPeopleSum), unit: '人' },
@@ -218,7 +231,7 @@ const ServiceAgencies = () => {
             <div className="grid-item-title">
               <span>残疾人康复机构数据统计</span>
             </div>
-            <div className="grid-item-content agency-statistics">
+            <div className="grid-item-content agency-statistics" style={{ flex: 'none' }}>
               {agencyStatisticsData.map((item, index) => {
                 const { name, value } = item;
                 const key = index;
@@ -240,15 +253,11 @@ const ServiceAgencies = () => {
             <div className="grid-item-title">
               <span>服务机构数据</span>
             </div>
-            <div
+            <StachChart
               className="grid-item-content"
-              style={{ flex: 4 }}
-            >
-              <StachChart
-                option={echartsOptions['1-2']}
-                style={{ flex: 1 }}
-              />
-            </div>
+              option={echartsOptions['1-2']}
+              style={{ flex: 1 }}
+            />
           </ContainerWithBorder>
           <ContainerWithBorder key="2-1" className="grid-item">
             <CommonMap callBack={setArea} />

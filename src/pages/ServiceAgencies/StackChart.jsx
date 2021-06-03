@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import classNames from 'classnames';
 import ArrowOrange from '../../assets/images/orange.png'
 import ArrowWhite from '../../assets/images/white.png'
 
@@ -12,6 +13,8 @@ const StackChart = (props) => {
   const {
     option = {},
     onRowClick = () => { },
+    className,
+    style = {},
   } = props;
   const { data = [] } = option || {};
 
@@ -35,13 +38,8 @@ const StackChart = (props) => {
 
 
   return (
-    <div style={{
-      height: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-around',
-      alignItems: 'stretch',
-    }}>
+    <div
+      className={classNames('stack-chart', className)} style={style}>
       {data.map((item, index) => {
         const key = index;
         const { name, values } = item;
@@ -49,12 +47,15 @@ const StackChart = (props) => {
           <div
             key={key}
             style={{
+              width: '100%',
               display: 'flex',
               flexDirection: 'column',
+              marginTop: index ? '2rem' : '',
             }}
           >
-            <div style={{ marginBottom: '5rem' }}>
+            <div>
               <span>No.{index + 1}</span>
+              <span>&nbsp;</span>
               <span>{name}</span>
             </div>
             <div style={{ position: 'relative', paddingRight: '50rem' }}>
@@ -77,6 +78,7 @@ const StackChart = (props) => {
                     <div style={{ flex: 1 }}>
                       <div style={{
                         textAlign: 'right',
+                        lineHeight: 1,
                       }}>{value}</div>
                       <div style={{
                         height: '4rem',
