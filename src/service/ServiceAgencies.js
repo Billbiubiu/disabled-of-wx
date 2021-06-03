@@ -24,6 +24,14 @@ export const getOrganizationCategoryWorkPersonnelTotal = (params) => {
     params,
   })
 }
+// 2、服务机构根据残联机构、康复机构+辅具康复中心、托养机构、残疾人之家几大类型统计服务机构服务对象总数
+export const getOrganizationCategoryServiceObjectTotal = (params) => {
+  return ajax({
+    url:'organization/category/service/object/total',
+    method:'get',
+    params,
+  })
+}
 // 4. 助残单位数量总数、安置残疾人总数，和各个单位安置数
 export const getOrganizationCompanyTotal = (params) => {
   return ajax({
