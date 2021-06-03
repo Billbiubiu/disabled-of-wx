@@ -16,6 +16,24 @@
       text-align: center;
       font-size: 30rem;
       color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .header-btn{
+        width: 80rem;
+        padding: 5rem;
+        margin-left: 20rem;
+        border-radius: 6rem;
+        cursor: pointer;
+        background-color: #03356C;
+        font-size: 10rem;
+        border: 1rem solid #0D7089;
+        &.btn-click{
+          background: rgba(132,157,255,0.24);
+          border: 1rem solid #03356C;
+          color:#15CBE1
+        }
+      }
     }
   }
 
