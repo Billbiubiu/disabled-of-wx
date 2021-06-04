@@ -2,7 +2,7 @@ import React from 'react';
 import ReactEcharts from 'echarts-for-react';
 
 const Echarts = (props) => {
-  const { option } = props;
+  const { option, style } = props;
   return option ? (
     <ReactEcharts {...props} />
   ) : (
@@ -11,7 +11,8 @@ const Echarts = (props) => {
       style={{
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        ...style,
       }}
     >
       <span>暂无数据</span>

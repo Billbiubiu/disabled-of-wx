@@ -17,6 +17,8 @@ import {
   getOnlineServiceInteractCnt,
   getOnlineServiceBsBuild,
   getOnlineServiceBsBuildingFacilityEvalution,
+  getAppletService,
+  getDayCount,
 } from '../../service/ServiceOnline';
 import * as icons from '../../assets/images/service-online';
 import './index.scss';
@@ -132,10 +134,10 @@ const ServiceOnline = () => {
               {
                 type: 'category',
                 boundaryGap: true,
-                axisLabel: {  
-                  interval:0,  
-                  rotate:20  
-               },
+                axisLabel: {
+                  interval: 0,
+                  rotate: 20
+                },
                 axisTick: {
                   show: false,
                 },
@@ -196,7 +198,14 @@ const ServiceOnline = () => {
         })
       }),
       // 2-1
-      Promise.resolve().then(() => {
+      getAppletService().then(res => {
+        setMiniProgramTotal(parseNumber(res['小程序服务总数'] || 0));
+        setMiniProgramStatisticsList([
+          { name: "科室1服务数量", value: parseNumber(res['科室1数量'] || 0) },
+          { name: "科室2服务数量", value: parseNumber(res['科室2数量'] || 0) },
+          { name: "科室3服务数量", value: parseNumber(res['科室3数量'] || 0) },
+        ]);
+      }).catch(() => {
         setMiniProgramTotal(parseNumber(12273684));
         setMiniProgramStatisticsList([
           { name: "科室1服务数量", value: parseNumber(885369) },
@@ -205,7 +214,9 @@ const ServiceOnline = () => {
         ]);
       }),
       // 2-1
-      Promise.resolve().then(() => {
+      getDayCount().then(res => {
+        console.log(res);
+      }).finally(() => {
         const names = Array(30).fill(0).map((d, i) => i + 1);
         const data = names.map(d => Math.random() * 25 + 25);
         mergeEchartsOptions({
@@ -523,12 +534,8 @@ const ServiceOnline = () => {
               style={{ height: '200rem', flexShrink: 0 }}
             />
           </ContainerWithBorder >
-          <ContainerWithBorder
-            key="2-1"
-            className="grid-item"
-            style={{ color: '#01DEF6', textAlign: 'center' }}
-          >
-            <div className="mini-program-statistics" style={{ flex: 1 }}>
+          <ContainerWithBorder key="2-1" className="grid-item">
+            <div className="mini-program-statistics" style={{ height: '35%', color: '#01DEF6', textAlign: 'center' }}>
               <div style={{
                 width: '30%',
                 display: 'flex',

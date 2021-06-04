@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import ArrowOrange from '../../assets/images/orange.png'
 import ArrowWhite from '../../assets/images/white.png'
@@ -12,13 +12,12 @@ const rowList = [
 const StackChart = (props) => {
   const {
     option = {},
+    activeValue = '',
     onRowClick = () => { },
     className,
     style = {},
   } = props;
   const { data = [] } = option || {};
-
-  const [activeIndex, setActiveIndex] = useState(0);
 
   const parsedData = useMemo(() => {
     return data.map(item => {
@@ -98,13 +97,12 @@ const StackChart = (props) => {
                   cursor: 'pointer',
                 }}
                 onClick={() => {
-                  setActiveIndex(index);
-                  onRowClick(index);
+                  onRowClick(item.name);
                 }}
               >
                 <img
                   alt=""
-                  src={index === activeIndex ? ArrowOrange : ArrowWhite}
+                  src={item.name === activeValue ? ArrowOrange : ArrowWhite}
                   style={{ width: '40rem' }}
                 />
               </div>

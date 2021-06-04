@@ -1,4 +1,4 @@
-import React, { useCallback, useReducer, useState } from 'react';
+import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import moment from 'moment';
 import { Layout, Spin } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
@@ -19,8 +19,9 @@ import {
   getOrganizationCategoryWorkPersonnelTotal,
   getOrganizationCategoryServiceObjectTotal,
   getOrganizationCompanyTotal,
+  getOrganizationTypeList,
 } from '../../service/ServiceAgencies';
-import StachChart from './StackChart';
+import StackChart from './StackChart';
 import './index.scss';
 
 const { Content } = Layout;
@@ -79,6 +80,36 @@ const ServiceAgencies = () => {
     { name: '单位数量', value: 0, unit: '个' },
     { name: '安置残疾人数', value: 0, unit: '人' },
   ]);
+  const [currentParams, setCurrentParams] = useState();
+  useEffect(() => {
+    if (!currentParams) return;
+    getOrganizationTypeList(currentParams).then(res => {
+      const data = res.map(item => ({
+        name: item.orgName,
+        value: item.servicePersonnel,
+      }))
+      mergeEchartsOptions({
+        '3-2': { data, unit: '人' }
+      });
+    }).catch(() => {
+      mergeEchartsOptions({
+        '3-2': {
+          data: [
+            { name: '无锡残疾人辅助器具中心', value: 543769 },
+            { name: '无锡市残疾人就业信息网', value: 358125 },
+            { name: '无锡市残疾人联合会', value: 335155 },
+            { name: '无锡市残疾人康复中心', value: 255145 },
+            { name: '无锡市残疾人康复研究会', value: 228131 },
+            { name: '无锡市盲人联合会', value: 213154 },
+            { name: '无锡市肢体残障联合会', value: 185354 },
+            { name: '无锡市治理残障康复中心', value: 165835 },
+            { name: '无锡市听力康复中心', value: 164528 },
+          ],
+          unit: '人',
+        },
+      })
+    })
+  }, [currentParams]);
   // 请求数据
   const getData = useCallback((params) => {
     setLoading(true);
@@ -122,6 +153,8 @@ const ServiceAgencies = () => {
             })),
           },
         })
+        const [type] = names;
+        setCurrentParams({ ...params, type });
       }),
       // 2-2
       Promise.resolve().then(() => {
@@ -174,25 +207,6 @@ const ServiceAgencies = () => {
           { name: '单位数量', value: parseNumber(companyTotal), unit: '个' },
           { name: '安置残疾人数', value: parseNumber(disabledPeopleSum), unit: '人' },
         ])
-      }),
-      // 3-2
-      Promise.resolve().then(() => {
-        mergeEchartsOptions({
-          '3-2': {
-            data: [
-              { name: '无锡残疾人辅助器具中心', value: 543769 },
-              { name: '无锡市残疾人就业信息网', value: 358125 },
-              { name: '无锡市残疾人联合会', value: 335155 },
-              { name: '无锡市残疾人康复中心', value: 255145 },
-              { name: '无锡市残疾人康复研究会', value: 228131 },
-              { name: '无锡市盲人联合会', value: 213154 },
-              { name: '无锡市肢体残障联合会', value: 185354 },
-              { name: '无锡市治理残障康复中心', value: 165835 },
-              { name: '无锡市听力康复中心', value: 164528 },
-            ],
-            unit: '人',
-          },
-        })
       }),
     ]).finally(() => {
       setLoading(false);
@@ -253,10 +267,12 @@ const ServiceAgencies = () => {
             <div className="grid-item-title">
               <span>服务机构数据</span>
             </div>
-            <StachChart
+            <StackChart
               className="grid-item-content"
+              activeValue={currentParams && currentParams.type}
               option={echartsOptions['1-2']}
               style={{ flex: 1 }}
+              onRowClick={type => setCurrentParams({ ...currentParams, type })}
             />
           </ContainerWithBorder>
           <ContainerWithBorder key="2-1" className="grid-item">

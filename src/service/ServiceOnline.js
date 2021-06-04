@@ -56,3 +56,19 @@ export const getOnlineServiceBsBuildingFacilityEvalution = (params) => {
     params,
   })
 }
+// 小程序服务总数; 科室1数量, 科室2数量, 科室3数量
+export const getAppletService = (params) => {
+  return ajax({
+    url:'applet/service',
+    method:'get',
+    params,
+  })
+}
+// 折线统计图
+export const getDayCount = (params) => {
+  return ajax({
+    url:'day/count',
+    method:'get',
+    params,
+  })
+}

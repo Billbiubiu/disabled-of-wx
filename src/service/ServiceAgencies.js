@@ -40,3 +40,11 @@ export const getOrganizationCompanyTotal = (params) => {
     params,
   })
 }
+// 3. 子类机构统计
+export const getOrganizationTypeList = (params) => {
+  return ajax({
+    url:'organization/type/list',
+    method:'get',
+    params,
+  })
+}
