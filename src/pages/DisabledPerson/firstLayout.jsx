@@ -9,7 +9,7 @@ import {
 import { Spin } from 'antd'
 import * as Icons from '../../assets/images/disabled-person';
 import './firstLayout.scss';
-import { disabeldIncome,getAgeGroup,getDisabledNum, getAutismNum,disabeldType, disabeldSex, disabeldMarry, disabeldDbNum,disabeldAvg,getMultipleNum,getSevereNum,getSuspectedNum,disabeldPersonAvg} from '../../service/index'
+import { disabeldIncome,getAgeGroup,getDisabledNum, getAutismNum,disabeldType, disabeldSex, disabeldDoctor,disabeldMarry, disabeldDbNum,disabeldAvg,getMultipleNum,getSevereNum,getSuspectedNum,disabeldPersonAvg} from '../../service/index'
 
 // 布局数据
 const layout = [
@@ -75,54 +75,7 @@ const FirstLayout = (props) => {
     // 残疾人增长趋势图
     '2-2': {},
     // 残疾人数据统计1
-    '3-2-1': {
-      color: ['#ff1493', '#00f5ff'],
-      title: {
-        text: '家庭医生签约统计',
-        left: 'center',
-        top: 0,
-        textStyle: {
-          color: 'white',
-          fontSize: '10'
-        }
-      },
-      legend: {
-        textStyle: {
-          fontSize: 10,
-          color: 'white'
-        },
-        width: 1000,
-        bottom: '1',
-        left: 'center',
-        itemWidth: 14,
-      },
-      series: [
-        {
-          name: '已签约',
-          type: 'pie',
-          radius: ['40%', '80%'],
-          label: {
-            show: false,
-            position: 'center',
-            color: "#fff",
-            backgroundColor: "transparent",
-          },
-          emphasis: {
-            label: {
-              show: true,
-              fontSize: '10',
-              formatter: `{d}%
-
-{b}`,
-            }
-          },
-          data: [
-            { value: 335, name: '已签约' },
-            { value: 310, name: '未签约' },
-          ],
-        }
-      ]
-    },
+    '3-2-1': {},
     // 残疾人数据统计2
     '3-2-2': {},
     // 残疾人收入统计
@@ -311,16 +264,69 @@ const FirstLayout = (props) => {
             ]
           })
         })
-      })
+      }),
       // 家庭医生签约和未签订数量和占比
+      new Promise((resolve)=>{
+        disabeldDoctor(area, timeRange.startDate, timeRange.endDate).then((res) => {
+          resolve({
+            color: ['#ff1493', '#00f5ff'],
+            title: {
+              text: '家庭医生签约统计',
+              left: 'center',
+              top: 0,
+              textStyle: {
+                color: 'white',
+                fontSize: '10'
+              }
+            },
+            legend: {
+              textStyle: {
+                fontSize: 10,
+                color: 'white'
+              },
+              width: 1000,
+              bottom: '1',
+              left: 'center',
+              itemWidth: 14,
+            },
+            series: [
+              {
+                name: '已签约',
+                type: 'pie',
+                radius: ['40%', '80%'],
+                label: {
+                  show: false,
+                  position: 'center',
+                  color: "#fff",
+                  backgroundColor: "transparent",
+                },
+                emphasis: {
+                  label: {
+                    show: true,
+                    fontSize: '10',
+                    formatter: `{d}%
+      
+      {b}`,
+                  }
+                },
+                data: [
+                  { value: res.已签约数, name: '已签约' },
+                  { value: res.未签约数, name: '未签约' },
+                ],
+              }
+            ]
+          })
+        })
+      })
     ]).then((res) => {
+      console.log(res)
       setDisabledCount(res[0])
         setDisabledMoney([
           { title: "残疾人人均年收入", num: res[5].oneincomeAvg, img: Icons.cjr_big },
           { title: "社会人均年收入", num: res[9].cityPersonAvg, img: Icons.people },
         ])
         setEchartsOptions({
-          ...echartsOptions, '1-2': res[1],'3-2-2':res[4],'2-2':res[11],'1-3':{
+          ...echartsOptions, '1-2': res[1],'3-2-2':res[4],'3-2-1':res[12],'2-2':res[11],'1-3':{
             color: ['#0263ff', '#ff1493', '#00f5ff'],
             tooltip: {
               trigger: 'item',

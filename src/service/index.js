@@ -183,6 +183,19 @@ export const disabeldIncome = ()=>{
   })
 }
 
+// 残疾人家庭医生签约数
+export const disabeldDoctor= (area,startDate,endDate)=>{
+  return ajax({
+    url:'disabled/doctor',
+    method:'get',
+    params:{
+      areaCode:area,
+      startDate:startDate,
+      endDate:endDate
+    }
+  })
+}
+
 /**  执证残疾人页面1  end */
 
 /**  执证残疾人页面2  start */
