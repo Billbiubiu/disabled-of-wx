@@ -17,8 +17,8 @@ import {
   getOnlineServiceInteractCnt,
   getOnlineServiceBsBuild,
   getOnlineServiceBsBuildingFacilityEvalution,
-  getAppletService,
-  getDayCount,
+  getOnlineServiceAppletService,
+  getOnlineServiceDayCount,
 } from '../../service/ServiceOnline';
 import * as icons from '../../assets/images/service-online';
 import './index.scss';
@@ -74,9 +74,9 @@ const ServiceOnline = () => {
   // 小程序服务统计
   const [miniProgramTotal, setMiniProgramTotal] = useState(0);
   const [miniProgramStatisticsList, setMiniProgramStatisticsList] = useState([
-    { name: "科室1服务数量", value: 0 },
-    { name: "科室2服务数量", value: 0 },
-    { name: "科室3服务数量", value: 0 },
+    { name: "教就处", value: 0 },
+    { name: "康复处", value: 0 },
+    { name: "维文处", value: 0 },
   ]);
   // echarts图表
   const [echartsOptions, mergeEchartsOptions] = useReducer((state, newState) => ({
@@ -198,27 +198,18 @@ const ServiceOnline = () => {
         })
       }),
       // 2-1
-      getAppletService().then(res => {
+      getOnlineServiceAppletService(params).then(res => {
         setMiniProgramTotal(parseNumber(res['小程序服务总数'] || 0));
         setMiniProgramStatisticsList([
-          { name: "科室1服务数量", value: parseNumber(res['科室1数量'] || 0) },
-          { name: "科室2服务数量", value: parseNumber(res['科室2数量'] || 0) },
-          { name: "科室3服务数量", value: parseNumber(res['科室3数量'] || 0) },
-        ]);
-      }).catch(() => {
-        setMiniProgramTotal(parseNumber(12273684));
-        setMiniProgramStatisticsList([
-          { name: "科室1服务数量", value: parseNumber(885369) },
-          { name: "科室2服务数量", value: parseNumber(685369) },
-          { name: "科室3服务数量", value: parseNumber(465369) },
+          { name: "教就处", value: parseNumber(res['教就处'] || 0) },
+          { name: "康复处", value: parseNumber(res['康复处'] || 0) },
+          { name: "维文处", value: parseNumber(res['维文处'] || 0) },
         ]);
       }),
       // 2-1
-      getDayCount().then(res => {
-        console.log(res);
-      }).finally(() => {
-        const names = Array(30).fill(0).map((d, i) => i + 1);
-        const data = names.map(d => Math.random() * 25 + 25);
+      getOnlineServiceDayCount(params).then(res => {
+        const names = Object.keys(res);
+        const data = names.map(name => res[name]);
         mergeEchartsOptions({
           '2-1': {
             grid: [
@@ -246,7 +237,6 @@ const ServiceOnline = () => {
             yAxis: [
               {
                 type: 'value',
-                boundaryGap: '50%',
                 splitLine: {
                   show: true,
                   lineStyle: {
@@ -457,8 +447,8 @@ const ServiceOnline = () => {
     getData(newParams);
     return newParams;
   }, {
-    startDate: moment().subtract(1, 'years').format('YYYY-MM-DD'),
-    endDate: moment().format('YYYY-MM-DD'),
+    startDate: moment().subtract(1, 'years').format('YYYY'),
+    endDate: moment().format('YYYY'),
   });
   // 触发首次请求
   useEffect(() => {

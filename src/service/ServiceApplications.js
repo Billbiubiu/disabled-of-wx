@@ -1,7 +1,7 @@
 import ajax from "../config/axios.config";
 
 // 1、服务申请人总数
-export const getServiceTotal = (params) => {
+export const getServiceTotal = params => {
   return ajax({
     url:'service/total',
     method:'get',

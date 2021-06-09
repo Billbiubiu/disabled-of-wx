@@ -232,8 +232,8 @@ const ServiceApplications = () => {
     getData(newParams);
     return newParams;
   }, {
-    startDate: moment().subtract(1, 'years').format('YYYY-MM-DD'),
-    endDate: moment().format('YYYY-MM-DD'),
+    startDate: moment().subtract(1, 'years').format('YYYY'),
+    endDate: moment().format('YYYY'),
   });
   const setArea = useCallback(({ name }) => {
     setParams({ area: name });
