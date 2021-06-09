@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
-import { message,DatePicker } from 'antd';
+import { message, DatePicker } from 'antd';
 import { loginOut } from '../../service';
 import './index.scss';
 import { useHistory } from 'react-router';
@@ -50,10 +50,20 @@ const CommonNavBar = (props) => {
       <div className="bar-title">{title}</div>
       {
         showRangeDate && <div className="time">
-        <DatePicker.RangePicker value={[moment(timeRange.startDate) ,moment(timeRange.endDate)]} onChange={(dates)=>{setTimeRange({startDate:dates[0].format('YYYY-MM-DD'),endDate:dates[1].format('YYYY-MM-DD')})}} allowClear={false}></DatePicker.RangePicker >
+          <DatePicker.RangePicker
+            picker="year"
+            allowClear={false}
+            value={[
+              moment(timeRange.startDate),
+              moment(timeRange.endDate)
+            ]}
+            onChange={(value) => setTimeRange({
+              startDate: value[0].format('YYYY'),
+              endDate: value[1].format('YYYY')
+            })}
+          />
         </div>
       }
-     
       <div className="bar-btn">
         {btnType === "back" && (
           <div className="btn-back">
