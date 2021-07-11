@@ -1,29 +1,40 @@
-import React from 'react';
-import { Layout, Form, Select, Input, Button } from 'antd';
+import React, { useState } from 'react';
+import { Layout, Form, Input, Button, Spin, message } from 'antd';
 import { CommonNavBar, ContainerWithCorner } from '../../components';
+import { postLogin } from '../../service/login';
 import './index.scss';
 
 const { Content } = Layout;
 const { useForm, Item: FormItem } = Form;
-const { Option } = Select;
-
-const regions = [
-  { name: '无锡市', value: '1' },
-  { name: '江阴市', value: '2' },
-  { name: '宜兴市', value: '3' },
-  { name: '惠山区', value: '4' },
-  { name: '锡山区', value: '5' },
-  { name: '梁溪区', value: '6' },
-  { name: '新吴区', value: '7' },
-  { name: '滨湖区', value: '8' },
-];
 
 const Login = (props) => {
   const { history } = props;
   const [form] = useForm();
+  const [loading, setLoading] = useState(false);
   const onSubmit = (values) => {
-    console.log(values);
-    history.push('/home');
+    setLoading(true);
+    postLogin(values).then(res => {
+      const { status } = res;
+      console.log(res);
+      if (status && status.code === '1') {
+        history.push('/home');
+      } else {
+        message.error({
+          type: 'error',
+          duration: 1000,
+          content: '登录失败',
+        })
+      }
+    }).catch(error => {
+      console.log(error);
+      message.error({
+        type: 'error',
+        duration: 1000,
+        content: '服务器连接失败',
+      })
+    }).finally(() => {
+      setLoading(false);
+    })
   };
   return (
     <Layout className="login">
@@ -39,22 +50,11 @@ const Login = (props) => {
           }}
           onFinish={onSubmit}
         >
-          <FormItem name="region">
-            <Select placeholder="请选择区域">
-              {
-                regions.map(region => (
-                  <Option
-                    key={region.value}
-                    value={region.value}
-                  >
-                    {region.name}
-                  </Option>
-                ))
-              }
-            </Select>
+          <FormItem name="username" rules={[{ required: true, message: '请输入账号' }]}>
+            <Input placeholder="请输入账号" />
           </FormItem>
           <FormItem name="password" rules={[{ required: true, message: '请输入密码' }]}>
-            <Input placeholder="请输入密码" />
+            <Input type='password' placeholder="请输入密码" />
           </FormItem>
           <FormItem>
             <Button type="primary" htmlType="submit">登录</Button>
@@ -62,6 +62,18 @@ const Login = (props) => {
           </FormItem>
         </Form>
       </ContainerWithCorner>
+      {loading && (
+        <Spin style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }} />
+      )}
     </Layout>
   )
 }
